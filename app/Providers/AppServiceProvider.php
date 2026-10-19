@@ -33,5 +33,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('registration', fn (Request $request): Limit => Limit::perMinute(3)->by($request->ip()));
+
+        RateLimiter::for('password-recovery', function (Request $request): Limit {
+            $email = Str::transliterate(Str::lower((string) $request->input('email')));
+
+            return Limit::perMinute(3)->by($email.'|'.$request->ip());
+        });
+
+        RateLimiter::for('verification', fn (Request $request): Limit => Limit::perMinute(3)
+            ->by(($request->user()?->getAuthIdentifier() ?? 'guest').'|'.$request->ip()));
     }
 }
