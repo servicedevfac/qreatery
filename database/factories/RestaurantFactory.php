@@ -22,6 +22,7 @@ class RestaurantFactory extends Factory
             'name' => fake()->company(),
             'slug' => fake()->unique()->slug(2),
             'description' => fake()->optional()->sentence(),
+            'logo_path' => null,
             'address' => fake()->optional()->address(),
             'phone' => fake()->optional()->phoneNumber(),
             'email' => fake()->optional()->companyEmail(),

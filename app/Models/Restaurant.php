@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'name',
     'slug',
     'description',
+    'logo_path',
     'address',
     'phone',
     'email',
@@ -43,6 +44,16 @@ class Restaurant extends Model
         return $this->belongsToMany(User::class, 'restaurant_memberships')
             ->withPivot(['role', 'permissions', 'is_active'])
             ->withTimestamps();
+    }
+
+    public function openingHours(): HasMany
+    {
+        return $this->hasMany(RestaurantOpeningHour::class);
+    }
+
+    public function closures(): HasMany
+    {
+        return $this->hasMany(RestaurantClosure::class);
     }
 
     protected function casts(): array
