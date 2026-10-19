@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\RestaurantPermission;
 use App\RestaurantRole;
 use Database\Factories\RestaurantMembershipFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -23,6 +24,11 @@ class RestaurantMembership extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function hasPermission(RestaurantPermission $permission): bool
+    {
+        return in_array($permission->value, $this->permissions ?? [], true);
     }
 
     protected function casts(): array

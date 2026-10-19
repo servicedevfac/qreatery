@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Restaurant;
 use App\Models\RestaurantMembership;
 use App\Models\User;
+use App\RestaurantPermission;
 use App\RestaurantRole;
 use Illuminate\Auth\Access\Response;
 
@@ -48,6 +49,7 @@ class RestaurantPolicy
         }
 
         return in_array($membership->role, [RestaurantRole::Owner, RestaurantRole::Admin], true)
+            || $membership->hasPermission(RestaurantPermission::RestaurantUpdate)
             ? Response::allow()
             : Response::deny('Votre rôle ne permet pas de modifier ce restaurant.');
     }
