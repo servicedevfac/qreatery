@@ -9,6 +9,8 @@ enum RestaurantPermission: string
     case MembersView = 'members.view';
     case MembersManage = 'members.manage';
     case MenuManage = 'menu.manage';
+    case TablesManage = 'tables.manage';
+    case QrCodesManage = 'qr_codes.manage';
     case OrdersView = 'orders.view';
     case OrdersManage = 'orders.manage';
     case PaymentsManage = 'payments.manage';

@@ -62,6 +62,60 @@ class RestaurantPolicy
         return false;
     }
 
+    public function manageMenu(User $user, Restaurant $restaurant): Response
+    {
+        return $this->authorizeCapability($user, $restaurant, RestaurantPermission::MenuManage, 'gérer le menu');
+    }
+
+    public function manageTables(User $user, Restaurant $restaurant): Response
+    {
+        return $this->authorizeCapability($user, $restaurant, RestaurantPermission::TablesManage, 'gérer les tables');
+    }
+
+    public function manageQrCodes(User $user, Restaurant $restaurant): Response
+    {
+        return $this->authorizeCapability($user, $restaurant, RestaurantPermission::QrCodesManage, 'gérer les QR Codes');
+    }
+
+    public function viewOrders(User $user, Restaurant $restaurant): Response
+    {
+        $membership = $this->activeMembership($user, $restaurant);
+
+        if (! $membership instanceof RestaurantMembership) {
+            return Response::denyAsNotFound();
+        }
+
+        return in_array($membership->role, [RestaurantRole::Owner, RestaurantRole::Admin, RestaurantRole::Manager], true)
+            || $membership->hasPermission(RestaurantPermission::OrdersView)
+            || $membership->hasPermission(RestaurantPermission::OrdersManage)
+            ? Response::allow()
+            : Response::deny('Votre rôle ne permet pas de consulter les commandes.');
+    }
+
+    public function manageOrders(User $user, Restaurant $restaurant): Response
+    {
+        return $this->authorizeCapability($user, $restaurant, RestaurantPermission::OrdersManage, 'gérer les commandes');
+    }
+
+    public function managePayments(User $user, Restaurant $restaurant): Response
+    {
+        return $this->authorizeCapability($user, $restaurant, RestaurantPermission::PaymentsManage, 'gérer les paiements');
+    }
+
+    public function viewReports(User $user, Restaurant $restaurant): Response
+    {
+        $membership = $this->activeMembership($user, $restaurant);
+
+        if (! $membership instanceof RestaurantMembership) {
+            return Response::denyAsNotFound();
+        }
+
+        return in_array($membership->role, [RestaurantRole::Owner, RestaurantRole::Admin, RestaurantRole::Manager], true)
+            || $membership->hasPermission(RestaurantPermission::ReportsView)
+            ? Response::allow()
+            : Response::deny('Votre rôle ne permet pas de consulter les rapports.');
+    }
+
     /**
      * Determine whether the user can restore the model.
      */
@@ -84,5 +138,19 @@ class RestaurantPolicy
             ->whereBelongsTo($user)
             ->where('is_active', true)
             ->first();
+    }
+
+    private function authorizeCapability(User $user, Restaurant $restaurant, RestaurantPermission $permission, string $action): Response
+    {
+        $membership = $this->activeMembership($user, $restaurant);
+
+        if (! $membership instanceof RestaurantMembership) {
+            return Response::denyAsNotFound();
+        }
+
+        return in_array($membership->role, [RestaurantRole::Owner, RestaurantRole::Admin], true)
+            || $membership->hasPermission($permission)
+            ? Response::allow()
+            : Response::deny("Votre rôle ne permet pas de {$action}.");
     }
 }
