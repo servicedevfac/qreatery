@@ -15,9 +15,11 @@ class RestaurantControllerTest extends TestCase
 
     public function test_returns_401_when_user_is_not_authenticated(): void
     {
-        $response = $this->getJson('/api/v1/restaurants');
+        $response = $this->get('/api/v1/restaurants');
 
-        $response->assertUnauthorized();
+        $response
+            ->assertUnauthorized()
+            ->assertJsonPath('message', 'Unauthenticated.');
     }
 
     public function test_returns_only_restaurants_of_authenticated_user(): void
