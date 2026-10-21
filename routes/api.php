@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\V1\Admin\SubscriptionStatusController as AdminSubsc
 use App\Http\Controllers\Api\V1\AssistanceRequestController;
 use App\Http\Controllers\Api\V1\AuditLogController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\HealthCheckController;
+use App\Http\Controllers\Api\V1\KitchenTicketController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OptionGroupController;
 use App\Http\Controllers\Api\V1\OrderController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\Api\V1\PublicMenuController;
 use App\Http\Controllers\Api\V1\PublicOrderController;
 use App\Http\Controllers\Api\V1\PublicQrCodeController;
 use App\Http\Controllers\Api\V1\QrCodeController;
+use App\Http\Controllers\Api\V1\QrCodePrintController;
 use App\Http\Controllers\Api\V1\ReportController;
 use App\Http\Controllers\Api\V1\ReportExportController;
 use App\Http\Controllers\Api\V1\RestaurantClosureController;
@@ -32,7 +35,10 @@ use App\Http\Controllers\Api\V1\RestaurantLogoController;
 use App\Http\Controllers\Api\V1\RestaurantMemberController;
 use App\Http\Controllers\Api\V1\RestaurantOpeningHourController;
 use App\Http\Controllers\Api\V1\RestaurantTableController;
+use App\Http\Controllers\Api\V1\RestaurantTableSessionController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('v1/health', HealthCheckController::class)->name('api.v1.health');
 
 Route::prefix('v1/public')->name('api.v1.public.')->group(function (): void {
     Route::get('restaurants/{restaurant:slug}/menu', PublicMenuController::class)
@@ -104,14 +110,24 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('v1')->name('api.v1.')->
     Route::apiResource('restaurants.option-groups', OptionGroupController::class)
         ->parameters(['option-groups' => 'optionGroup'])
         ->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::get('restaurants/{restaurant}/tables/{restaurantTable}/active-orders', [RestaurantTableSessionController::class, 'activeOrders'])
+        ->name('restaurants.tables.active-orders');
+    Route::post('restaurants/{restaurant}/tables/{restaurantTable}/close', [RestaurantTableSessionController::class, 'close'])
+        ->name('restaurants.tables.close');
     Route::apiResource('restaurants.tables', RestaurantTableController::class)
         ->parameters(['tables' => 'restaurantTable'])
         ->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::get('restaurants/{restaurant}/qr-codes/print-sheet', [QrCodePrintController::class, 'printSheet'])
+        ->name('restaurants.qr-codes.print-sheet');
+    Route::get('restaurants/{restaurant}/qr-codes/{qrCode}/download', [QrCodePrintController::class, 'download'])
+        ->name('restaurants.qr-codes.download');
     Route::post('restaurants/{restaurant}/qr-codes/{qrCode}/regeneration', [QrCodeController::class, 'regenerate'])
         ->name('restaurants.qr-codes.regenerate');
     Route::apiResource('restaurants.qr-codes', QrCodeController::class)
         ->parameters(['qr-codes' => 'qrCode'])
         ->only(['index', 'store', 'destroy']);
+    Route::get('restaurants/{restaurant}/orders/{order}/kitchen-ticket', [KitchenTicketController::class, 'show'])
+        ->name('restaurants.orders.kitchen-ticket');
     Route::patch('restaurants/{restaurant}/orders/{order}/status', OrderStatusController::class)
         ->name('restaurants.orders.status.update');
     Route::apiResource('restaurants.orders', OrderController::class)
