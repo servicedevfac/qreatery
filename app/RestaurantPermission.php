@@ -15,4 +15,5 @@ enum RestaurantPermission: string
     case OrdersManage = 'orders.manage';
     case PaymentsManage = 'payments.manage';
     case ReportsView = 'reports.view';
+    case AuditView = 'audit.view';
 }

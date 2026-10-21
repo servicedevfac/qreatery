@@ -37,6 +37,17 @@ class AssistanceRequestControllerTest extends TestCase
             ->assertJsonPath('data.table.label', 'Table 4');
         $assistanceRequestId = $create->json('data.id');
 
+        $this->assertDatabaseHas('notifications', [
+            'notifiable_type' => User::class,
+            'notifiable_id' => $owner->id,
+        ]);
+        $this->assertDatabaseHas('audit_logs', [
+            'restaurant_id' => $restaurant->id,
+            'action' => 'assistance.requested',
+            'auditable_type' => AssistanceRequest::class,
+            'auditable_id' => $assistanceRequestId,
+        ]);
+
         $this->actingAs($owner)
             ->getJson("/api/v1/restaurants/{$restaurant->id}/assistance-requests")
             ->assertOk()->assertJsonCount(1, 'data');

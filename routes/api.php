@@ -1,7 +1,16 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\AuditLogController as AdminAuditLogController;
+use App\Http\Controllers\Api\V1\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Api\V1\Admin\PlanController as AdminPlanController;
+use App\Http\Controllers\Api\V1\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Api\V1\Admin\SubscriptionController as AdminSubscriptionController;
+use App\Http\Controllers\Api\V1\Admin\SubscriptionPaymentController as AdminSubscriptionPaymentController;
+use App\Http\Controllers\Api\V1\Admin\SubscriptionStatusController as AdminSubscriptionStatusController;
 use App\Http\Controllers\Api\V1\AssistanceRequestController;
+use App\Http\Controllers\Api\V1\AuditLogController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OptionGroupController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\OrderStatusController;
@@ -37,7 +46,29 @@ Route::prefix('v1/public')->name('api.v1.public.')->group(function (): void {
         ->name('restaurants.assistance-requests.store');
 });
 
+Route::middleware(['auth:sanctum', 'verified', 'platform.admin'])
+    ->prefix('v1/admin')
+    ->name('api.v1.admin.')
+    ->group(function (): void {
+        Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+        Route::get('audit-logs', AdminAuditLogController::class)->name('audit-logs.index');
+        Route::apiResource('plans', AdminPlanController::class)->only(['index', 'store', 'show', 'update']);
+        Route::get('restaurants', [AdminRestaurantController::class, 'index'])->name('restaurants.index');
+        Route::patch('restaurants/{restaurant}/status', [AdminRestaurantController::class, 'updateStatus'])
+            ->name('restaurants.status.update');
+        Route::apiResource('restaurants.subscriptions', AdminSubscriptionController::class)
+            ->only(['index', 'store', 'show']);
+        Route::patch('subscriptions/{subscription}/status', AdminSubscriptionStatusController::class)
+            ->name('subscriptions.status.update');
+        Route::apiResource('subscriptions.payments', AdminSubscriptionPaymentController::class)
+            ->only(['index', 'store']);
+    });
+
 Route::middleware(['auth:sanctum', 'verified'])->prefix('v1')->name('api.v1.')->group(function (): void {
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::patch('notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+
     Route::apiResource('restaurants', RestaurantController::class)->only([
         'index',
         'store',
@@ -93,4 +124,6 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('v1')->name('api.v1.')->
         ->name('restaurants.payments.refunds.store');
     Route::get('restaurants/{restaurant}/reports/overview', ReportController::class)
         ->name('restaurants.reports.overview');
+    Route::get('restaurants/{restaurant}/audit-logs', AuditLogController::class)
+        ->name('restaurants.audit-logs.index');
 });

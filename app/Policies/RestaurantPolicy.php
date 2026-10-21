@@ -116,6 +116,20 @@ class RestaurantPolicy
             : Response::deny('Votre rôle ne permet pas de consulter les rapports.');
     }
 
+    public function viewAuditLogs(User $user, Restaurant $restaurant): Response
+    {
+        $membership = $this->activeMembership($user, $restaurant);
+
+        if (! $membership instanceof RestaurantMembership) {
+            return Response::denyAsNotFound();
+        }
+
+        return in_array($membership->role, [RestaurantRole::Owner, RestaurantRole::Admin], true)
+            || $membership->hasPermission(RestaurantPermission::AuditView)
+            ? Response::allow()
+            : Response::deny('Votre rôle ne permet pas de consulter le journal d’audit.');
+    }
+
     /**
      * Determine whether the user can restore the model.
      */

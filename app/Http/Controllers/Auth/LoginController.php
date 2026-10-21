@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\RecordAuditLogAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
@@ -13,7 +14,7 @@ class LoginController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(LoginRequest $request): UserResource
+    public function __invoke(LoginRequest $request, RecordAuditLogAction $recordAuditLog): UserResource
     {
         $authenticated = Auth::attempt([
             'email' => $request->string('email')->toString(),
@@ -31,6 +32,9 @@ class LoginController extends Controller
 
         $user = $request->user();
         $user->forceFill(['last_login_at' => now()])->save();
+        $recordAuditLog->handle($user, 'auth.login', $user, metadata: [
+            'remember' => $request->boolean('remember'),
+        ]);
 
         return new UserResource($user->refresh());
     }

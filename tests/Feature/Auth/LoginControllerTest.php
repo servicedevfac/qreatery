@@ -28,6 +28,12 @@ class LoginControllerTest extends TestCase
             ->assertJsonPath('data.email', 'awa@example.com');
         $this->assertAuthenticatedAs($user);
         $this->assertNotNull($user->refresh()->last_login_at);
+        $this->assertDatabaseHas('audit_logs', [
+            'actor_id' => $user->id,
+            'action' => 'auth.login',
+            'auditable_type' => User::class,
+            'auditable_id' => $user->id,
+        ]);
     }
 
     public function test_returns_422_for_invalid_credentials_without_revealing_account_state(): void

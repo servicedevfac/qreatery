@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 
 class TransitionOrderStatusAction
 {
+    public function __construct(private readonly RecordAuditLogAction $recordAuditLog) {}
+
     /** @var array<string, array<int, string>> */
     private const TRANSITIONS = [
         'pending' => ['accepted', 'rejected', 'cancelled'],
@@ -23,7 +25,8 @@ class TransitionOrderStatusAction
 
     public function handle(Order $order, User $user, string $status, ?string $reason): Order
     {
-        return DB::transaction(function () use ($order, $user, $status, $reason): Order {
+        $fromStatus = $order->preparation_status;
+        $updatedOrder = DB::transaction(function () use ($order, $user, $status, $reason): Order {
             $lockedOrder = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
             $fromStatus = $lockedOrder->preparation_status;
 
@@ -49,5 +52,13 @@ class TransitionOrderStatusAction
 
             return $lockedOrder->load(['restaurantTable', 'items.options', 'statusHistories.user']);
         });
+
+        $this->recordAuditLog->handle($user, 'order.status_changed', $updatedOrder, $updatedOrder->restaurant, [
+            'from_status' => $fromStatus,
+            'to_status' => $status,
+            'reason' => $reason,
+        ]);
+
+        return $updatedOrder;
     }
 }

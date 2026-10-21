@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 
 class RefundPaymentAction
 {
+    public function __construct(private readonly RecordAuditLogAction $recordAuditLog) {}
+
     /**
      * @param  array<string, mixed>  $data
      */
@@ -57,6 +59,14 @@ class RefundPaymentAction
             $charges = (int) $lockedOrder->payments()->where('type', 'charge')->where('status', 'succeeded')->sum('amount_minor');
             $refunds = (int) $lockedOrder->payments()->where('type', 'refund')->where('status', 'succeeded')->sum('amount_minor');
             $lockedOrder->update(['payment_status' => $charges - $refunds === 0 ? 'refunded' : 'partially_refunded']);
+
+            $this->recordAuditLog->handle($operator, 'payment.refunded', $refund, $restaurant, [
+                'order_id' => $lockedOrder->id,
+                'original_payment_id' => $lockedPayment->id,
+                'amount_minor' => $refund->amount_minor,
+                'currency' => $refund->currency,
+                'reason' => $data['reason'],
+            ]);
 
             return $refund->load(['operator', 'originalPayment']);
         });

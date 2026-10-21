@@ -6,13 +6,17 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\QrCode;
 use App\Models\Restaurant;
+use App\Notifications\NewOrderNotification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class CreateOrderAction
 {
+    public function __construct(private readonly RecordAuditLogAction $recordAuditLog) {}
+
     /**
      * @param  array<string, mixed>  $data
      */
@@ -27,7 +31,7 @@ class CreateOrderAction
         $taxMinor = (int) round($subtotalMinor * $taxRate / 100);
         $serviceFeeMinor = (int) ($restaurant->settings['service_fee_minor'] ?? 0);
 
-        return DB::transaction(function () use ($restaurant, $data, $restaurantTableId, $preparedItems, $subtotalMinor, $taxMinor, $serviceFeeMinor): Order {
+        $order = DB::transaction(function () use ($restaurant, $data, $restaurantTableId, $preparedItems, $subtotalMinor, $taxMinor, $serviceFeeMinor): Order {
             $order = $restaurant->orders()->create([
                 'restaurant_table_id' => $restaurantTableId,
                 'number' => $this->uniqueOrderNumber(),
@@ -57,6 +61,18 @@ class CreateOrderAction
 
             return $order->load(['restaurantTable', 'items.options', 'statusHistories']);
         });
+
+        $this->recordAuditLog->handle(null, 'order.created', $order, $restaurant, [
+            'mode' => $order->mode,
+            'total_minor' => $order->total_minor,
+            'currency' => $order->currency,
+        ]);
+        Notification::send(
+            $restaurant->users()->wherePivot('is_active', true)->get(),
+            new NewOrderNotification($order),
+        );
+
+        return $order;
     }
 
     /**

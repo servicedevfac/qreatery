@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\CreateRestaurantMemberAction;
+use App\Actions\RecordAuditLogAction;
 use App\Actions\RevokeUserAccessAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantMemberRequest;
@@ -37,8 +38,14 @@ class RestaurantMemberController extends Controller
         StoreRestaurantMemberRequest $request,
         Restaurant $restaurant,
         CreateRestaurantMemberAction $createMember,
+        RecordAuditLogAction $recordAuditLog,
     ): JsonResponse {
         $membership = $createMember->handle($restaurant, $request->validated());
+        $recordAuditLog->handle($request->user(), 'membership.created', $membership, $restaurant, [
+            'user_id' => $membership->user_id,
+            'role' => $membership->role->value,
+            'permissions' => $membership->permissions,
+        ]);
         Password::sendResetLink(['email' => $membership->user->email]);
 
         return (new RestaurantMembershipResource($membership))
@@ -64,9 +71,15 @@ class RestaurantMemberController extends Controller
         UpdateRestaurantMemberRequest $request,
         Restaurant $restaurant,
         RestaurantMembership $membership,
+        RecordAuditLogAction $recordAuditLog,
     ): RestaurantMembershipResource {
         $this->ensureBelongsToRestaurant($restaurant, $membership);
+        $before = $membership->only(['role', 'permissions', 'is_active']);
         $membership->update($request->validated());
+        $recordAuditLog->handle($request->user(), 'membership.updated', $membership, $restaurant, [
+            'before' => $before,
+            'after' => $membership->fresh()->only(['role', 'permissions', 'is_active']),
+        ]);
 
         return new RestaurantMembershipResource($membership->refresh()->load('user'));
     }
@@ -78,11 +91,15 @@ class RestaurantMemberController extends Controller
         Restaurant $restaurant,
         RestaurantMembership $membership,
         RevokeUserAccessAction $revokeUserAccess,
+        RecordAuditLogAction $recordAuditLog,
     ): Response {
         $this->ensureBelongsToRestaurant($restaurant, $membership);
         Gate::authorize('delete', $membership);
 
         $membership->update(['is_active' => false]);
+        $recordAuditLog->handle(request()->user(), 'membership.deactivated', $membership, $restaurant, [
+            'user_id' => $membership->user_id,
+        ]);
         $user = $membership->user;
 
         if (! $user->restaurantMemberships()->where('is_active', true)->exists()) {
@@ -93,13 +110,19 @@ class RestaurantMemberController extends Controller
         return response()->noContent();
     }
 
-    public function reactivate(Restaurant $restaurant, RestaurantMembership $membership): RestaurantMembershipResource
-    {
+    public function reactivate(
+        Restaurant $restaurant,
+        RestaurantMembership $membership,
+        RecordAuditLogAction $recordAuditLog,
+    ): RestaurantMembershipResource {
         $this->ensureBelongsToRestaurant($restaurant, $membership);
         Gate::authorize('restore', $membership);
 
         $membership->update(['is_active' => true]);
         $membership->user->forceFill(['is_active' => true])->save();
+        $recordAuditLog->handle(request()->user(), 'membership.reactivated', $membership, $restaurant, [
+            'user_id' => $membership->user_id,
+        ]);
 
         return new RestaurantMembershipResource($membership->refresh()->load('user'));
     }

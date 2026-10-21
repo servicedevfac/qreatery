@@ -36,6 +36,11 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function subscriptionPaymentsRecorded(): HasMany
+    {
+        return $this->hasMany(SubscriptionPayment::class, 'recorded_by');
+    }
+
     public function membershipFor(Restaurant $restaurant): ?RestaurantMembership
     {
         return $this->restaurantMemberships()
@@ -54,6 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'is_active' => 'boolean',
+            'is_platform_admin' => 'boolean',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];

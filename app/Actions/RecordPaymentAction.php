@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 
 class RecordPaymentAction
 {
+    public function __construct(private readonly RecordAuditLogAction $recordAuditLog) {}
+
     /**
      * @param  array<string, mixed>  $data
      */
@@ -53,6 +55,13 @@ class RecordPaymentAction
             $newPaidMinor = $paidMinor + $payment->amount_minor;
             $lockedOrder->update([
                 'payment_status' => $newPaidMinor >= $lockedOrder->total_minor ? 'paid' : 'partially_paid',
+            ]);
+
+            $this->recordAuditLog->handle($operator, 'payment.recorded', $payment, $restaurant, [
+                'order_id' => $lockedOrder->id,
+                'amount_minor' => $payment->amount_minor,
+                'currency' => $payment->currency,
+                'method' => $payment->method,
             ]);
 
             return $payment->load(['operator', 'refunds']);
