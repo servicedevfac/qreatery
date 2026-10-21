@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantMembership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class ReportControllerTest extends TestCase
@@ -69,5 +70,29 @@ class ReportControllerTest extends TestCase
         $this->actingAs($staff)
             ->getJson("/api/v1/restaurants/{$restaurant->id}/reports/overview")
             ->assertForbidden();
+    }
+
+    public function test_owner_can_export_report_as_pdf_and_xlsx(): void
+    {
+        Carbon::setTestNow('2026-10-21 12:00:00');
+        $owner = User::factory()->create();
+        $restaurant = Restaurant::factory()->create(['slug' => 'export-demo']);
+        RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
+        Order::factory()->for($restaurant)->create(['total_minor' => 8500]);
+
+        $pdf = $this->actingAs($owner)
+            ->get("/api/v1/restaurants/{$restaurant->id}/reports/overview/export/pdf");
+
+        $pdf->assertOk()
+            ->assertHeader('content-type', 'application/pdf')
+            ->assertDownload('rapport-export-demo-20261021-120000.pdf');
+        $this->assertStringStartsWith('%PDF', $pdf->getContent());
+
+        $xlsx = $this->actingAs($owner)
+            ->get("/api/v1/restaurants/{$restaurant->id}/reports/overview/export/xlsx");
+
+        $xlsx->assertOk()
+            ->assertDownload('rapport-export-demo-20261021-120000.xlsx');
+        $this->assertSame('PK', file_get_contents($xlsx->baseResponse->getFile()->getPathname(), false, null, 0, 2));
     }
 }

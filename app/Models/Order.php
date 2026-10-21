@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['restaurant_id', 'restaurant_table_id', 'number', 'tracking_token', 'mode', 'preparation_status', 'payment_status', 'customer_name', 'customer_phone', 'notes', 'subtotal_minor', 'tax_minor', 'service_fee_minor', 'total_minor', 'currency', 'accepted_at', 'ready_at', 'completed_at', 'cancelled_at'])]
+#[Fillable(['restaurant_id', 'restaurant_table_id', 'number', 'tracking_token', 'mode', 'preparation_status', 'payment_status', 'customer_name', 'customer_phone', 'notes', 'subtotal_minor', 'tax_minor', 'service_fee_minor', 'total_minor', 'currency', 'accepted_at', 'ready_at', 'completed_at', 'cancelled_at', 'late_notified_at'])]
 class Order extends Model
 {
     /** @use HasFactory<OrderFactory> */
@@ -63,6 +63,7 @@ class Order extends Model
             'ready_at' => 'datetime',
             'completed_at' => 'datetime',
             'cancelled_at' => 'datetime',
+            'late_notified_at' => 'datetime',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Events\OrderCreated;
 use App\Models\Option;
 use App\Models\OptionGroup;
 use App\Models\Product;
@@ -10,6 +11,7 @@ use App\Models\QrCode;
 use App\Models\Restaurant;
 use App\Models\RestaurantTable;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class PublicOrderControllerTest extends TestCase
@@ -18,6 +20,7 @@ class PublicOrderControllerTest extends TestCase
 
     public function test_public_order_recalculates_totals_and_preserves_item_snapshot(): void
     {
+        Event::fake([OrderCreated::class]);
         $restaurant = Restaurant::factory()->create([
             'slug' => 'maquis-order',
             'settings' => ['order_modes' => ['dine_in'], 'tax_rate' => 10, 'service_fee_minor' => 500],
@@ -60,6 +63,7 @@ class PublicOrderControllerTest extends TestCase
         $this->assertDatabaseHas('orders', ['restaurant_id' => $restaurant->id, 'total_minor' => 14800]);
         $this->assertDatabaseHas('order_items', ['product_name' => 'Poulet braisé', 'unit_price_minor' => 6500, 'quantity' => 2]);
         $this->assertDatabaseHas('order_status_histories', ['from_status' => null, 'to_status' => 'pending']);
+        Event::assertDispatched(OrderCreated::class, fn (OrderCreated $event): bool => $event->order->id === $response->json('data.id'));
 
         $product->update(['name' => 'Nouveau nom', 'price_minor' => 9999]);
         $this->getJson("/api/v1/public/orders/{$trackingToken}")

@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,7 @@ class TransitionOrderStatusAction
             'to_status' => $status,
             'reason' => $reason,
         ]);
+        OrderStatusUpdated::dispatch($updatedOrder, $fromStatus);
 
         return $updatedOrder;
     }

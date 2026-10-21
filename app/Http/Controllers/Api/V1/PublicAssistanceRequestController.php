@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\RecordAuditLogAction;
+use App\Events\AssistanceRequested;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePublicAssistanceRequest;
 use App\Http\Resources\AssistanceRequestResource;
@@ -58,6 +59,7 @@ class PublicAssistanceRequestController extends Controller
             $restaurant->users()->wherePivot('is_active', true)->get(),
             new AssistanceRequestedNotification($assistanceRequest),
         );
+        AssistanceRequested::dispatch($assistanceRequest);
 
         return (new AssistanceRequestResource($assistanceRequest))->response()->setStatusCode(201);
     }

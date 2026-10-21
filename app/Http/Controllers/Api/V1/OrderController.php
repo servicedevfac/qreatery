@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderIndexRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\Restaurant;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
-    public function index(Request $request, Restaurant $restaurant): AnonymousResourceCollection
+    public function index(OrderIndexRequest $request, Restaurant $restaurant): AnonymousResourceCollection
     {
-        Gate::authorize('viewOrders', $restaurant);
-
         $orders = $restaurant->orders()
             ->with(['restaurantTable', 'items.options'])
             ->when($request->filled('status'), fn ($query) => $query->where('preparation_status', $request->string('status')->toString()))
@@ -24,6 +22,7 @@ class OrderController extends Controller
             ->when($request->filled('number'), fn ($query) => $query->where('number', $request->string('number')->toString()))
             ->when($request->filled('date_from'), fn ($query) => $query->whereDate('created_at', '>=', $request->date('date_from')))
             ->when($request->filled('date_to'), fn ($query) => $query->whereDate('created_at', '<=', $request->date('date_to')))
+            ->when($request->filled('updated_after'), fn ($query) => $query->where('updated_at', '>', $request->date('updated_after')))
             ->latest('id')
             ->paginate();
 

@@ -11,12 +11,15 @@ use Illuminate\Validation\ValidationException;
 
 class RecordSubscriptionPaymentAction
 {
-    public function __construct(private readonly RecordAuditLogAction $recordAuditLog) {}
+    public function __construct(
+        private readonly RecordAuditLogAction $recordAuditLog,
+        private readonly SendSubscriptionPaymentFailedAlertAction $sendPaymentFailedAlert,
+    ) {}
 
     /** @param array<string, mixed> $data */
     public function handle(Subscription $subscription, User $actor, array $data): SubscriptionPayment
     {
-        return DB::transaction(function () use ($subscription, $actor, $data): SubscriptionPayment {
+        $payment = DB::transaction(function () use ($subscription, $actor, $data): SubscriptionPayment {
             $existing = SubscriptionPayment::query()
                 ->where('idempotency_key', $data['idempotency_key'])
                 ->first();
@@ -60,5 +63,11 @@ class RecordSubscriptionPaymentAction
 
             return $payment;
         });
+
+        if ($payment->status === SubscriptionPaymentStatus::Failed) {
+            $this->sendPaymentFailedAlert->handle($payment);
+        }
+
+        return $payment->refresh()->load('recorder');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Events\AssistanceRequested;
 use App\Models\AssistanceRequest;
 use App\Models\QrCode;
 use App\Models\Restaurant;
@@ -9,6 +10,7 @@ use App\Models\RestaurantMembership;
 use App\Models\RestaurantTable;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AssistanceRequestControllerTest extends TestCase
@@ -17,6 +19,7 @@ class AssistanceRequestControllerTest extends TestCase
 
     public function test_client_can_request_help_and_owner_can_resolve_it(): void
     {
+        Event::fake([AssistanceRequested::class]);
         $owner = User::factory()->create();
         $restaurant = Restaurant::factory()->create(['slug' => 'assistance-demo']);
         RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
@@ -47,6 +50,7 @@ class AssistanceRequestControllerTest extends TestCase
             'auditable_type' => AssistanceRequest::class,
             'auditable_id' => $assistanceRequestId,
         ]);
+        Event::assertDispatched(AssistanceRequested::class, fn (AssistanceRequested $event): bool => $event->assistanceRequest->id === $assistanceRequestId);
 
         $this->actingAs($owner)
             ->getJson("/api/v1/restaurants/{$restaurant->id}/assistance-requests")

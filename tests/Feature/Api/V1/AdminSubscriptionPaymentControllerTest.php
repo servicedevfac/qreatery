@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Models\RestaurantMembership;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\User;
+use App\Notifications\SubscriptionPaymentFailedNotification;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class AdminSubscriptionPaymentControllerTest extends TestCase
@@ -85,5 +88,26 @@ class AdminSubscriptionPaymentControllerTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $payment->id)
             ->assertJsonPath('data.0.amount_minor', 3500000);
+    }
+
+    public function test_failed_payment_immediately_alerts_restaurant_and_platform_admins(): void
+    {
+        Notification::fake();
+        $admin = User::factory()->platformAdmin()->create();
+        $owner = User::factory()->create();
+        $subscription = Subscription::factory()->create();
+        RestaurantMembership::factory()->owner()->for($subscription->restaurant)->for($owner)->create();
+
+        $this->actingAs($admin)->postJson("/api/v1/admin/subscriptions/{$subscription->id}/payments", [
+            'amount_minor' => 1500000,
+            'currency' => 'XOF',
+            'method' => 'mobile_money',
+            'idempotency_key' => 'subscription-payment-failed-alert',
+            'status' => 'failed',
+            'failure_reason' => 'Solde insuffisant',
+        ])->assertCreated();
+
+        Notification::assertSentTo([$owner, $admin], SubscriptionPaymentFailedNotification::class);
+        $this->assertNotNull(SubscriptionPayment::query()->firstOrFail()->failure_notified_at);
     }
 }

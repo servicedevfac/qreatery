@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\Restaurant;
 use App\Models\RestaurantMembership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class OrderControllerTest extends TestCase
@@ -15,6 +17,7 @@ class OrderControllerTest extends TestCase
 
     public function test_owner_can_list_show_and_transition_order_status(): void
     {
+        Event::fake([OrderStatusUpdated::class]);
         $owner = User::factory()->create();
         $restaurant = Restaurant::factory()->create();
         RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
@@ -42,6 +45,7 @@ class OrderControllerTest extends TestCase
             'to_status' => 'preparing',
             'user_id' => $owner->id,
         ]);
+        Event::assertDispatched(OrderStatusUpdated::class, 2);
     }
 
     public function test_invalid_status_transition_returns_422(): void

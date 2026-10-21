@@ -29,6 +29,7 @@ class UpdateRestaurantConfigurationRequest extends FormRequest
             'order_modes' => ['sometimes', 'array', 'min:1'],
             'order_modes.*' => ['required', 'distinct', 'in:dine_in,takeaway'],
             'estimated_preparation_minutes' => ['sometimes', 'integer', 'min:1', 'max:1440'],
+            'order_delay_minutes' => ['sometimes', 'integer', 'min:1', 'max:1440'],
             'cancellation_policy' => ['sometimes', 'nullable', 'string', 'max:2000'],
             'required_customer_fields' => ['sometimes', 'array'],
             'required_customer_fields.*' => ['required', 'distinct', 'in:name,phone'],

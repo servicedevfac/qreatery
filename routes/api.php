@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\V1\PublicOrderController;
 use App\Http\Controllers\Api\V1\PublicQrCodeController;
 use App\Http\Controllers\Api\V1\QrCodeController;
 use App\Http\Controllers\Api\V1\ReportController;
+use App\Http\Controllers\Api\V1\ReportExportController;
 use App\Http\Controllers\Api\V1\RestaurantClosureController;
 use App\Http\Controllers\Api\V1\RestaurantConfigurationController;
 use App\Http\Controllers\Api\V1\RestaurantController;
@@ -124,6 +125,10 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('v1')->name('api.v1.')->
         ->name('restaurants.payments.refunds.store');
     Route::get('restaurants/{restaurant}/reports/overview', ReportController::class)
         ->name('restaurants.reports.overview');
+    Route::get('restaurants/{restaurant}/reports/overview/export/pdf', [ReportExportController::class, 'pdf'])
+        ->name('restaurants.reports.overview.export.pdf');
+    Route::get('restaurants/{restaurant}/reports/overview/export/xlsx', [ReportExportController::class, 'xlsx'])
+        ->name('restaurants.reports.overview.export.xlsx');
     Route::get('restaurants/{restaurant}/audit-logs', AuditLogController::class)
         ->name('restaurants.audit-logs.index');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Events\OrderCreated;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\QrCode;
@@ -71,6 +72,7 @@ class CreateOrderAction
             $restaurant->users()->wherePivot('is_active', true)->get(),
             new NewOrderNotification($order),
         );
+        OrderCreated::dispatch($order);
 
         return $order;
     }

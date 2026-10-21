@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['subscription_id', 'recorded_by', 'amount_minor', 'currency', 'method', 'transaction_reference', 'idempotency_key', 'status', 'proof_path', 'failure_reason', 'metadata', 'paid_at'])]
+#[Fillable(['subscription_id', 'recorded_by', 'amount_minor', 'currency', 'method', 'transaction_reference', 'idempotency_key', 'status', 'proof_path', 'failure_reason', 'metadata', 'paid_at', 'failure_notified_at'])]
 class SubscriptionPayment extends Model
 {
     /** @use HasFactory<SubscriptionPaymentFactory> */
@@ -36,6 +36,7 @@ class SubscriptionPayment extends Model
             'status' => SubscriptionPaymentStatus::class,
             'metadata' => 'array',
             'paid_at' => 'datetime',
+            'failure_notified_at' => 'datetime',
         ];
     }
 }
