@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -11,6 +12,9 @@ use App\Models\RestaurantMembership;
 use App\Models\RestaurantTable;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
+use RuntimeException;
 use Tests\TestCase;
 
 class OperationalFeaturesTest extends TestCase
@@ -26,6 +30,20 @@ class OperationalFeaturesTest extends TestCase
             ->assertJsonPath('checks.database.status', 'ok')
             ->assertJsonPath('checks.cache.status', 'ok')
             ->assertJsonPath('checks.storage.status', 'ok');
+    }
+
+    public function test_healthcheck_hides_technical_errors_when_debug_is_disabled(): void
+    {
+        config(['app.debug' => false]);
+        Cache::shouldReceive('put')->once()->andThrow(new RuntimeException('secret-cache-host'));
+
+        $response = $this->getJson('/api/v1/health');
+
+        $response->assertStatus(503)
+            ->assertJsonPath('status', 'degraded')
+            ->assertJsonPath('checks.cache.status', 'error')
+            ->assertJsonPath('checks.cache.message', 'Service de cache indisponible.');
+        $this->assertStringNotContainsString('secret-cache-host', $response->getContent());
     }
 
     public function test_owner_can_download_qr_code_svg_and_pdf(): void
@@ -97,6 +115,7 @@ class OperationalFeaturesTest extends TestCase
 
     public function test_owner_can_view_table_active_orders_and_close_table(): void
     {
+        Event::fake([OrderStatusUpdated::class]);
         $owner = User::factory()->create();
         $restaurant = Restaurant::factory()->create();
         RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
@@ -126,6 +145,20 @@ class OperationalFeaturesTest extends TestCase
             'id' => $order->id,
             'preparation_status' => 'completed',
         ]);
+        $this->assertDatabaseHas('order_status_histories', [
+            'order_id' => $order->id,
+            'user_id' => $owner->id,
+            'from_status' => 'served',
+            'to_status' => 'completed',
+        ]);
+        $this->assertDatabaseHas('audit_logs', [
+            'restaurant_id' => $restaurant->id,
+            'action' => 'restaurant_table.closed',
+            'auditable_type' => RestaurantTable::class,
+            'auditable_id' => $table->id,
+        ]);
+        Event::assertDispatched(OrderStatusUpdated::class, fn (OrderStatusUpdated $event): bool => $event->order->id === $order->id
+            && $event->fromStatus === 'served');
     }
 
     public function test_cannot_close_table_with_unpaid_orders_unless_forced(): void

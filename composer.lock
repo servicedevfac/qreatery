@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69bba3a1aaf3890aea63a303a6ec3ade",
+    "content-hash": "1a1fc5e1417b6415eb04c8562911abca",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2850,23 +2850,23 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "4.0.0",
+            "version": "4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SpartnerNL/Laravel-Excel.git",
-                "reference": "367e92a78008291684b791b3712d46e6fca77343"
+                "reference": "aacc1f88e95932beb744766d21187a42b759ad20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/367e92a78008291684b791b3712d46e6fca77343",
-                "reference": "367e92a78008291684b791b3712d46e6fca77343",
+                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/aacc1f88e95932beb744766d21187a42b759ad20",
+                "reference": "aacc1f88e95932beb744766d21187a42b759ad20",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^3.4",
                 "illuminate/support": "^12.0 || ^13.0",
                 "php": "^8.3",
-                "phpoffice/phpspreadsheet": "^5.8",
+                "phpoffice/phpspreadsheet": "^5.9",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
@@ -2923,7 +2923,7 @@
             ],
             "support": {
                 "issues": "https://github.com/SpartnerNL/Laravel-Excel/issues",
-                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/4.0.0"
+                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/4.0.5"
             },
             "funding": [
                 {
@@ -2935,7 +2935,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-13T10:52:49+00:00"
+            "time": "2026-10-21T09:16:11+00:00"
         },
         {
             "name": "maennchen/zipstream-php",

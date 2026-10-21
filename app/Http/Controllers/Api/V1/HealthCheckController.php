@@ -44,10 +44,7 @@ class HealthCheckController extends Controller
                 'latency_ms' => round((microtime(true) - $start) * 1000, 2),
             ];
         } catch (Throwable $e) {
-            return [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
+            return $this->failure($e, 'Base de données indisponible.');
         }
     }
 
@@ -68,10 +65,7 @@ class HealthCheckController extends Controller
 
             return ['status' => 'ok'];
         } catch (Throwable $e) {
-            return [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
+            return $this->failure($e, 'Service de cache indisponible.');
         }
     }
 
@@ -87,10 +81,18 @@ class HealthCheckController extends Controller
 
             return ['status' => 'ok'];
         } catch (Throwable $e) {
-            return [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
+            return $this->failure($e, 'Stockage indisponible.');
         }
+    }
+
+    /** @return array{status: string, message: string} */
+    private function failure(Throwable $exception, string $publicMessage): array
+    {
+        report($exception);
+
+        return [
+            'status' => 'error',
+            'message' => config('app.debug') ? $exception->getMessage() : $publicMessage,
+        ];
     }
 }

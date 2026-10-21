@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\CloseRestaurantTableAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
-use App\Models\Order;
 use App\Models\Restaurant;
 use App\Models\RestaurantTable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class RestaurantTableSessionController extends Controller
@@ -21,11 +20,12 @@ class RestaurantTableSessionController extends Controller
         Gate::authorize('viewOrders', $restaurant);
 
         $activeOrders = $restaurantTable->orders()
-            ->whereNotIn('preparation_status', ['completed', 'cancelled', 'rejected'])
-            ->orWhere(function ($query) use ($restaurantTable): void {
-                $query->where('restaurant_table_id', $restaurantTable->id)
-                    ->where('payment_status', '!=', 'paid')
-                    ->whereNotIn('preparation_status', ['cancelled', 'rejected']);
+            ->where(function ($query): void {
+                $query->whereNotIn('preparation_status', ['completed', 'cancelled', 'rejected'])
+                    ->orWhere(function ($query): void {
+                        $query->where('payment_status', '!=', 'paid')
+                            ->whereNotIn('preparation_status', ['cancelled', 'rejected']);
+                    });
             })
             ->with(['items.options', 'payments', 'restaurantTable'])
             ->latest()
@@ -34,11 +34,16 @@ class RestaurantTableSessionController extends Controller
         return OrderResource::collection($activeOrders);
     }
 
-    public function close(Request $request, Restaurant $restaurant, RestaurantTable $restaurantTable): JsonResponse
-    {
+    public function close(
+        Request $request,
+        Restaurant $restaurant,
+        RestaurantTable $restaurantTable,
+        CloseRestaurantTableAction $closeTable,
+    ): JsonResponse {
         abort_unless($restaurantTable->restaurant_id === $restaurant->id, 404);
         Gate::authorize('manageOrders', $restaurant);
 
+        $request->validate(['force' => ['sometimes', 'boolean']]);
         $force = $request->boolean('force');
 
         $unpaidOrders = $restaurantTable->orders()
@@ -54,25 +59,7 @@ class RestaurantTableSessionController extends Controller
             ], 422);
         }
 
-        $closedCount = DB::transaction(function () use ($restaurantTable): int {
-            // Mark open active orders as completed
-            $affected = Order::where('restaurant_table_id', $restaurantTable->id)
-                ->whereIn('preparation_status', ['pending', 'accepted', 'preparing', 'ready', 'served'])
-                ->update([
-                    'preparation_status' => 'completed',
-                    'completed_at' => now(),
-                ]);
-
-            // Resolve any open assistance requests for this table
-            $restaurantTable->assistanceRequests()
-                ->whereIn('status', ['pending', 'in_progress'])
-                ->update([
-                    'status' => 'resolved',
-                    'resolved_at' => now(),
-                ]);
-
-            return $affected;
-        });
+        $closedCount = $closeTable->handle($restaurantTable, $request->user(), $force);
 
         return response()->json([
             'message' => 'Table '.$restaurantTable->label.' clôturée avec succès.',
