@@ -27,10 +27,11 @@ class QrCodePrintController extends Controller
 
         if ($format === 'svg') {
             $filename = 'qr-'.$restaurant->slug.'-'.($qrCode->restaurantTable?->label ?? 'menu').'.svg';
+            $disposition = $request->boolean('inline') ? 'inline' : 'attachment; filename="'.$filename.'"';
 
             return response($svgContent, 200, [
                 'Content-Type' => 'image/svg+xml',
-                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+                'Content-Disposition' => $disposition,
             ]);
         }
 

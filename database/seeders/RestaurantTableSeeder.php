@@ -2,15 +2,34 @@
 
 namespace Database\Seeders;
 
+use App\Models\Restaurant;
+use App\Models\RestaurantTable;
 use Illuminate\Database\Seeder;
 
 class RestaurantTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        if (! $demoRestaurant) {
+            return;
+        }
+
+        $tables = [
+            ['label' => 'Table 1', 'capacity' => 2, 'is_active' => true],
+            ['label' => 'Table 2', 'capacity' => 4, 'is_active' => true],
+            ['label' => 'Table 3', 'capacity' => 4, 'is_active' => true],
+            ['label' => 'Table 4', 'capacity' => 6, 'is_active' => true],
+            ['label' => 'Terrasse 1', 'capacity' => 4, 'is_active' => true],
+            ['label' => 'Terrasse 2', 'capacity' => 2, 'is_active' => true],
+            ['label' => 'Salon VIP', 'capacity' => 8, 'is_active' => true],
+        ];
+
+        foreach ($tables as $t) {
+            RestaurantTable::query()->updateOrCreate(
+                ['restaurant_id' => $demoRestaurant->id, 'label' => $t['label']],
+                $t
+            );
+        }
     }
 }

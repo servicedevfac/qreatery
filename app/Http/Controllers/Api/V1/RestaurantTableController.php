@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\GenerateQrCodeAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantTableRequest;
 use App\Http\Requests\UpdateRestaurantTableRequest;
@@ -28,11 +29,12 @@ class RestaurantTableController extends Controller
         );
     }
 
-    public function store(StoreRestaurantTableRequest $request, Restaurant $restaurant): JsonResponse
+    public function store(StoreRestaurantTableRequest $request, Restaurant $restaurant, GenerateQrCodeAction $generateQrCode): JsonResponse
     {
         $restaurantTable = $restaurant->restaurantTables()->create($request->validated());
+        $generateQrCode->handle($restaurant, 'table', $restaurantTable->id);
 
-        return (new RestaurantTableResource($restaurantTable))->response()->setStatusCode(201);
+        return (new RestaurantTableResource($restaurantTable->load('qrCodes')))->response()->setStatusCode(201);
     }
 
     public function show(Restaurant $restaurant, RestaurantTable $restaurantTable): RestaurantTableResource

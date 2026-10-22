@@ -37,6 +37,11 @@ class UpdateRestaurantConfigurationRequest extends FormRequest
             'service_fee_minor' => ['sometimes', 'integer', 'min:0'],
             'notification_channels' => ['sometimes', 'array'],
             'notification_channels.*' => ['required', 'distinct', 'in:in_app,email'],
+            'qr_options' => ['sometimes', 'array'],
+            'qr_options.allow_table_ordering' => ['sometimes', 'boolean'],
+            'qr_options.allow_waiter_call' => ['sometimes', 'boolean'],
+            'qr_options.qr_color' => ['sometimes', 'string', 'max:20'],
+            'qr_options.display_logo' => ['sometimes', 'boolean'],
         ];
     }
 }

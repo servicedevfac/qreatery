@@ -19,6 +19,13 @@ class StoreQrCodeRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('type') === 'dine_in') {
+            $this->merge(['type' => 'table']);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,7 +34,7 @@ class StoreQrCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', Rule::in(['table', 'takeaway'])],
+            'type' => ['required', Rule::in(['table', 'takeaway', 'dine_in'])],
             'restaurant_table_id' => [
                 'nullable',
                 'required_if:type,table',
