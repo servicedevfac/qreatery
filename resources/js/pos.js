@@ -507,7 +507,7 @@ import { createRealtimeClient } from './realtime.js';
 
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = `pos-category-pill ${state.activeCategory === String(cat.id) ? 'active bg-brand-orange text-white shadow-2xs' : 'bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-gray-700 dark:text-gray-300 hover:bg-gray-100'} shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all focus-ring`;
+            btn.className = `pos-category-pill ${state.activeCategory === String(cat.id) ? 'active bg-brand-orange text-white shadow-xs font-bold' : 'bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'} shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all focus-ring`;
             btn.setAttribute('data-category-id', cat.id);
             btn.innerHTML = `${escapeHtml(cat.name)} <span class="opacity-75 text-[10px]">(${count})</span>`;
             btn.addEventListener('click', () => {
@@ -569,29 +569,29 @@ import { createRealtimeClient } from './realtime.js';
         const hasOptions = (product.variants && product.variants.length > 0) || (product.option_groups && product.option_groups.length > 0);
         const isAvail = product.is_available;
 
-        card.className = `p-3 rounded-brand-lg bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border shadow-2xs flex flex-col justify-between transition-all select-none ${isAvail ? 'hover:border-brand-orange hover:shadow-xs active:scale-[0.98] cursor-pointer' : 'opacity-50 grayscale cursor-not-allowed'}`;
+        card.className = `p-3 rounded-brand-xl bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-800 shadow-2xs flex flex-col justify-between transition-all select-none ${isAvail ? 'hover:border-brand-orange hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer' : 'opacity-50 grayscale cursor-not-allowed'}`;
 
         const imageHtml = product.image_url
             ? `<img src="${product.image_url}" alt="${escapeHtml(product.name)}" class="w-full h-full object-cover">`
-            : `<div class="w-full h-full bg-brand-light dark:bg-brand-dark flex items-center justify-center font-bold text-lg text-brand-orange">
+            : `<div class="w-full h-full bg-gradient-to-br from-amber-500/10 to-orange-500/20 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center font-black text-xl text-brand-orange">
                 ${escapeHtml((product.name || 'P').charAt(0).toUpperCase())}
                </div>`;
 
         card.innerHTML = `
-            <div class="h-24 sm:h-28 rounded-brand overflow-hidden bg-gray-100 dark:bg-brand-dark mb-2 relative">
+            <div class="h-28 sm:h-32 rounded-brand-lg overflow-hidden bg-gray-100 dark:bg-[#0B0F19] mb-2.5 relative group">
                 ${imageHtml}
-                ${hasOptions ? '<span class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-brand-orange text-white text-[9px] font-black uppercase shadow-xs">Options</span>' : ''}
-                ${!isAvail ? '<span class="absolute inset-0 bg-black/70 text-white text-[10px] font-black flex items-center justify-center uppercase">Épuisé</span>' : ''}
+                ${hasOptions ? '<span class="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full bg-brand-orange text-white text-[10px] font-black uppercase tracking-wider shadow-xs">Options</span>' : ''}
+                ${!isAvail ? '<span class="absolute inset-0 bg-black/75 backdrop-blur-xs text-white text-xs font-black flex items-center justify-center uppercase tracking-wider">Épuisé</span>' : ''}
             </div>
             <div>
-                <h4 class="text-xs font-bold text-brand-text dark:text-white leading-tight line-clamp-2">
+                <h4 class="text-xs font-bold text-gray-900 dark:text-white leading-snug line-clamp-2">
                     ${escapeHtml(product.name)}
                 </h4>
-                <div class="flex items-center justify-between gap-1 pt-2 mt-1 border-t border-gray-100 dark:border-brand-dark-border/60">
-                    <span class="text-xs font-black text-brand-orange font-mono">
+                <div class="flex items-center justify-between gap-1 pt-2.5 mt-1 border-t border-gray-100 dark:border-gray-800/80">
+                    <span class="text-sm font-black text-brand-orange font-mono">
                         ${formatMoney(product.price_minor)}
                     </span>
-                    <span class="w-6 h-6 rounded bg-brand-orange/10 dark:bg-brand-orange/20 text-brand-orange flex items-center justify-center font-bold text-xs">
+                    <span class="w-8 h-8 rounded-full bg-brand-orange/15 hover:bg-brand-orange hover:text-white text-brand-orange font-black text-sm flex items-center justify-center transition-colors shadow-2xs">
                         +
                     </span>
                 </div>
@@ -912,39 +912,39 @@ import { createRealtimeClient } from './realtime.js';
 
         state.ticket.forEach(item => {
             const itemEl = document.createElement('div');
-            itemEl.className = 'py-2 flex flex-col gap-1.5 text-xs';
+            itemEl.className = 'py-2.5 flex flex-col gap-1.5 text-xs';
 
             const optsText = (item.options || []).map(o => escapeHtml(o.name)).join(', ');
 
             itemEl.innerHTML = `
                 <div class="flex items-start justify-between gap-2">
                     <div class="flex-1 min-w-0">
-                        <span class="font-bold text-brand-text dark:text-white leading-tight block">
+                        <span class="font-bold text-gray-900 dark:text-white text-[13px] leading-tight block">
                             ${escapeHtml(item.productName)}
                         </span>
-                        ${item.variantName ? `<span class="text-[11px] text-brand-orange block">${escapeHtml(item.variantName)}</span>` : ''}
-                        ${optsText ? `<span class="text-[10px] text-gray-500 block leading-tight">+ ${optsText}</span>` : ''}
-                        ${item.instructions ? `<span class="text-[10px] text-amber-500 italic block mt-0.5">Note: ${escapeHtml(item.instructions)}</span>` : ''}
+                        ${item.variantName ? `<span class="text-[11px] font-semibold text-brand-orange block mt-0.5">• ${escapeHtml(item.variantName)}</span>` : ''}
+                        ${optsText ? `<span class="text-[11px] text-gray-500 dark:text-gray-400 block leading-tight mt-0.5">+ ${optsText}</span>` : ''}
+                        ${item.instructions ? `<div class="text-[11px] text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800/60 font-medium italic mt-1">Note: ${escapeHtml(item.instructions)}</div>` : ''}
                     </div>
-                    <span class="font-black text-brand-text dark:text-white font-mono shrink-0">
+                    <span class="font-black text-gray-900 dark:text-white font-mono shrink-0 text-xs">
                         ${formatMoney(item.lineTotalMinor)}
                     </span>
                 </div>
 
-                <div class="flex items-center justify-between pt-1">
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" class="btn-pos-line-minus w-6 h-6 rounded bg-gray-100 dark:bg-brand-dark border border-gray-300 dark:border-brand-dark-border text-brand-text dark:text-white font-bold flex items-center justify-center hover:bg-gray-200">
+                <div class="flex items-center justify-between pt-1.5">
+                    <div class="flex items-center gap-1">
+                        <button type="button" class="btn-pos-line-minus w-8 h-8 rounded-brand bg-gray-100 hover:bg-gray-200 dark:bg-[#111827] dark:hover:bg-gray-800 active:scale-90 border border-gray-300 dark:border-gray-700 text-brand-text dark:text-white font-black text-sm flex items-center justify-center transition-all shadow-2xs touch-target" aria-label="Diminuer la quantité">
                             -
                         </button>
-                        <span class="w-6 text-center font-bold text-brand-text dark:text-white font-mono">
+                        <span class="w-8 text-center font-black text-brand-text dark:text-white font-mono text-sm">
                             ${item.quantity}
                         </span>
-                        <button type="button" class="btn-pos-line-plus w-6 h-6 rounded bg-gray-100 dark:bg-brand-dark border border-gray-300 dark:border-brand-dark-border text-brand-text dark:text-white font-bold flex items-center justify-center hover:bg-gray-200">
+                        <button type="button" class="btn-pos-line-plus w-8 h-8 rounded-brand bg-gray-100 hover:bg-gray-200 dark:bg-[#111827] dark:hover:bg-gray-800 active:scale-90 border border-gray-300 dark:border-gray-700 text-brand-text dark:text-white font-black text-sm flex items-center justify-center transition-all shadow-2xs touch-target" aria-label="Augmenter la quantité">
                             +
                         </button>
                     </div>
 
-                    <button type="button" class="btn-pos-line-remove text-[11px] text-rose-500 hover:text-rose-600 font-semibold">
+                    <button type="button" class="btn-pos-line-remove text-[11px] text-rose-500 hover:text-rose-600 font-bold px-2 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors">
                         Supprimer
                     </button>
                 </div>

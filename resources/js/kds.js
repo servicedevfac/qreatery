@@ -416,30 +416,33 @@ import { createRealtimeClient } from './realtime.js';
         const delayInfo = getDelaySeverity(elapsed);
 
         const card = document.createElement('article');
-        card.className = `p-3.5 rounded-brand-lg bg-brand-dark border ${delayInfo.cardBorder} flex flex-col justify-between gap-3 transition-all hover:border-brand-orange/60 shadow-xs relative`;
+        card.className = `p-3.5 rounded-brand-xl bg-[#0F172A] border ${delayInfo.cardBorder} flex flex-col justify-between gap-3 transition-all hover:border-brand-orange/70 shadow-md hover:shadow-lg relative overflow-hidden`;
         card.setAttribute('data-order-id', order.id);
 
         const isTakeaway = order.mode === 'takeaway';
         const modeBadge = isTakeaway
-            ? '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-purple-950/60 text-purple-300 border border-purple-800">🛍️ À emporter</span>'
-            : `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-950/60 text-blue-300 border border-blue-800">🍽️ Table ${escapeHtml(order.table?.label || order.table?.id || '--')}</span>`;
+            ? '<span class="px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase tracking-wider bg-purple-950/80 text-purple-200 border border-purple-700/80 shadow-xs">🛍️ À emporter</span>'
+            : `<span class="px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase tracking-wider bg-sky-950/80 text-sky-200 border border-sky-700/80 shadow-xs">🍽️ Table ${escapeHtml(order.table?.label || order.table?.id || '--')}</span>`;
+
+        const createdDate = order.created_at ? new Date(order.created_at) : null;
+        const timeReceived = createdDate ? createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
         // Articles
         const itemsHtml = (order.items || []).map(item => {
             const options = (item.options || []).map(o => escapeHtml(o.option_name || o.name)).join(', ');
             return `
-                <li class="py-1 border-b border-gray-800/80 last:border-0 text-xs">
+                <li class="py-1.5 border-b border-gray-800/80 last:border-0 text-xs">
                     <div class="flex items-start justify-between gap-2">
-                        <span class="font-bold text-white leading-tight">
-                            <span class="inline-block px-1.5 py-0.5 rounded bg-brand-dark-card border border-brand-dark-border text-brand-orange font-black text-[11px] mr-1">
+                        <span class="font-bold text-gray-100 text-[13px] leading-snug">
+                            <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-brand-orange/20 border border-brand-orange/40 text-brand-orange font-black text-xs min-w-[28px] mr-1.5 shadow-2xs font-mono">
                                 ${item.quantity}x
                             </span>
                             ${escapeHtml(item.product_name)}
                         </span>
                     </div>
-                    ${item.variant_name ? `<span class="text-[10px] font-semibold text-brand-orange block pl-6">${escapeHtml(item.variant_name)}</span>` : ''}
-                    ${options ? `<span class="text-[10px] text-gray-400 block pl-6 leading-tight">+ ${options}</span>` : ''}
-                    ${item.instructions ? `<span class="text-[10px] text-amber-400 italic block pl-6 mt-0.5">Note: ${escapeHtml(item.instructions)}</span>` : ''}
+                    ${item.variant_name ? `<span class="text-[11px] font-semibold text-brand-orange/90 block pl-8 mt-0.5">• ${escapeHtml(item.variant_name)}</span>` : ''}
+                    ${options ? `<span class="text-[11px] text-gray-400 block pl-8 leading-tight mt-0.5">+ ${options}</span>` : ''}
+                    ${item.instructions ? `<div class="bg-amber-950/60 border-l-2 border-amber-400 pl-2.5 py-1 text-[11px] text-amber-200 font-semibold italic rounded-r ml-8 mt-1">⚠️ Note: ${escapeHtml(item.instructions)}</div>` : ''}
                 </li>
             `;
         }).join('');
@@ -449,18 +452,19 @@ import { createRealtimeClient } from './realtime.js';
 
         card.innerHTML = `
             <!-- En-tête ticket -->
-            <div class="flex items-center justify-between gap-2 border-b border-gray-800 pb-2">
+            <div class="flex items-center justify-between gap-2 border-b border-gray-800/80 pb-2.5">
                 <div class="flex items-center gap-2">
-                    <h3 class="text-sm font-black text-white font-mono tracking-tight">
+                    <h3 class="text-base font-black text-white font-mono tracking-tight">
                         #${escapeHtml(order.number || order.id)}
                     </h3>
                     ${modeBadge}
                 </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${delayInfo.badgeClass}">
+                <div class="flex items-center gap-2">
+                    ${timeReceived ? `<span class="text-[11px] text-gray-400 font-mono hidden sm:inline">${timeReceived}</span>` : ''}
+                    <span class="px-2.5 py-0.5 rounded-md text-xs font-black font-mono border ${delayInfo.badgeClass} shadow-xs">
                         ${delayInfo.label}
                     </span>
-                    <button type="button" class="btn-order-detail p-1 text-gray-400 hover:text-white" title="Voir le détail complet" aria-label="Détail commande #${order.id}">
+                    <button type="button" class="btn-order-detail p-1 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors" title="Voir le détail complet" aria-label="Détail commande #${order.id}">
                         ℹ️
                     </button>
                 </div>
@@ -468,18 +472,18 @@ import { createRealtimeClient } from './realtime.js';
 
             <!-- Notes de commande globale -->
             ${order.notes ? `
-                <div class="px-2.5 py-1.5 rounded bg-amber-950/40 border border-amber-900/60 text-[11px] text-amber-200 italic leading-snug">
-                    💬 ${escapeHtml(order.notes)}
+                <div class="px-3 py-2 rounded-brand bg-amber-950/50 border border-amber-800/80 text-xs text-amber-200 font-medium italic leading-snug shadow-inner">
+                    <span class="font-bold not-italic text-amber-400 mr-1">💬 Note :</span> ${escapeHtml(order.notes)}
                 </div>
             ` : ''}
 
             <!-- Liste des articles commandés -->
-            <ul class="space-y-0.5 max-h-48 overflow-y-auto pr-1">
+            <ul class="space-y-0.5 max-h-52 overflow-y-auto pr-1">
                 ${itemsHtml}
             </ul>
 
             <!-- Barre d'actions tactiles KDS -->
-            <div class="pt-2 border-t border-gray-800/80 flex items-center gap-2">
+            <div class="pt-2.5 border-t border-gray-800/80 flex items-center gap-2">
                 ${actionsHtml}
             </div>
         `;
@@ -513,14 +517,14 @@ import { createRealtimeClient } from './realtime.js';
             return `
                 <button
                     type="button"
-                    class="flex-1 touch-target py-2 px-3 rounded-brand bg-brand-orange hover:bg-brand-orange-dark text-white font-black text-xs uppercase tracking-wider transition-all shadow-xs focus-ring"
+                    class="flex-1 touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-brand-orange hover:bg-brand-orange-dark active:scale-95 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md focus-ring"
                     data-transition-status="accepted"
                 >
-                    Accepter
+                    ⚡ Accepter
                 </button>
                 <button
                     type="button"
-                    class="touch-target py-2 px-3 rounded-brand bg-gray-800 hover:bg-rose-950 border border-gray-700 hover:border-rose-800 text-gray-300 hover:text-rose-300 font-bold text-xs transition-all focus-ring"
+                    class="touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-[#111827] hover:bg-rose-950 active:scale-95 border border-gray-700 hover:border-rose-800 text-gray-300 hover:text-rose-300 font-bold text-xs transition-all focus-ring"
                     data-transition-status="rejected"
                     title="Refuser la commande avec motif"
                 >
@@ -533,14 +537,14 @@ import { createRealtimeClient } from './realtime.js';
             return `
                 <button
                     type="button"
-                    class="flex-1 touch-target py-2 px-3 rounded-brand bg-amber-600 hover:bg-amber-700 text-white font-black text-xs uppercase tracking-wider transition-all shadow-xs focus-ring"
+                    class="flex-1 touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md focus-ring"
                     data-transition-status="preparing"
                 >
-                    Démarrer Prépa
+                    🔥 Démarrer Prépa
                 </button>
                 <button
                     type="button"
-                    class="touch-target py-2 px-2.5 rounded-brand bg-gray-800 hover:bg-rose-950 text-gray-400 hover:text-rose-300 text-xs transition-all"
+                    class="touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-[#111827] hover:bg-rose-950 active:scale-95 text-gray-400 hover:text-rose-300 text-xs font-bold transition-all border border-gray-800"
                     data-transition-status="cancelled"
                     title="Annuler avec motif"
                 >
@@ -553,14 +557,14 @@ import { createRealtimeClient } from './realtime.js';
             return `
                 <button
                     type="button"
-                    class="flex-1 touch-target py-2 px-3 rounded-brand bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider transition-all shadow-xs focus-ring"
+                    class="flex-1 touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md focus-ring"
                     data-transition-status="ready"
                 >
                     ✓ Prête au passe
                 </button>
                 <button
                     type="button"
-                    class="touch-target py-2 px-2.5 rounded-brand bg-gray-800 hover:bg-rose-950 text-gray-400 hover:text-rose-300 text-xs transition-all"
+                    class="touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-[#111827] hover:bg-rose-950 active:scale-95 text-gray-400 hover:text-rose-300 text-xs font-bold transition-all border border-gray-800"
                     data-transition-status="cancelled"
                     title="Annuler avec motif"
                 >
@@ -573,14 +577,14 @@ import { createRealtimeClient } from './realtime.js';
             return `
                 <button
                     type="button"
-                    class="flex-1 touch-target py-2 px-3 rounded-brand bg-brand-dark-card hover:bg-gray-800 border border-emerald-500/50 text-emerald-300 font-black text-xs uppercase tracking-wider transition-all shadow-xs focus-ring"
+                    class="flex-1 touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-[#111827] hover:bg-emerald-950 active:scale-95 border-2 border-emerald-500 text-emerald-300 font-black text-xs uppercase tracking-wider transition-all shadow-md focus-ring"
                     data-transition-status="served"
                 >
-                    Remise / Servie
+                    🤝 Remise / Servie
                 </button>
                 <button
                     type="button"
-                    class="touch-target py-2 px-3 rounded-brand bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs transition-all"
+                    class="touch-target min-h-[44px] py-2.5 px-3 rounded-brand bg-gray-800 hover:bg-gray-700 active:scale-95 text-gray-300 font-bold text-xs transition-all"
                     data-transition-status="completed"
                     title="Clôturer la commande"
                 >
@@ -1065,9 +1069,10 @@ import { createRealtimeClient } from './realtime.js';
 
     function renderEmptyColumnState(message) {
         return `
-            <div class="h-48 flex flex-col items-center justify-center text-center p-4 text-gray-500 border border-dashed border-gray-800 rounded-brand">
-                <span class="text-2xl mb-1 select-none">🍳</span>
-                <p class="text-xs font-semibold">${escapeHtml(message)}</p>
+            <div class="h-44 flex flex-col items-center justify-center text-center p-6 text-gray-500 border border-dashed border-gray-800/80 rounded-brand-xl bg-gray-950/20">
+                <span class="text-3xl mb-2 select-none opacity-40">🍳</span>
+                <p class="text-xs font-bold text-gray-400">${escapeHtml(message)}</p>
+                <p class="text-[11px] text-gray-600 mt-0.5">En attente de commandes...</p>
             </div>
         `;
     }

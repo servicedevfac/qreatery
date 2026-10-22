@@ -25,23 +25,23 @@
             <label class="text-xs font-bold text-brand-text dark:text-gray-300 uppercase tracking-wider block">
                 Moyen de paiement <span class="text-rose-500">*</span>
             </label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <label class="pos-method-card flex flex-col items-center justify-center p-3 rounded-brand border-2 border-brand-orange bg-brand-orange/10 cursor-pointer transition-all">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border-2 border-brand-orange bg-brand-orange/10 cursor-pointer transition-all active:scale-95 shadow-xs">
                     <input type="radio" name="pos_payment_method" value="cash" checked class="sr-only">
                     <span class="text-2xl mb-1 select-none">💵</span>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Espèces</span>
                 </label>
-                <label class="pos-method-card flex flex-col items-center justify-center p-3 rounded-brand border border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card cursor-pointer transition-all hover:border-brand-orange">
+                <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="card" class="sr-only">
                     <span class="text-2xl mb-1 select-none">💳</span>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Carte Bancaire</span>
                 </label>
-                <label class="pos-method-card flex flex-col items-center justify-center p-3 rounded-brand border border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card cursor-pointer transition-all hover:border-brand-orange">
+                <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="mobile_money" class="sr-only">
                     <span class="text-2xl mb-1 select-none">📱</span>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Mobile Money</span>
                 </label>
-                <label class="pos-method-card flex flex-col items-center justify-center p-3 rounded-brand border border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card cursor-pointer transition-all hover:border-brand-orange">
+                <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="other" class="sr-only">
                     <span class="text-2xl mb-1 select-none">⚙️</span>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Autre</span>
@@ -50,7 +50,7 @@
         </div>
 
         <!-- Section spécifique : ESPÈCES (Calcul de la monnaie) -->
-        <div id="pos-cash-calculator-section" class="p-3 rounded-brand bg-gray-50 dark:bg-brand-dark border border-gray-200 dark:border-brand-dark-border space-y-3">
+        <div id="pos-cash-calculator-section" class="p-3.5 rounded-brand-lg bg-gray-50 dark:bg-[#111827] border border-gray-200 dark:border-gray-800 space-y-3.5 shadow-xs">
             <div class="grid grid-cols-2 gap-3">
                 <div class="space-y-1">
                     <label for="pos-cash-tendered-input" class="text-xs font-bold text-gray-700 dark:text-gray-300">
@@ -63,7 +63,7 @@
                             min="0"
                             step="any"
                             placeholder="0"
-                            class="w-full px-3 py-2 bg-white dark:bg-brand-dark-card border border-gray-300 dark:border-brand-dark-border rounded-brand text-brand-text dark:text-white font-mono font-bold text-base focus-ring"
+                            class="w-full px-3 py-2 bg-white dark:bg-[#0B0F19] border border-gray-300 dark:border-gray-700 rounded-brand text-brand-text dark:text-white font-mono font-black text-base focus-ring shadow-inner"
                         >
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                     <span class="text-xs font-bold text-gray-700 dark:text-gray-300 block">
                         Monnaie à rendre :
                     </span>
-                    <div class="px-3 py-2 rounded-brand bg-white dark:bg-brand-dark-card border border-gray-300 dark:border-brand-dark-border flex items-center justify-between">
+                    <div class="px-3 py-2 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-300 dark:border-gray-700 flex items-center justify-between shadow-inner">
                         <span id="pos-cash-change-display" class="font-mono font-black text-base text-emerald-600 dark:text-emerald-400">
                             0 FCFA
                         </span>
@@ -81,25 +81,25 @@
             </div>
 
             <!-- Raccourcis de coupures usuelles en FCFA -->
-            <div class="space-y-1">
-                <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider block">Coupures rapides :</span>
+            <div class="space-y-1.5">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Coupures rapides :</span>
                 <div class="flex items-center gap-1.5 flex-wrap">
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-exact="true">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-exact="true">
                         Compte exact
                     </button>
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-val="500">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-val="500">
                         500
                     </button>
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-val="1000">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-val="1000">
                         1 000
                     </button>
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-val="2000">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-val="2000">
                         2 000
                     </button>
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-val="5000">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-val="5000">
                         5 000
                     </button>
-                    <button type="button" class="btn-pos-bill px-2.5 py-1 rounded bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-xs font-bold text-brand-text dark:text-white hover:border-brand-orange" data-bill-val="10000">
+                    <button type="button" class="btn-pos-bill px-3 py-1.5 rounded-brand bg-white dark:bg-[#0B0F19] border border-gray-200 dark:border-gray-700 text-xs font-bold font-mono text-brand-text dark:text-white hover:border-brand-orange hover:text-brand-orange active:scale-95 transition-all shadow-2xs" data-bill-val="10000">
                         10 000
                     </button>
                 </div>

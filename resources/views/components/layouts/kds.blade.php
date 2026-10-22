@@ -14,56 +14,62 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="h-full bg-brand-dark text-gray-100 font-sans antialiased flex flex-col overflow-hidden select-none selection:bg-brand-orange selection:text-white">
-    <!-- Barre KDS supérieure haute visibilité -->
-    <header class="bg-brand-dark-card border-b border-brand-dark-border px-4 py-3 flex items-center justify-between shrink-0">
+<body class="h-full bg-[#080C14] text-gray-100 font-sans antialiased flex flex-col overflow-hidden select-none selection:bg-brand-orange selection:text-white">
+    <!-- Barre KDS supérieure haute visibilité avec effet glassmorphism -->
+    <header class="bg-[#0B0F19]/95 backdrop-blur-md border-b border-gray-800/80 px-4 py-3 flex items-center justify-between shrink-0 shadow-lg z-20">
         <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-brand-orange animate-ping"></span>
-                <span class="w-3 h-3 rounded-full bg-brand-orange -ml-5"></span>
-                <h1 class="text-lg font-black tracking-wide text-white flex items-center gap-2">
-                    <span>KDS CUISINE</span>
-                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-dark border border-brand-dark-border text-brand-orange">
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-orange shadow-xs"></span>
+                </span>
+                <h1 class="text-lg font-black tracking-wider text-white flex items-center gap-2.5">
+                    <span class="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">KDS CUISINE</span>
+                    <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#111827] border border-gray-700/80 text-brand-orange tracking-normal shadow-2xs">
                         {{ $restaurantName ?? config('app.name', 'Restaurant') }}
                     </span>
                 </h1>
             </div>
 
             <!-- Indicateur de flux temps réel / polling REC-13 -->
-            <div id="kds-connection-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-xs font-semibold">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <div id="kds-connection-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-700/60 text-emerald-400 text-xs font-semibold shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
                 <span id="kds-connection-label">Temps réel actif</span>
             </div>
         </div>
 
-        <!-- Centre : Compteurs d'état -->
+        <!-- Centre : Compteurs d'état & Légende sévérité -->
         @if(isset($headerMetrics))
             <div class="flex items-center gap-3">
                 {{ $headerMetrics }}
             </div>
         @else
-            <div class="flex items-center gap-3 text-xs">
-                <div class="flex items-center gap-1.5 bg-brand-dark px-3 py-1.5 rounded-brand border border-brand-dark-border">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                    <span class="text-gray-400">&lt; 15 min</span>
+            <div class="hidden lg:flex items-center gap-2.5 text-xs">
+                <div class="flex items-center gap-1.5 bg-[#111827] px-3 py-1 rounded-full border border-gray-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="text-gray-400 font-medium">&lt; 15 min</span>
                 </div>
-                <div class="flex items-center gap-1.5 bg-brand-dark px-3 py-1.5 rounded-brand border border-brand-dark-border">
-                    <span class="w-2.5 h-2.5 rounded-full bg-brand-orange"></span>
-                    <span class="text-gray-400">15 - 30 min</span>
+                <div class="flex items-center gap-1.5 bg-[#111827] px-3 py-1 rounded-full border border-gray-800">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span class="text-gray-400 font-medium">15 - 30 min</span>
                 </div>
-                <div class="flex items-center gap-1.5 bg-brand-dark px-3 py-1.5 rounded-brand border border-brand-dark-border">
-                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                <div class="flex items-center gap-1.5 bg-[#111827] px-3 py-1 rounded-full border border-gray-800">
+                    <span class="w-2 h-2 rounded-full bg-brand-orange"></span>
+                    <span class="text-gray-400 font-medium">30 - 45 min</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-rose-950/50 px-3 py-1 rounded-full border border-rose-800/60">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                     <span class="text-rose-400 font-bold">&gt; 45 min (Retard)</span>
                 </div>
             </div>
         @endif
 
-        <!-- Droite : Son et Horloge KDS -->
+        <!-- Droite : Son et Horloge KDS haute visibilité -->
         <div class="flex items-center gap-3">
             <button
                 type="button"
                 id="kds-audio-toggle"
-                class="touch-target px-3 py-1.5 bg-brand-dark hover:bg-gray-800 border border-brand-dark-border rounded-brand text-xs font-medium text-gray-300 flex items-center gap-2 transition-colors focus-ring"
+                class="touch-target px-3.5 py-1.5 bg-[#111827] hover:bg-gray-800 border border-gray-700/80 rounded-brand text-xs font-semibold text-gray-200 flex items-center gap-2 transition-all active:scale-95 focus-ring shadow-xs"
                 aria-label="Activer ou désactiver les alertes sonores"
             >
                 <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -72,14 +78,14 @@
                 <span id="kds-audio-label">Son activé</span>
             </button>
 
-            <div id="kds-live-clock" class="text-sm font-mono font-bold text-white bg-brand-dark px-3 py-1.5 rounded-brand border border-brand-dark-border">
+            <div id="kds-live-clock" class="text-sm font-mono font-bold text-amber-400 bg-[#111827] px-3.5 py-1.5 rounded-brand border border-gray-700/80 shadow-xs tracking-wider">
                 {{ now()->format('H:i:s') }}
             </div>
         </div>
     </header>
 
     <!-- Vue principale KDS (Grille fluide pour colonnes Kanban) -->
-    <main class="flex-1 overflow-x-auto overflow-y-hidden p-4 bg-brand-dark">
+    <main class="flex-1 overflow-x-auto overflow-y-hidden p-3.5 sm:p-4 bg-[#080C14]">
         {{ $slot }}
     </main>
 
