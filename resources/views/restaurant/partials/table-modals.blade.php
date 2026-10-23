@@ -3,11 +3,11 @@
     <div class="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-brand-lg max-w-md w-full shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-brand-dark-border">
             <h3 class="text-base font-bold text-brand-text dark:text-white flex items-center gap-2">
-                <span>➕</span>
+                <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 <span>Ajouter une nouvelle table</span>
             </h3>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-create-table">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-create-table">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -54,8 +54,9 @@
                 </label>
             </div>
 
-            <p class="text-[11px] text-gray-400">
-                💡 Un QR Code sécurisé unique sera automatiquement généré pour cette table.
+            <p class="text-[11px] text-gray-400 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-amber-500 inline shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Un QR Code sécurisé unique sera automatiquement généré pour cette table.</span>
             </p>
 
             <div class="pt-4 border-t border-gray-200 dark:border-brand-dark-border flex items-center justify-end gap-2">
@@ -84,13 +85,13 @@
         <div class="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-brand-dark-border">
             <div>
                 <h3 class="text-base font-bold text-brand-text dark:text-white flex items-center gap-2">
-                    <span>⚙️</span>
+                    <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <span>Configuration des QR Codes de Table</span>
                 </h3>
                 <p class="text-[11px] text-gray-500 mt-0.5">Personnalisez le comportement et l'apparence des QR codes pour vos clients</p>
             </div>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-qr-config">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-qr-config">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -192,9 +193,10 @@
                     <button
                         type="button"
                         id="btn-regenerate-all-qr"
-                        class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded transition-colors shrink-0 shadow-xs"
+                        class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
                     >
-                        🔄 Régénérer tout
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        <span>Régénérer tout</span>
                     </button>
                 </div>
             </div>
@@ -229,8 +231,8 @@
                     Table #...
                 </h3>
             </div>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-table-qr-detail">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-table-qr-detail">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -260,10 +262,11 @@
                     <button
                         type="button"
                         id="btn-copy-qr-url"
-                        class="px-2.5 py-2 bg-white dark:bg-brand-dark-card hover:bg-gray-100 dark:hover:bg-brand-dark border border-gray-200 dark:border-brand-dark-border text-gray-700 dark:text-gray-200 rounded-brand font-bold text-xs shrink-0 transition-colors"
+                        class="px-2.5 py-2 bg-white dark:bg-brand-dark-card hover:bg-gray-100 dark:hover:bg-brand-dark border border-gray-200 dark:border-brand-dark-border text-gray-700 dark:text-gray-200 rounded-brand font-bold text-xs shrink-0 transition-colors flex items-center gap-1"
                         title="Copier le lien"
                     >
-                        📋 Copier
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <span>Copier</span>
                     </button>
                 </div>
             </div>
@@ -282,7 +285,7 @@
                     href="#"
                     class="px-3 py-2 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white rounded-brand text-xs font-bold text-center transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                 >
-                    <span>📥</span>
+                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     <span>Télécharger SVG</span>
                 </a>
                 <a
@@ -291,7 +294,7 @@
                     target="_blank"
                     class="px-3 py-2 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white rounded-brand text-xs font-bold text-center transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                 >
-                    <span>📄</span>
+                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     <span>Chevalet A5 (PDF)</span>
                 </a>
             </div>
@@ -303,7 +306,7 @@
                     class="text-xs text-amber-600 hover:text-amber-700 dark:text-amber-400 font-bold flex items-center gap-1 hover:underline"
                     title="Invalide l'ancien QR code et en génère un nouveau"
                 >
-                    <span>🔄</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     <span>Régénérer ce jeton QR</span>
                 </button>
 

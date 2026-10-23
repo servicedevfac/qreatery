@@ -396,7 +396,9 @@ import { createRealtimeClient } from './realtime.js';
         if (totalRenderedProducts === 0) {
             container.innerHTML = `
                 <div class="text-center py-12 px-4 bg-white dark:bg-brand-dark-card rounded-brand-lg border border-gray-200 dark:border-brand-dark-border">
-                    <span class="text-3xl block mb-2">🍽️</span>
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
                     <h3 class="text-sm font-bold text-brand-text dark:text-white">Aucun plat correspondant</h3>
                     <p class="text-xs text-gray-500 mt-1">Essayez un autre mot-clé ou sélectionnez une autre catégorie.</p>
                 </div>
@@ -875,11 +877,11 @@ import { createRealtimeClient } from './realtime.js';
             btnTakeaway?.classList.add('text-gray-600', 'dark:text-gray-400');
             if (noteEl) {
                 if (state.table) {
-                    noteEl.innerHTML = `🍽️ Commande servie directement à votre <strong>Table ${escapeHtml(state.table.label || state.table.id)}</strong>.`;
+                    noteEl.innerHTML = `Commande servie directement à votre <strong>Table ${escapeHtml(state.table.label || state.table.id)}</strong>.`;
                 } else if (state.qrToken) {
-                    noteEl.innerHTML = '🍽️ Commande servie sur place.';
+                    noteEl.innerHTML = 'Commande servie sur place.';
                 } else {
-                    noteEl.innerHTML = `<span class="text-amber-600 dark:text-amber-400 font-medium">⚠️ Aucun QR code de table scanné. Pour commander à table, scannez le QR code de votre table, ou choisissez <strong>« À emporter »</strong> ci-dessus.</span>`;
+                    noteEl.innerHTML = `<span class="text-amber-600 dark:text-amber-400 font-medium">Aucun QR code de table scanné. Pour commander à table, scannez le QR code de votre table, ou choisissez <strong>« À emporter »</strong> ci-dessus.</span>`;
                 }
             }
         } else {
@@ -888,7 +890,7 @@ import { createRealtimeClient } from './realtime.js';
             btnDineIn?.classList.remove('bg-brand-orange', 'text-white', 'shadow-xs');
             btnDineIn?.classList.add('text-gray-600', 'dark:text-gray-400');
             if (noteEl) {
-                noteEl.innerHTML = '🛍️ Commande préparée pour être emportée au comptoir.';
+                noteEl.innerHTML = 'Commande préparée pour être emportée au comptoir.';
             }
         }
 
@@ -915,9 +917,9 @@ import { createRealtimeClient } from './realtime.js';
             if (errorBox) {
                 errorBox.innerHTML = `
                     <div class="space-y-1">
-                        <p class="font-bold">⚠️ QR Code de table requis pour la commande sur place</p>
+                        <p class="font-bold">QR Code de table requis pour la commande sur place</p>
                         <p class="text-[11px]">Pour que la cuisine sache à quelle table livrer, vous devez scanner le QR Code de votre table.</p>
-                        <p class="text-[11px]">👉 Pour commander en direct sans être à table, sélectionnez le mode <strong>« 🛍️ À emporter »</strong> ci-dessus puis cliquez à nouveau sur <strong>« Valider ma commande »</strong>.</p>
+                        <p class="text-[11px]">Pour commander en direct sans être à table, sélectionnez le mode <strong>« À emporter »</strong> ci-dessus puis cliquez à nouveau sur <strong>« Valider ma commande »</strong>.</p>
                     </div>
                 `;
                 errorBox.classList.remove('hidden');
@@ -1059,7 +1061,7 @@ import { createRealtimeClient } from './realtime.js';
 
         // Métadonnées commande
         document.getElementById('track-order-number').textContent = `#${order.number || order.id}`;
-        document.getElementById('track-order-mode').textContent = order.mode === 'dine_in' ? '🍽️ Sur place' : '🛍️ À emporter';
+        document.getElementById('track-order-mode').textContent = order.mode === 'dine_in' ? 'Sur place' : 'À emporter';
         document.getElementById('track-order-table').textContent = order.table ? `Table ${order.table.label || order.table.id}` : 'Sans table';
         document.getElementById('track-order-time').textContent = order.created_at ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         document.getElementById('track-order-total').textContent = formatMoney(order.total_minor, order.currency);
@@ -1131,7 +1133,7 @@ import { createRealtimeClient } from './realtime.js';
                 stepEl.classList.remove('opacity-40');
                 if (iconEl) {
                     iconEl.className = 'w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shrink-0 z-10 shadow-sm';
-                    iconEl.innerHTML = '✓';
+                    iconEl.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
                 }
             } else if (idx === currentIdx) {
                 // Étape en cours
@@ -1208,11 +1210,11 @@ import { createRealtimeClient } from './realtime.js';
         updateStepper(data.to_status);
 
         if (data.to_status === 'ready') {
-            window.showToast('🎉 Votre commande est prête au comptoir !', 'success', 8000);
+            window.showToast('Votre commande est prête au comptoir !', 'success', 8000);
         } else if (data.to_status === 'accepted') {
-            window.showToast('👨‍🍳 Votre commande a été acceptée par la cuisine !', 'info', 4000);
+            window.showToast('Votre commande a été acceptée par la cuisine !', 'info', 4000);
         } else if (data.to_status === 'rejected' || data.to_status === 'cancelled') {
-            window.showToast('⚠️ Votre commande n\'a pas pu être préparée.', 'error', 8000);
+            window.showToast('Votre commande n\'a pas pu être préparée.', 'error', 8000);
         }
     }
 

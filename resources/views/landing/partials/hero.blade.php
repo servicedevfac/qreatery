@@ -98,7 +98,10 @@
                             <div class="bg-[#0B0F19] border border-brand-orange/40 rounded-brand p-3 space-y-2">
                                 <div class="flex items-center justify-between text-xs">
                                     <span class="font-bold text-brand-orange">Table 4</span>
-                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold">⏱️ 08 min</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        08 min
+                                    </span>
                                 </div>
                                 <div class="space-y-1 text-xs text-gray-200">
                                     <p class="font-medium">• 1x Poulet braisé d'Abidjan</p>
@@ -115,7 +118,10 @@
                             <div class="bg-[#0B0F19] border border-gray-800 rounded-brand p-3 space-y-2">
                                 <div class="flex items-center justify-between text-xs">
                                     <span class="font-bold text-white">À emporter</span>
-                                    <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">⏱️ 03 min</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        03 min
+                                    </span>
                                 </div>
                                 <div class="space-y-1 text-xs text-gray-200">
                                     <p class="font-medium">• 1x Garba Royal Thon</p>
@@ -158,8 +164,10 @@
 
                     <!-- Badge Flottant : Encaissement Caisse POS -->
                     <div class="absolute -top-5 -left-4 hidden sm:flex items-center gap-2.5 bg-[#111827] border border-gray-700 px-3.5 py-2.5 rounded-brand-lg shadow-xl">
-                        <div class="w-8 h-8 rounded-brand bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
-                            💳
+                        <div class="w-8 h-8 rounded-brand bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
                         </div>
                         <div>
                             <div class="text-[10px] font-semibold text-gray-400">Caisse POS multi-moyens</div>

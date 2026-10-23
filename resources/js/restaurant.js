@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var toast = document.createElement('div');
         toast.className = 'fixed bottom-5 right-5 z-50 px-4 py-3 rounded-brand shadow-xl text-xs font-bold transition-all transform duration-300 flex items-center gap-2 ' +
             (type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white');
-        toast.innerHTML = (type === 'success' ? '✅ ' : '⚠️ ') + message;
+        toast.textContent = message;
         document.body.appendChild(toast);
 
         setTimeout(function () {
@@ -897,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (modalOrderNumber) modalOrderNumber.textContent = 'Commande #' + order.number;
                 if (modalOrderDate) {
-                    modalOrderDate.textContent = (order.mode === 'dine_in' ? '🍽️ Sur place (Table ' + (order.table?.label || 'N/A') + ')' : '🛍️ À emporter') +
+                    modalOrderDate.textContent = (order.mode === 'dine_in' ? 'Sur place (Table ' + (order.table?.label || 'N/A') + ')' : 'À emporter') +
                         ' • ' + (order.customer_name || 'Client sans nom');
                 }
 
@@ -920,17 +920,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 var prepStatus = order.preparation_status;
 
                 if (prepStatus === 'pending') {
-                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="accepted">✅ Accepter la commande</button>';
-                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="cancelled">❌ Refuser la commande</button>';
+                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="accepted">Accepter la commande</button>';
+                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="cancelled">Refuser la commande</button>';
                 } else if (prepStatus === 'accepted') {
-                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="preparing">🍳 Passer en préparation (Cuisine)</button>';
+                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="preparing">Passer en préparation (Cuisine)</button>';
                 } else if (prepStatus === 'preparing') {
-                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="ready">🔔 Marquer comme prête</button>';
+                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="ready">Marquer comme prête</button>';
                 } else if (prepStatus === 'ready') {
-                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-gray-800 hover:bg-black text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="served">🍽️ Marquer comme servie</button>';
+                    statusActionsHtml += '<button type="button" class="btn-change-order-status px-3 py-1.5 bg-gray-800 hover:bg-black text-white font-bold rounded-brand text-xs shadow-xs" data-id="' + order.id + '" data-status="served">Marquer comme servie</button>';
                 }
 
-                statusActionsHtml += '<a href="/api/v1/restaurants/' + restaurantId + '/orders/' + order.id + '/kitchen-ticket" target="_blank" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-gray-200 font-bold rounded-brand text-xs border border-gray-200 dark:border-brand-dark-border transition-colors">🖨️ Ticket Cuisine</a>';
+                statusActionsHtml += '<a href="/api/v1/restaurants/' + restaurantId + '/orders/' + order.id + '/kitchen-ticket" target="_blank" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-brand-dark text-gray-700 dark:text-gray-200 font-bold rounded-brand text-xs border border-gray-200 dark:border-brand-dark-border transition-colors">Ticket Cuisine</a>';
                 statusActionsHtml += '</div>';
 
                 modalOrderContent.innerHTML =
@@ -1494,7 +1494,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast('Erreur lors de la régénération.', 'error');
             } finally {
                 btnRegenAll.disabled = false;
-                btnRegenAll.textContent = '🔄 Régénérer tout';
+                btnRegenAll.textContent = 'Régénérer tout';
             }
         });
     }
@@ -1609,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast('Erreur réseau.', 'error');
             } finally {
                 btnRegenSingle.disabled = false;
-                btnRegenSingle.textContent = '🔄 Régénérer ce jeton QR';
+                btnRegenSingle.textContent = 'Régénérer ce jeton QR';
             }
         });
     }

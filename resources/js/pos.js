@@ -230,11 +230,114 @@ import { createRealtimeClient } from './realtime.js';
             });
         });
 
+        // Fonction robuste d'impression thermique du reçu (Format 80mm)
+        function printThermalReceipt() {
+            const receiptEl = document.getElementById('pos-printable-receipt');
+            if (!receiptEl) {
+                window.print();
+                return;
+            }
+
+            let printIframe = document.getElementById('pos-print-iframe');
+            if (printIframe) {
+                printIframe.remove();
+            }
+
+            printIframe = document.createElement('iframe');
+            printIframe.id = 'pos-print-iframe';
+            printIframe.style.position = 'fixed';
+            printIframe.style.right = '0';
+            printIframe.style.bottom = '0';
+            printIframe.style.width = '0';
+            printIframe.style.height = '0';
+            printIframe.style.border = '0';
+            printIframe.style.visibility = 'hidden';
+            document.body.appendChild(printIframe);
+
+            try {
+                const doc = printIframe.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <!DOCTYPE html>
+                    <html lang="fr">
+                    <head>
+                        <meta charset="utf-8">
+                        <title>Ticket de Caisse</title>
+                        <style>
+                            @page {
+                                size: 80mm auto;
+                                margin: 0;
+                            }
+                            body {
+                                margin: 0;
+                                padding: 4mm;
+                                width: 72mm;
+                                font-family: 'Courier New', Courier, monospace;
+                                font-size: 11px;
+                                line-height: 1.35;
+                                color: #000;
+                                background: #fff;
+                            }
+                            * { box-sizing: border-box; }
+                            .text-center { text-align: center; }
+                            .font-bold { font-weight: bold; }
+                            .font-black { font-weight: 900; }
+                            .uppercase { text-transform: uppercase; }
+                            .tracking-wider { letter-spacing: 0.05em; }
+                            .italic { font-style: italic; }
+                            .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                            .text-sm { font-size: 13px; }
+                            .text-xs { font-size: 11px; }
+                            .text-\\[11px\\] { font-size: 11px; }
+                            .text-\\[10px\\] { font-size: 10px; }
+                            .flex { display: flex; }
+                            .items-center { align-items: center; }
+                            .items-start { align-items: flex-start; }
+                            .justify-between { justify-content: space-between; }
+                            .space-y-0\\.5 > * + * { margin-top: 2px; }
+                            .space-y-1 > * + * { margin-top: 3px; }
+                            .space-y-3 > * + * { margin-top: 10px; }
+                            .border-b { border-bottom: 1px solid #444; }
+                            .border-t { border-top: 1px solid #444; }
+                            .border-dashed { border-style: dashed; }
+                            .py-0\\.5 { padding-top: 2px; padding-bottom: 2px; }
+                            .py-1 { padding-top: 3px; padding-bottom: 3px; }
+                            .pb-1 { padding-bottom: 3px; }
+                            .pb-2 { padding-bottom: 6px; }
+                            .pt-1 { padding-top: 3px; }
+                            .pt-2 { padding-top: 6px; }
+                            .hidden { display: none !important; }
+                            .shrink-0 { flex-shrink: 0; }
+                        </style>
+                    </head>
+                    <body>
+                        ${receiptEl.innerHTML}
+                    </body>
+                    </html>
+                `);
+                doc.close();
+
+                setTimeout(function () {
+                    try {
+                        printIframe.contentWindow.focus();
+                        printIframe.contentWindow.print();
+                    } catch (e) {
+                        window.print();
+                    }
+                }, 150);
+            } catch (err) {
+                window.print();
+            }
+        }
+
+        window.printThermalReceipt = printThermalReceipt;
+
         // Bouton d'impression du reçu
         const printReceiptBtn = document.getElementById('btn-pos-print-receipt');
         if (printReceiptBtn) {
-            printReceiptBtn.addEventListener('click', function () {
-                window.print();
+            printReceiptBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                printThermalReceipt();
             });
         }
 
@@ -463,7 +566,7 @@ import { createRealtimeClient } from './realtime.js';
 
         if (state.tables.length === 0) {
             if (warning && state.serviceMode === 'dine_in') {
-                warning.textContent = '⚠️ Aucun QR Code de table actif configuré pour cet établissement. Les commandes sur place exigent un QR Code de table actif. Veuillez utiliser le mode À emporter ou configurer les tables.';
+                warning.textContent = 'Aucun QR Code de table actif configuré pour cet établissement. Les commandes sur place exigent un QR Code de table actif. Veuillez utiliser le mode À emporter ou configurer les tables.';
                 warning.classList.remove('hidden');
             }
             return;
@@ -1003,7 +1106,7 @@ import { createRealtimeClient } from './realtime.js';
 
             if (state.tables.length === 0) {
                 if (tableWarning) {
-                    tableWarning.textContent = '⚠️ Aucun QR Code de table actif configuré pour cet établissement. Les commandes sur place exigent un QR Code de table actif. Veuillez utiliser le mode À emporter ou configurer les QR Codes de table.';
+                    tableWarning.textContent = 'Aucun QR Code de table actif configuré pour cet établissement. Les commandes sur place exigent un QR Code de table actif. Veuillez utiliser le mode À emporter ou configurer les QR Codes de table.';
                     tableWarning.classList.remove('hidden');
                 }
             } else {
@@ -1355,8 +1458,8 @@ import { createRealtimeClient } from './realtime.js';
         document.getElementById('pos-receipt-order-num').textContent = `#${order.number || order.id}`;
         const tableLabel = order.table?.label || state.selectedTableLabel || '';
         document.getElementById('pos-receipt-mode').textContent = order.mode === 'takeaway'
-            ? '🛍️ À emporter'
-            : `🍽️ Sur place${tableLabel ? ` (Table ${escapeHtml(tableLabel)})` : ''}`;
+            ? 'À emporter'
+            : `Sur place${tableLabel ? ` (Table ${escapeHtml(tableLabel)})` : ''}`;
 
         // Articles
         const itemsList = document.getElementById('pos-receipt-items-list');
@@ -1465,7 +1568,7 @@ import { createRealtimeClient } from './realtime.js';
                 </td>
                 <td class="p-3 text-gray-500">${createdTime}</td>
                 <td class="p-3">
-                    ${order.mode === 'takeaway' ? '🛍️ À emporter' : '🍽️ Sur place'}
+                    ${order.mode === 'takeaway' ? 'À emporter' : 'Sur place'}
                 </td>
                 <td class="p-3 font-mono font-bold text-brand-text dark:text-white">
                     ${formatMoney(order.total_minor, order.currency)}
@@ -1591,7 +1694,7 @@ import { createRealtimeClient } from './realtime.js';
         const tableText = data.restaurant_table_id ? `Table #${data.restaurant_table_id}` : 'Salle';
         const typeText = data.type === 'waiter' ? 'Serveur demandé' : 'Assistance requise';
 
-        window.showToast(`🔔 Appel : ${tableText} — ${typeText}`, 'warning', 8000);
+        window.showToast(`Appel : ${tableText} — ${typeText}`, 'warning', 8000);
     }
 
     // CA-02 : Mise à jour du statut des commandes dans l'historique POS

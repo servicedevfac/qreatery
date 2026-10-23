@@ -28,22 +28,22 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border-2 border-brand-orange bg-brand-orange/10 cursor-pointer transition-all active:scale-95 shadow-xs">
                     <input type="radio" name="pos_payment_method" value="cash" checked class="sr-only">
-                    <span class="text-2xl mb-1 select-none">💵</span>
+                    <svg class="w-6 h-6 mb-1 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Espèces</span>
                 </label>
                 <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="card" class="sr-only">
-                    <span class="text-2xl mb-1 select-none">💳</span>
+                    <svg class="w-6 h-6 mb-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Carte Bancaire</span>
                 </label>
                 <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="mobile_money" class="sr-only">
-                    <span class="text-2xl mb-1 select-none">📱</span>
+                    <svg class="w-6 h-6 mb-1 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Mobile Money</span>
                 </label>
                 <label class="pos-method-card flex flex-col items-center justify-center p-3.5 rounded-brand-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111827] cursor-pointer transition-all hover:border-brand-orange active:scale-95 shadow-2xs">
                     <input type="radio" name="pos_payment_method" value="other" class="sr-only">
-                    <span class="text-2xl mb-1 select-none">⚙️</span>
+                    <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <span class="text-xs font-bold text-brand-text dark:text-white">Autre</span>
                 </label>
             </div>

@@ -27,7 +27,7 @@
                 id="btn-pos-mode-takeaway"
                 class="pos-mode-btn active py-2 rounded-sm bg-brand-orange text-white shadow-xs transition-all flex items-center justify-center gap-1.5 font-bold"
             >
-                <span>🛍️</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 <span>À emporter</span>
             </button>
             <button
@@ -35,7 +35,7 @@
                 id="btn-pos-mode-dine-in"
                 class="pos-mode-btn py-2 rounded-sm text-gray-600 dark:text-gray-400 hover:text-brand-text dark:hover:text-white transition-all flex items-center justify-center gap-1.5 font-medium"
             >
-                <span>🍽️</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                 <span>Sur place</span>
             </button>
         </div>
@@ -61,7 +61,7 @@
     <div id="pos-ticket-items" class="flex-1 overflow-y-auto py-2 space-y-2 pr-1 divide-y divide-gray-100 dark:divide-gray-800/50">
         <!-- État vide -->
         <div id="pos-ticket-empty" class="h-full flex flex-col items-center justify-center text-center p-6 text-gray-400">
-            <span class="text-4xl block mb-2 opacity-40 select-none">🧾</span>
+            <svg class="w-10 h-10 mb-2 opacity-40 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <p class="text-xs font-bold text-gray-600 dark:text-gray-300">Ticket vierge</p>
             <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">Touchez un produit dans le catalogue pour l'ajouter à la vente.</p>
         </div>
@@ -107,7 +107,7 @@
                 disabled
                 class="w-full touch-target min-h-[44px] py-2.5 px-3 rounded-brand-lg bg-gray-100 hover:bg-gray-200 dark:bg-[#111827] dark:hover:bg-gray-800 active:scale-[0.99] border border-gray-200 dark:border-gray-800 disabled:opacity-40 disabled:pointer-events-none text-gray-700 dark:text-gray-300 font-bold text-xs transition-colors flex items-center justify-center gap-2 focus-ring"
             >
-                <span>🍳</span>
+                <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
                 <span>Envoyer en cuisine uniquement</span>
             </button>
         </div>

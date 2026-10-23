@@ -74,14 +74,14 @@
                         id="btn-mode-dine-in"
                         class="py-2.5 px-3 rounded-brand text-center transition-all bg-brand-orange text-white shadow-xs"
                     >
-                        🍽️ Sur place
+                        Sur place
                     </button>
                     <button
                         type="button"
                         id="btn-mode-takeaway"
                         class="py-2.5 px-3 rounded-brand text-center transition-all text-gray-600 dark:text-gray-400 hover:text-brand-text"
                     >
-                        🛍️ À emporter
+                        À emporter
                     </button>
                 </div>
                 <p id="cart-mode-note" class="text-[11px] text-gray-500 mt-1.5">
@@ -111,7 +111,9 @@
 
                 <!-- État panier vide -->
                 <div id="cart-empty-state" class="hidden text-center py-8">
-                    <span class="text-4xl block mb-2">🛒</span>
+                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    </div>
                     <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Votre panier est vide</p>
                     <p class="text-xs text-gray-500 mt-1">Parcourez le menu pour ajouter des plats savoureux.</p>
                 </div>

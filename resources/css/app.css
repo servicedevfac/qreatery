@@ -106,15 +106,24 @@
         z-index: 999999 !important;
     }
 
-    /* Masquer explicitement les boutons, modales, en-têtes et panneaux */
+    /* Masquer explicitement les boutons, en-têtes et panneaux */
     header,
-    main,
     aside,
     nav,
     [data-modal-backdrop],
     .touch-target,
     button {
         display: none !important;
+    }
+
+    /* Préserver l'arborescence du conteneur sans masquer le reçu */
+    main {
+        display: block !important;
+        position: static !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
     }
 
     /* Marges à zéro et dimensions adaptées au rouleau thermique continu */

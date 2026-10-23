@@ -16,11 +16,11 @@
         <!-- Boutons d'export direct PDF / Excel -->
         <div class="flex items-center gap-2">
             <a href="/api/v1/restaurants/{{ $restaurant->id }}/reports/overview/export/pdf" target="_blank" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-brand transition-colors shadow-sm flex items-center gap-1.5">
-                <span>📄</span>
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 <span>Télécharger PDF</span>
             </a>
             <a href="/api/v1/restaurants/{{ $restaurant->id }}/reports/overview/export/xlsx" target="_blank" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-brand transition-colors shadow-sm flex items-center gap-1.5">
-                <span>📊</span>
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 <span>Exporter Excel</span>
             </a>
         </div>
@@ -146,7 +146,7 @@
                     <div>
                         <div class="flex items-center justify-between text-xs font-semibold mb-1">
                             <span class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
-                                <span>🍽️</span>
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                                 <span>Sur place (Tables)</span>
                             </span>
                             <span class="text-brand-orange font-bold">{{ $dineInCount }} ({{ $dineInPct }}%)</span>
@@ -160,7 +160,7 @@
                     <div>
                         <div class="flex items-center justify-between text-xs font-semibold mb-1">
                             <span class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
-                                <span>🛍️</span>
+                                <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                                 <span>À emporter (Takeaway)</span>
                             </span>
                             <span class="text-blue-600 font-bold">{{ $takeawayCount }} ({{ $takeawayPct }}%)</span>
@@ -173,8 +173,9 @@
             </div>
 
             <!-- Note d'immuabilité -->
-            <div class="mt-6 pt-4 border-t border-gray-100 dark:border-brand-dark-border text-[11px] text-gray-400">
-                🔒 Conformément à REC-04, les rapports utilisent les instantanés (snapshots) figés au moment de chaque commande.
+            <div class="mt-6 pt-4 border-t border-gray-100 dark:border-brand-dark-border text-[11px] text-gray-400 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span>Conformément à REC-04, les rapports utilisent les instantanés (snapshots) figés au moment de chaque commande.</span>
             </div>
         </div>
     </div>

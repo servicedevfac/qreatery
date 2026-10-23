@@ -18,7 +18,7 @@
         <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="p-2.5 rounded bg-brand-dark border border-brand-dark-border space-y-1">
                 <span class="text-gray-400 font-semibold block uppercase text-[10px]">Service & Emplacement</span>
-                <p id="kds-detail-mode" class="text-white font-bold">🍽️ Sur place</p>
+                <p id="kds-detail-mode" class="text-white font-bold">Sur place</p>
                 <p id="kds-detail-table" class="text-brand-orange font-bold">Table --</p>
             </div>
             <div class="p-2.5 rounded bg-brand-dark border border-brand-dark-border space-y-1">

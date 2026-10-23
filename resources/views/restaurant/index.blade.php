@@ -71,7 +71,7 @@
     @if(!auth()->check())
         <div class="mb-5 bg-gradient-to-r from-amber-500/10 via-brand-orange/10 to-transparent border border-amber-500/30 rounded-brand-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-2.5">
-                <span class="text-base">🔒</span>
+                <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 <div>
                     <span class="font-bold text-brand-text dark:text-white">Session invité (Consultation) :</span>
                     <span class="text-gray-600 dark:text-gray-400 ml-1">Connectez-vous pour ajouter des plats, créer des tables ou modifier la configuration.</span>
@@ -79,7 +79,7 @@
             </div>
             <a href="/login" class="px-3.5 py-1.5 bg-brand-orange hover:bg-brand-orange-dark text-white font-bold rounded-brand transition-colors shrink-0 shadow-xs flex items-center gap-1.5">
                 <span>Se connecter</span>
-                <span>➔</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
         </div>
     @endif

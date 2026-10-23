@@ -27,7 +27,7 @@
                     aria-controls="panel-client"
                     class="px-4 py-2.5 rounded-brand text-xs sm:text-sm font-bold bg-brand-orange text-white shadow-sm transition-all whitespace-nowrap flex items-center gap-2"
                 >
-                    <span>📱</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     <span>Menu Client Mobile</span>
                 </button>
 
@@ -40,7 +40,7 @@
                     aria-controls="panel-kds"
                     class="px-4 py-2.5 rounded-brand text-xs sm:text-sm font-medium text-gray-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2"
                 >
-                    <span>👨‍🍳</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
                     <span>Écran Cuisine KDS</span>
                 </button>
 
@@ -53,7 +53,7 @@
                     aria-controls="panel-pos"
                     class="px-4 py-2.5 rounded-brand text-xs sm:text-sm font-medium text-gray-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2"
                 >
-                    <span>💳</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     <span>Caisse Tactile POS</span>
                 </button>
 
@@ -66,7 +66,7 @@
                     aria-controls="panel-admin"
                     class="px-4 py-2.5 rounded-brand text-xs sm:text-sm font-medium text-gray-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2"
                 >
-                    <span>📊</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     <span>Gestion Restaurant</span>
                 </button>
 
@@ -93,16 +93,16 @@
                         </p>
                         <ul class="space-y-2 text-xs text-gray-400">
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Pas d'application à télécharger ni de formulaire obligatoire
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Pas d'application à télécharger ni de formulaire obligatoire</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Panier dynamique avec calcul précis des montants en FCFA
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Panier dynamique avec calcul précis des montants en FCFA</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Suivi en direct du statut de préparation du plat
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Suivi en direct du statut de préparation du plat</span>
                             </li>
                         </ul>
                         <div class="pt-2">
@@ -144,8 +144,10 @@
 
                             <!-- Carte produit 1 -->
                             <div class="bg-[#111827] border border-gray-800 rounded-brand p-3 flex gap-3 items-center">
-                                <div class="w-16 h-16 rounded-brand bg-brand-orange/20 border border-brand-orange/30 flex items-center justify-center text-2xl shrink-0">
-                                    🍗
+                                <div class="w-16 h-16 rounded-brand bg-brand-orange/20 border border-brand-orange/30 flex items-center justify-center text-brand-orange shrink-0">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="text-xs font-bold text-white truncate">Poulet Braisé & Alloco</div>
@@ -157,8 +159,10 @@
 
                             <!-- Carte produit 2 -->
                             <div class="bg-[#111827] border border-gray-800 rounded-brand p-3 flex gap-3 items-center">
-                                <div class="w-16 h-16 rounded-brand bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-2xl shrink-0">
-                                    🍹
+                                <div class="w-16 h-16 rounded-brand bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="text-xs font-bold text-white truncate">Jus de Bissap Maison</div>
@@ -230,7 +234,8 @@
                         <!-- En-tête KDS -->
                         <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
                             <div class="flex items-center gap-2 text-xs font-bold text-white">
-                                <span>👨‍🍳 File Cuisine active</span>
+                                <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+                                <span>File Cuisine active</span>
                                 <span class="px-2 py-0.5 rounded-full bg-brand-orange text-white text-[10px] font-mono">3 commandes</span>
                             </div>
                             <div class="flex items-center gap-2 text-[11px] text-gray-400">
@@ -246,14 +251,18 @@
                             <div class="bg-[#111827] border-2 border-emerald-500/60 rounded-brand p-3 space-y-2">
                                 <div class="flex items-center justify-between text-xs font-bold">
                                     <span class="text-white">Table 05</span>
-                                    <span class="text-emerald-400 font-mono text-[11px] bg-emerald-950 px-2 py-0.5 rounded">⏱️ 06 min</span>
+                                    <span class="text-emerald-400 font-mono text-[11px] bg-emerald-950 px-2 py-0.5 rounded flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        06 min
+                                    </span>
                                 </div>
                                 <div class="text-xs space-y-1 text-gray-200">
                                     <p class="font-semibold">• 1x Garba Royal (Thon braisé)</p>
                                     <p class="font-semibold">• 1x Alloco grande portion</p>
                                 </div>
-                                <button type="button" class="w-full text-center py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">
-                                    Marquer comme prête ✓
+                                <button type="button" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold flex items-center justify-center gap-1.5">
+                                    <span>Marquer comme prête</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                                 </button>
                             </div>
 
@@ -261,7 +270,10 @@
                             <div class="bg-[#111827] border-2 border-amber-500/60 rounded-brand p-3 space-y-2">
                                 <div class="flex items-center justify-between text-xs font-bold">
                                     <span class="text-white">Table 02</span>
-                                    <span class="text-amber-400 font-mono text-[11px] bg-amber-950 px-2 py-0.5 rounded">⏱️ 22 min</span>
+                                    <span class="text-amber-400 font-mono text-[11px] bg-amber-950 px-2 py-0.5 rounded flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        22 min
+                                    </span>
                                 </div>
                                 <div class="text-xs space-y-1 text-gray-200">
                                     <p class="font-semibold">• 2x Capitaine braisé aux aromates</p>
@@ -294,16 +306,16 @@
                         </p>
                         <ul class="space-y-2 text-xs text-gray-400">
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Calcul instantané de la monnaie à rendre pour les espèces
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Calcul instantané de la monnaie à rendre pour les espèces</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Division de note par parts égales ou au choix des convives
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Division de note par parts égales ou au choix des convives</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Impression thermique directe 80mm
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Impression thermique directe 80mm</span>
                             </li>
                         </ul>
                         <div class="pt-2">
@@ -321,7 +333,8 @@
                     <div class="lg:col-span-7 bg-[#0B0F19] border border-gray-800 rounded-brand-xl p-4 sm:p-5 shadow-inner space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                             <div class="text-xs font-bold text-white flex items-center gap-2">
-                                <span>🛒 Vente en cours</span>
+                                <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                <span>Vente en cours</span>
                                 <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">Table 04</span>
                             </div>
                             <span class="text-xs font-mono font-bold text-brand-orange">Ticket #1042</span>
@@ -353,17 +366,21 @@
                             <div class="bg-[#111827] rounded-brand p-3 space-y-2 border border-gray-800">
                                 <div class="text-gray-400 font-semibold border-b border-gray-800 pb-1">Moyen de règlement</div>
                                 <div class="grid grid-cols-2 gap-1.5 pt-1">
-                                    <button type="button" class="p-2 rounded bg-brand-orange text-white text-[11px] font-bold text-center">
-                                        💵 Espèces
+                                    <button type="button" class="p-2 rounded bg-brand-orange text-white text-[11px] font-bold text-center flex items-center justify-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        <span>Espèces</span>
                                     </button>
-                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center">
-                                        📱 Wave / Orange
+                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center flex items-center justify-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                        <span>Mobile</span>
                                     </button>
-                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center">
-                                        💳 Carte
+                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center flex items-center justify-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                        <span>Carte</span>
                                     </button>
-                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center">
-                                        ✂️ Diviser
+                                    <button type="button" class="p-2 rounded bg-gray-800 text-gray-200 hover:text-white text-[11px] font-medium text-center flex items-center justify-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                        <span>Diviser</span>
                                     </button>
                                 </div>
                                 <div class="pt-1 text-[10px] text-gray-400 text-center">
@@ -393,16 +410,16 @@
                         </p>
                         <ul class="space-y-2 text-xs text-gray-400">
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Tableau de bord des ventes quotidiennes et historique complet
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Tableau de bord des ventes quotidiennes et historique complet</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Gestion du plan de table et génération des planches de QR Codes PDF
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Gestion du plan de table et génération des planches de QR Codes PDF</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-400 font-bold">✓</span>
-                                Rapports périodiques téléchargeables en PDF et Excel
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <span>Rapports périodiques téléchargeables en PDF et Excel</span>
                             </li>
                         </ul>
                         <div class="pt-2">
@@ -419,7 +436,10 @@
                     <!-- Maquette visuelle du tableau de bord gérant -->
                     <div class="lg:col-span-7 bg-[#0B0F19] border border-gray-800 rounded-brand-xl p-4 sm:p-5 shadow-inner space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-                            <div class="text-xs font-bold text-white">📈 Tableau de Bord du Jour</div>
+                            <div class="text-xs font-bold text-white flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                <span>Tableau de Bord du Jour</span>
+                            </div>
                             <span class="text-[11px] text-gray-400">Qreatery Restaurant</span>
                         </div>
 

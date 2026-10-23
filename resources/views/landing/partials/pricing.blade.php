@@ -145,7 +145,10 @@
 
         <!-- Note de réassurance sous les tarifs -->
         <div class="mt-12 text-center text-xs text-gray-400 max-w-xl mx-auto space-y-1">
-            <p>💡 Tous les tarifs sont indiqués en Francs CFA (XOF) hors taxes applicables.</p>
+            <p class="flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Tous les tarifs sont indiqués en Francs CFA (XOF) hors taxes applicables.</span>
+            </p>
             <p>Aucun frais d'installation masqué. Assistance et formation au démarrage incluses.</p>
         </div>
 

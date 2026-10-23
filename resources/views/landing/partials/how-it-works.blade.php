@@ -37,7 +37,7 @@
                     </p>
                 </div>
                 <div class="pt-4 border-t border-gray-800/80 text-xs text-gray-300 font-medium flex items-center gap-2">
-                    <span class="text-brand-orange">✓</span>
+                    <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     <span>Planche de QR Codes générée au format PDF</span>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     </p>
                 </div>
                 <div class="pt-4 border-t border-gray-800/80 text-xs text-gray-300 font-medium flex items-center gap-2">
-                    <span class="text-brand-orange">✓</span>
+                    <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     <span>Transmission instantanée sans cri ni papier</span>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     </p>
                 </div>
                 <div class="pt-4 border-t border-gray-800/80 text-xs text-gray-300 font-medium flex items-center gap-2">
-                    <span class="text-brand-orange">✓</span>
+                    <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     <span>Rapports financiers téléchargeables en PDF/Excel</span>
                 </div>
             </div>
