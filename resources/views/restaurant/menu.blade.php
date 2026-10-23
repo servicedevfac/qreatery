@@ -96,8 +96,9 @@
                                 </span>
                             @endforeach
                             @if($prod->preparation_minutes)
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-medium">
-                                    ⏱️ {{ $prod->preparation_minutes }} min
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-medium inline-flex items-center gap-1">
+                                    <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>{{ $prod->preparation_minutes }} min</span>
                                 </span>
                             @endif
                         </div>
