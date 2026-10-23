@@ -26,7 +26,7 @@
     @endif
 @elseif(request('view') === 'restaurant' || request('view') === 'restaurant-admin' || request('view') === 'resto')
     @include('restaurant.index')
-@else
+@elseif(request('view') === 'client' || request()->has('restaurant') || request()->has('qr') || request()->has('tracking') || request()->has('table'))
 <x-layouts.client>
     <!-- Slot d'en-tête mobile -->
     <x-slot name="header">
@@ -100,4 +100,6 @@
     @vite(['resources/js/client.js'])
     @endpush
 </x-layouts.client>
+@else
+    @include('landing.index')
 @endif

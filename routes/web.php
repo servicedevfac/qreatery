@@ -10,9 +10,11 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 Route::prefix('api/v1/auth')->name('api.v1.auth.')->group(function (): void {
     Route::middleware('guest')->group(function (): void {
@@ -62,7 +64,16 @@ Route::get('/', function (Request $request) {
         }
     }
 
-    return view('welcome');
+    $plans = [];
+    try {
+        if (Schema::hasTable('plans')) {
+            $plans = Plan::query()->where('is_active', true)->orderBy('price_minor')->get();
+        }
+    } catch (Throwable) {
+        $plans = [];
+    }
+
+    return view('welcome', compact('plans'));
 });
 
 Route::get('/login', function (Request $request) {

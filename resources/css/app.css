@@ -55,7 +55,6 @@
 
 @utility focus-ring {
     outline: none;
-    box-shadow: 0 0 0 2px var(--brand-light), 0 0 0 4px var(--brand-orange);
 }
 
 /* Animations et transitions fluides */
