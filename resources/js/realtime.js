@@ -9,8 +9,10 @@ export function createRealtimeClient(options = {}) {
     const metaPort = document.querySelector('meta[name="reverb-port"]')?.getAttribute('content');
     const metaScheme = document.querySelector('meta[name="reverb-scheme"]')?.getAttribute('content');
 
-    const appKey = options.appKey || metaKey || 'qreatery-local-key';
-    const host = options.host || metaHost || window.location.hostname || '127.0.0.1';
+    let host = options.host || metaHost;
+    if (!host || host === '127.0.0.1' || host === 'localhost') {
+        host = window.location.hostname || '127.0.0.1';
+    }
     const port = options.port || metaPort || '8080';
     const scheme = options.scheme || metaScheme || (window.location.protocol === 'https:' ? 'https' : 'http');
     const wsProtocol = (scheme === 'https' || window.location.protocol === 'https:') ? 'wss:' : 'ws:';

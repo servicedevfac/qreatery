@@ -25,7 +25,7 @@ class StorePublicOrderRequest extends FormRequest
     {
         return [
             'mode' => ['required', Rule::in(['dine_in', 'takeaway'])],
-            'qr_token' => ['nullable', 'string', 'size:64'],
+            'qr_token' => ['nullable', 'string', 'max:64'],
             'customer_name' => ['nullable', 'string', 'max:255'],
             'customer_phone' => ['nullable', 'string', 'max:30'],
             'notes' => ['nullable', 'string', 'max:2000'],

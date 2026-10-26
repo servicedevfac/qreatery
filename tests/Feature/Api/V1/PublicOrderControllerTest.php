@@ -95,4 +95,25 @@ class PublicOrderControllerTest extends TestCase
             'items' => [['product_id' => $foreignProduct->id, 'quantity' => 1]],
         ])->assertUnprocessable()->assertJsonValidationErrors('items');
     }
+
+    public function test_public_order_accepts_short_qr_token(): void
+    {
+        $restaurant = Restaurant::factory()->create([
+            'slug' => 'short-token-resto',
+            'settings' => ['order_modes' => ['dine_in']],
+        ]);
+        $table = RestaurantTable::factory()->for($restaurant)->create();
+        $qrCode = QrCode::factory()->for($restaurant)->create([
+            'restaurant_table_id' => $table->id,
+            'type' => 'table',
+            'token' => 'qr-demo-table-1',
+        ]);
+        $product = Product::factory()->for($restaurant)->create(['price_minor' => 1000]);
+
+        $this->postJson('/api/v1/public/restaurants/short-token-resto/orders', [
+            'mode' => 'dine_in',
+            'qr_token' => $qrCode->token,
+            'items' => [['product_id' => $product->id, 'quantity' => 1]],
+        ])->assertCreated();
+    }
 }

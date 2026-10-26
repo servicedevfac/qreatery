@@ -221,7 +221,7 @@ import { createRealtimeClient } from './realtime.js';
 
             state.restaurantSlug = qrData.restaurant?.slug;
             state.table = qrData.table;
-            state.orderMode = qrData.type === 'table' ? 'dine_in' : 'takeaway';
+            state.orderMode = (qrData.type === 'table' || qrData.type === 'dine_in') ? 'dine_in' : 'takeaway';
 
             // Affichage du badge de table dans le header
             const tableBadge = document.getElementById('client-table-badge');
@@ -1107,7 +1107,11 @@ import { createRealtimeClient } from './realtime.js';
     // Mise à jour visuelle du stepper selon le statut
     function updateStepper(status) {
         const steps = ['pending', 'accepted', 'preparing', 'ready'];
-        const currentIdx = steps.indexOf(status);
+        let currentIdx = steps.indexOf(status);
+
+        if (status === 'served' || status === 'completed') {
+            currentIdx = steps.length;
+        }
 
         const rejectedBox = document.getElementById('track-rejected-box');
 
@@ -1162,20 +1166,19 @@ import { createRealtimeClient } from './realtime.js';
             state.realtimeClient = null;
         }
 
+        // Polling de secours actif dès le chargement (REC-13)
+        startTrackingPolling(token, 4000);
+
         // Connexion WebSocket temps réel sur le canal public
         state.realtimeClient = createRealtimeClient({
             onDegraded(isDegraded) {
                 state.isDegraded = isDegraded;
                 if (isDegraded) {
-                    // Si déconnexion > 3s, déclencher le polling de secours à 10s (ARB-02)
-                    startTrackingPolling(token, 10000);
-                } else {
-                    stopTrackingPolling();
+                    startTrackingPolling(token, 4000);
                 }
             },
             onReconnect() {
-                // Reconnexion confirmée : arrêt du polling et resynchronisation complète (REC-13)
-                stopTrackingPolling();
+                // Reconnexion confirmée : resynchronisation complète (REC-13)
                 resyncTrackingOrder(token);
             }
         });
@@ -1213,13 +1216,19 @@ import { createRealtimeClient } from './realtime.js';
             window.showToast('Votre commande est prête au comptoir !', 'success', 8000);
         } else if (data.to_status === 'accepted') {
             window.showToast('Votre commande a été acceptée par la cuisine !', 'info', 4000);
+        } else if (data.to_status === 'preparing') {
+            window.showToast('Votre commande est en cours de préparation !', 'info', 4000);
+        } else if (data.to_status === 'served' || data.to_status === 'completed') {
+            window.showToast('Votre commande a été servie. Bon appétit !', 'success', 6000);
+            stopTrackingPolling();
         } else if (data.to_status === 'rejected' || data.to_status === 'cancelled') {
             window.showToast('Votre commande n\'a pas pu être préparée.', 'error', 8000);
+            stopTrackingPolling();
         }
     }
 
-    // Polling de secours à 10 secondes (REC-13)
-    function startTrackingPolling(token, intervalMs = 10000) {
+    // Polling de secours automatique (REC-13)
+    function startTrackingPolling(token, intervalMs = 4000) {
         stopTrackingPolling();
         state.trackingInterval = setInterval(async function () {
             await resyncTrackingOrder(token);
@@ -1240,10 +1249,26 @@ import { createRealtimeClient } from './realtime.js';
             });
             if (res.ok) {
                 const json = await res.json();
-                renderTrackingOrder(json.data);
+                const order = json.data;
+                const prevStatus = state.trackingOrder?.preparation_status;
+                state.trackingOrder = order;
+                renderTrackingOrder(order);
+
+                // Si le statut a évolué via le polling, informer le client avec un toast
+                if (prevStatus && prevStatus !== order.preparation_status) {
+                    if (order.preparation_status === 'accepted') {
+                        window.showToast('Votre commande a été acceptée par la cuisine !', 'info', 4000);
+                    } else if (order.preparation_status === 'preparing') {
+                        window.showToast('Votre commande est en cours de préparation !', 'info', 4000);
+                    } else if (order.preparation_status === 'ready') {
+                        window.showToast('Votre commande est prête au comptoir !', 'success', 8000);
+                    } else if (['served', 'completed'].includes(order.preparation_status)) {
+                        window.showToast('Votre commande a été servie. Bon appétit !', 'success', 6000);
+                    }
+                }
 
                 // Si commande terminée ou annulée, arrêter le polling
-                if (['completed', 'served', 'rejected', 'cancelled'].includes(json.data.preparation_status)) {
+                if (['completed', 'served', 'rejected', 'cancelled'].includes(order.preparation_status)) {
                     stopTrackingPolling();
                 }
             }
@@ -1323,8 +1348,10 @@ import { createRealtimeClient } from './realtime.js';
     function showLoading(show) {
         const skeleton = document.getElementById('client-loading-state');
         const container = document.getElementById('client-menu-container');
+        const errorState = document.getElementById('client-error-state');
         if (skeleton) skeleton.classList.toggle('hidden', !show);
         if (container && show) container.innerHTML = '';
+        if (errorState && show) errorState.classList.add('hidden');
     }
 
     function showError(title, message) {

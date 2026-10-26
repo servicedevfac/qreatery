@@ -63,4 +63,20 @@ class QrCodeControllerTest extends TestCase
             'restaurant_table_id' => $restaurantTable->id,
         ])->assertUnprocessable()->assertJsonValidationErrors('restaurant_table_id');
     }
+
+    public function test_browser_scanning_public_qr_code_redirects_to_client_menu(): void
+    {
+        $restaurant = Restaurant::factory()->create();
+        $qrCode = QrCode::factory()->for($restaurant)->create();
+
+        $this->get("/api/v1/public/qr-codes/{$qrCode->token}", [
+            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        ])->assertRedirect("/?qr={$qrCode->token}");
+    }
+
+    public function test_short_qr_web_route_redirects_to_client_menu(): void
+    {
+        $this->get('/qr/some-token-value')
+            ->assertRedirect('/?qr=some-token-value');
+    }
 }

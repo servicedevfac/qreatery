@@ -20,7 +20,7 @@ class QrCodePrintController extends Controller
 
         $qrCode->load('restaurantTable');
 
-        $targetUrl = route('api.v1.public.qr-codes.show', ['token' => $qrCode->token]);
+        $targetUrl = $this->resolveTargetUrl($request, $qrCode->token);
         $svgContent = (string) QrCodeGenerator::size(300)->errorCorrection('H')->generate($targetUrl);
 
         $format = $request->query('format', 'pdf');
@@ -43,7 +43,7 @@ class QrCodePrintController extends Controller
             ->download($filename);
     }
 
-    public function printSheet(Restaurant $restaurant): Response
+    public function printSheet(Request $request, Restaurant $restaurant): Response
     {
         Gate::authorize('manageQrCodes', $restaurant);
 
@@ -54,7 +54,7 @@ class QrCodePrintController extends Controller
 
         $cards = [];
         foreach ($qrCodes as $qr) {
-            $url = route('api.v1.public.qr-codes.show', ['token' => $qr->token]);
+            $url = $this->resolveTargetUrl($request, $qr->token);
             $svg = (string) QrCodeGenerator::size(200)->errorCorrection('M')->generate($url);
             $cards[] = [
                 'label' => $qr->restaurantTable ? 'Table '.$qr->restaurantTable->label : 'Menu Principal',
@@ -67,5 +67,12 @@ class QrCodePrintController extends Controller
         return Pdf::loadView('qr-codes.sheet-pdf', compact('restaurant', 'cards'))
             ->setPaper('a4', 'portrait')
             ->download($filename);
+    }
+
+    private function resolveTargetUrl(Request $request, string $token): string
+    {
+        $host = $request->getSchemeAndHttpHost() ?: url('/');
+
+        return rtrim($host, '/').'/?qr='.$token;
     }
 }
