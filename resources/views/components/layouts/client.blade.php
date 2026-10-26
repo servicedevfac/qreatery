@@ -6,6 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#F97316">
     <meta name="color-scheme" content="light dark">
+    <meta name="reverb-key" content="{{ config('broadcasting.connections.reverb.key') }}">
+    <meta name="reverb-host" content="{{ config('broadcasting.connections.reverb.options.host') }}">
+    <meta name="reverb-port" content="{{ config('broadcasting.connections.reverb.options.port') }}">
+    <meta name="reverb-scheme" content="{{ config('broadcasting.connections.reverb.options.scheme') }}">
 
     <title>{{ $title ?? config('app.name', 'APP RESTAURANT') }}</title>
     <meta name="description" content="{{ $description ?? 'Consultez le menu et commandez en toute simplicité.' }}">

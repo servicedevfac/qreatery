@@ -49,22 +49,22 @@
             <!-- Navigation transversale Propriétaire -->
             <div class="hidden md:flex items-center gap-1 bg-brand-dark px-2 py-1 rounded-brand border border-brand-dark-border text-xs">
                 <a href="/?view=restaurant&restaurant={{ $currentRestoSlug }}" class="px-2 py-0.5 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors flex items-center gap-1" title="Espace Gestion & Paramètres">
-                    <span>📊</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     <span>Gestion</span>
                 </a>
                 <span class="text-gray-600">|</span>
                 <a href="/?view=kds&restaurant={{ $currentRestoSlug }}" class="px-2 py-0.5 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors flex items-center gap-1" title="Écran Cuisine KDS">
-                    <span>👨‍🍳</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
                     <span>Cuisine</span>
                 </a>
                 <span class="text-gray-600">|</span>
                 <a href="/?restaurant={{ $currentRestoSlug }}" target="_blank" class="px-2 py-0.5 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors flex items-center gap-1" title="Menu Client Web">
-                    <span>📱</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     <span>Menu Client</span>
                 </a>
                 <span class="text-gray-600">|</span>
                 <a href="/login" class="px-2 py-0.5 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors flex items-center gap-1" title="Portail central par rôle">
-                    <span>🔑</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                     <span>Rôles</span>
                 </a>
             </div>

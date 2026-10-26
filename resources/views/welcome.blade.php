@@ -9,7 +9,9 @@
         <script>window.location.href = '/login';</script>
         <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-brand-dark p-6 text-center">
             <div class="space-y-3">
-                <div class="text-3xl">🔒</div>
+                <div class="w-12 h-12 mx-auto rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
                 <h2 class="text-base font-bold text-brand-text dark:text-white">Accès restreint au Super-Administrateur</h2>
                 <p class="text-xs text-gray-500">Redirection vers la page de connexion en cours...</p>
                 <a href="/login" class="inline-block mt-2 px-4 py-2 bg-brand-orange text-white text-xs font-bold rounded-brand">Se connecter</a>
@@ -65,7 +67,9 @@
 
         <!-- État d'erreur / Restaurant introuvable -->
         <div id="client-error-state" class="hidden text-center py-12 px-4 space-y-3 bg-white dark:bg-brand-dark-card rounded-brand-lg border border-gray-200 dark:border-brand-dark-border shadow-sm">
-            <span class="text-4xl block">⚠️</span>
+            <div class="w-12 h-12 mx-auto rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
             <h3 id="client-error-title" class="text-base font-bold text-brand-text dark:text-white">
                 Établissement introuvable
             </h3>

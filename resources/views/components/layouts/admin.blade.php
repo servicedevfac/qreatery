@@ -130,13 +130,13 @@
                     <p class="text-[11px] text-gray-500 truncate" id="sidebar-user-role">{{ $userRoleLabel }}</p>
                 </div>
                 <button type="button" id="admin-theme-toggle" class="p-1.5 text-gray-500 hover:text-brand-orange dark:text-gray-400 rounded-brand hover:bg-gray-100 dark:hover:bg-brand-dark" title="Basculer le thème">
-                    <span class="dark:hidden">🌙</span>
-                    <span class="hidden dark:inline">☀️</span>
+                    <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg class="w-4 h-4 hidden dark:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
             </div>
             <div class="flex items-center gap-1.5 pt-1 border-t border-gray-100 dark:border-brand-dark-border">
                 <a href="/login" class="flex items-center justify-center gap-1 flex-1 py-1 text-[11px] font-semibold text-gray-600 dark:text-gray-400 hover:text-brand-orange hover:bg-gray-50 dark:hover:bg-brand-dark rounded transition-colors" title="Changer de rôle / Portail central">
-                    <span>🔑</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                     <span>Portail Rôles</span>
                 </a>
                 <a href="/logout" class="flex items-center justify-center py-1 px-2 text-[11px] font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded transition-colors" title="Se déconnecter">

@@ -23,7 +23,9 @@
         <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div class="relative w-full sm:w-80">
                 <input type="text" id="order-search-input" placeholder="Rechercher par n°, client, table..." class="w-full text-xs pl-8 pr-3 py-2 bg-gray-50 dark:bg-brand-dark border border-gray-200 dark:border-brand-dark-border rounded-brand text-brand-text dark:text-white placeholder-gray-400 focus:outline-none focus:border-brand-orange">
-                <span class="absolute left-2.5 top-2.5 text-gray-400 text-xs">🔍</span>
+                <span class="absolute left-2.5 top-2.5 text-gray-400">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </span>
             </div>
 
             <!-- Filtre Mode -->
@@ -116,12 +118,12 @@
                             <td class="p-3.5 whitespace-nowrap">
                                 @if($order->mode === 'dine_in')
                                     <span class="inline-flex items-center gap-1 font-semibold text-gray-700 dark:text-gray-200">
-                                        <span>🍽️</span>
+                                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                                         <span>{{ $order->restaurantTable?->label ?? 'Table inconnue' }}</span>
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1 font-semibold text-brand-orange">
-                                        <span>🛍️</span>
+                                        <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                                         <span>À emporter</span>
                                     </span>
                                 @endif
@@ -217,8 +219,8 @@
                 <h3 class="text-base font-bold text-brand-text dark:text-white" id="modal-order-number">Détails de la commande</h3>
                 <p class="text-xs text-gray-400" id="modal-order-date"></p>
             </div>
-            <button type="button" id="btn-close-order-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1">
-                ✕
+            <button type="button" id="btn-close-order-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-white p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 

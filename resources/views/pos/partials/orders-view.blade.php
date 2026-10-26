@@ -8,10 +8,10 @@
                     Toutes (<span id="pos-filter-count-all" class="font-mono">0</span>)
                 </button>
                 <button type="button" class="pos-orders-filter px-3.5 py-1.5 rounded-sm text-gray-600 dark:text-gray-400 hover:text-white font-medium transition-all" data-filter="unpaid">
-                    🔴 Impayées (<span id="pos-filter-count-unpaid" class="font-mono">0</span>)
+                    <span class="w-2 h-2 rounded-full bg-rose-500 inline-block mr-1"></span> Impayées (<span id="pos-filter-count-unpaid" class="font-mono">0</span>)
                 </button>
                 <button type="button" class="pos-orders-filter px-3.5 py-1.5 rounded-sm text-gray-600 dark:text-gray-400 hover:text-white font-medium transition-all" data-filter="paid">
-                    🟢 Encaissées (<span id="pos-filter-count-paid" class="font-mono">0</span>)
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1"></span> Encaissées (<span id="pos-filter-count-paid" class="font-mono">0</span>)
                 </button>
             </div>
         </div>
@@ -21,7 +21,8 @@
             id="btn-pos-orders-refresh"
             class="touch-target px-3.5 py-1.5 rounded-brand bg-white hover:bg-gray-100 dark:bg-[#111827] dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-bold text-brand-text dark:text-white flex items-center gap-2 active:scale-95 transition-all shadow-xs focus-ring"
         >
-            <span>🔄 Actualiser</span>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Actualiser</span>
         </button>
     </div>
 
@@ -46,7 +47,7 @@
 
         <!-- État vide -->
         <div id="pos-orders-empty" class="hidden p-12 text-center text-gray-400">
-            <span class="text-3xl block mb-2">📋</span>
+            <svg class="w-10 h-10 mb-2 opacity-40 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             <p class="text-sm font-bold text-gray-600 dark:text-gray-400">Aucune commande trouvée</p>
             <p class="text-xs text-gray-400 mt-1">Les ventes enregistrées au cours du service apparaîtront ici.</p>
         </div>

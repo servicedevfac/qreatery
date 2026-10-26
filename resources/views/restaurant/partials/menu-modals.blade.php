@@ -7,8 +7,8 @@
     <div class="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-brand-lg max-w-lg w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-brand-dark-border">
             <h3 class="text-base font-bold text-brand-text dark:text-white">Ajouter un nouveau plat au menu</h3>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-create-product">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-create-product">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -123,8 +123,8 @@
     <div class="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-brand-lg max-w-lg w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-brand-dark-border">
             <h3 class="text-base font-bold text-brand-text dark:text-white">Modifier le plat</h3>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-edit-product">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-edit-product">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -236,8 +236,8 @@
     <div class="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-brand-lg max-w-md w-full shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-brand-dark-border">
             <h3 class="text-base font-bold text-brand-text dark:text-white">Nouvelle Catégorie de Menu</h3>
-            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1" data-modal="modal-create-category">
-                ✕
+            <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-600 dark:hover:text-white p-1" data-modal="modal-create-category">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 

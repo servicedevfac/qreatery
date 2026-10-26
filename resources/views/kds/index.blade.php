@@ -37,10 +37,10 @@
                         Toutes
                     </button>
                     <button type="button" class="kds-filter-mode px-3.5 py-1.5 rounded-sm text-gray-400 hover:text-white transition-all font-medium" data-mode="dine_in">
-                        🍽️ Sur place
+                        Sur place
                     </button>
                     <button type="button" class="kds-filter-mode px-3.5 py-1.5 rounded-sm text-gray-400 hover:text-white transition-all font-medium" data-mode="takeaway">
-                        🛍️ À emporter
+                        À emporter
                     </button>
                 </div>
 
@@ -83,7 +83,9 @@
         <!-- État d'erreur / Déconnexion -->
         <div id="kds-error-banner" class="hidden bg-rose-950/90 border border-rose-800 text-rose-200 px-4 py-3 rounded-brand flex items-center justify-between gap-3 shrink-0 shadow-md">
             <div class="flex items-center gap-2 text-xs font-medium">
-                <span class="text-base">⚠️</span>
+                <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
                 <span id="kds-error-message">Erreur de communication avec le serveur.</span>
             </div>
             <button type="button" id="btn-kds-error-retry" class="px-3 py-1 bg-rose-800 hover:bg-rose-700 text-white rounded text-xs font-bold transition-all active:scale-95">

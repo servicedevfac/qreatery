@@ -15,7 +15,7 @@
                     <span id="pos-receipt-order-num" class="font-bold">#---</span>
                 </div>
                 <div class="text-[10px] text-gray-600 flex items-center justify-between">
-                    <span id="pos-receipt-mode">🛍️ À emporter</span>
+                    <span id="pos-receipt-mode">À emporter</span>
                     <span id="pos-receipt-operator">Opérateur: Caisse</span>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             <x-button type="button" variant="secondary" onclick="window.closeModal('pos-receipt-modal')">
                 Fermer
             </x-button>
-            <x-button type="button" id="btn-pos-print-receipt" variant="primary" class="flex items-center gap-2">
+            <x-button type="button" id="btn-pos-print-receipt" onclick="window.printThermalReceipt ? window.printThermalReceipt() : window.print()" variant="primary" class="flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zM7 7h10M7 11h10" />
                 </svg>

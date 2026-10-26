@@ -12,8 +12,8 @@
                     <p class="text-[11px] text-gray-500">Authentification sécurisée du restaurant</p>
                 </div>
             </div>
-            <button type="button" id="btn-close-owner-auth" class="text-gray-400 hover:text-gray-600 dark:hover:text-white text-lg p-1">
-                ✕
+            <button type="button" id="btn-close-owner-auth" class="text-gray-400 hover:text-gray-600 dark:hover:text-white p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
@@ -24,7 +24,10 @@
             <!-- Bouton Connexion 1-Clic Démo -->
             <div class="bg-brand-light dark:bg-brand-orange/10 border border-brand-orange/30 p-3.5 rounded-brand space-y-2">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-brand-orange">⚡ Accès Démo Rapide</span>
+                    <span class="text-xs font-bold text-brand-orange flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        <span>Accès Démo Rapide</span>
+                    </span>
                     <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Recommandé</span>
                 </div>
                 <p class="text-xs text-gray-600 dark:text-gray-300">
@@ -35,7 +38,7 @@
                     id="btn-quick-login-owner"
                     class="w-full py-2 px-3 bg-brand-orange hover:bg-brand-orange-dark text-white text-xs font-bold rounded-brand transition-colors shadow-sm flex items-center justify-center gap-2"
                 >
-                    <span>👤</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     <span>Se connecter comme Propriétaire Démo</span>
                 </button>
             </div>

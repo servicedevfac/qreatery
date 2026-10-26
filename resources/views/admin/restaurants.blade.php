@@ -138,8 +138,8 @@
             id="restaurants-empty-state"
             class="hidden p-12 bg-white dark:bg-brand-dark-card rounded-brand-lg border border-gray-200 dark:border-brand-dark-border text-center space-y-3"
         >
-            <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-brand-dark text-gray-400 mx-auto flex items-center justify-center text-xl">
-                🔍
+            <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-brand-dark text-gray-400 mx-auto flex items-center justify-center">
+                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
             <h3 class="text-base font-bold text-brand-text dark:text-white">
                 Aucun établissement trouvé

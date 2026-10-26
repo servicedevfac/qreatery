@@ -7,7 +7,7 @@
                 id="btn-pos-tab-sale"
                 class="pos-view-tab active px-4 py-1.5 rounded-sm bg-brand-orange text-white shadow-xs transition-all flex items-center gap-1.5 focus-ring font-bold"
             >
-                <span>🛒</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 <span>Nouvelle vente</span>
             </button>
             <button
@@ -15,7 +15,7 @@
                 id="btn-pos-tab-orders"
                 class="pos-view-tab px-4 py-1.5 rounded-sm text-gray-400 hover:text-white transition-all flex items-center gap-1.5 focus-ring font-medium"
             >
-                <span>📋</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 <span>Commandes du jour</span>
                 <span id="pos-badge-unpaid-count" class="hidden px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black font-mono shadow-xs">
                     0
@@ -80,7 +80,7 @@
                     id="pos-search-clear"
                     class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-white"
                 >
-                    ✕
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
@@ -112,7 +112,7 @@
 
         <!-- Aucun produit trouvé -->
         <div id="pos-empty-products" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center bg-white dark:bg-brand-dark-card rounded-brand-lg border border-gray-200 dark:border-brand-dark-border">
-            <span class="text-4xl block mb-2 select-none">🔍</span>
+            <svg class="w-10 h-10 mb-2 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <h3 class="text-sm font-bold text-brand-text dark:text-white">Aucun produit trouvé</h3>
             <p class="text-xs text-gray-500 mt-1">Essayez un autre mot-clé ou sélectionnez une autre catégorie.</p>
         </div>

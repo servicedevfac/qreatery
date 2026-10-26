@@ -173,3 +173,7 @@ Route::match(['get', 'post'], '/logout', function (Request $request) {
 
     return redirect('/login')->with('success', 'Vous avez été déconnecté avec succès.');
 })->name('logout');
+
+Route::get('/qr/{token}', function (string $token) {
+    return redirect('/?qr='.$token);
+})->name('qr.redirect');

@@ -24,8 +24,8 @@ class StorePublicAssistanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'qr_token' => ['nullable', 'required_without:tracking_token', 'string', 'size:64'],
-            'tracking_token' => ['nullable', 'required_without:qr_token', 'string', 'size:64'],
+            'qr_token' => ['nullable', 'required_without:tracking_token', 'string', 'max:64'],
+            'tracking_token' => ['nullable', 'required_without:qr_token', 'string', 'max:64'],
             'type' => ['required', Rule::in(['waiter', 'bill', 'other'])],
             'message' => ['nullable', 'string', 'max:1000'],
         ];

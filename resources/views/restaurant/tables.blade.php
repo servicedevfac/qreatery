@@ -27,13 +27,13 @@
         <div class="flex flex-wrap items-center gap-2">
             <!-- Bouton Options de Configuration QR Codes -->
             <button type="button" id="btn-open-qr-config" class="px-3.5 py-2 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white text-xs font-bold rounded-brand transition-colors flex items-center gap-1.5 shadow-xs">
-                <span>⚙️</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span>Configuration QR Codes</span>
             </button>
 
             <!-- Bouton Impression de la Planche Complète -->
             <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/print-sheet" target="_blank" id="btn-print-qr-sheet" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-brand-dark dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-bold rounded-brand border border-gray-200 dark:border-brand-dark-border transition-colors flex items-center gap-1.5 shadow-xs">
-                <span>🖨️</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 <span>Planche QR (PDF A4)</span>
             </a>
 
@@ -49,7 +49,7 @@
     <div class="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-brand-lg p-4 flex flex-wrap items-center justify-between gap-4 text-xs shadow-xs">
         <div class="flex flex-wrap items-center gap-6">
             <div class="flex items-center gap-2">
-                <span class="text-base">📱</span>
+                <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 <div>
                     <span class="font-bold text-gray-700 dark:text-gray-300">Commande à table :</span>
                     <span class="ml-1 font-semibold {{ ($qrConfig['allow_table_ordering'] ?? true) ? 'text-emerald-600' : 'text-amber-600' }}">
@@ -59,7 +59,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <span class="text-base">🛎️</span>
+                <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                 <div>
                     <span class="font-bold text-gray-700 dark:text-gray-300">Appel serveur / Addition :</span>
                     <span class="ml-1 font-semibold {{ ($qrConfig['allow_waiter_call'] ?? true) ? 'text-emerald-600' : 'text-gray-400' }}">
@@ -69,7 +69,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <span class="text-base">🎨</span>
+                <svg class="w-4 h-4 text-brand-orange shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4 5 5 0 013-4.5V11a7 7 0 1114 0v1.5a5 5 0 013 4.5 4 4 0 01-4 4H7z"/></svg>
                 <div class="flex items-center gap-1.5">
                     <span class="font-bold text-gray-700 dark:text-gray-300">Teinte QR :</span>
                     <span class="w-3.5 h-3.5 rounded-full inline-block border border-gray-300" style="background-color: {{ $qrConfig['qr_color'] ?? '#F97316' }}"></span>
@@ -80,7 +80,7 @@
 
         <button type="button" class="btn-trigger-qr-config text-brand-orange hover:underline font-bold text-xs flex items-center gap-1">
             <span>Modifier la configuration</span>
-            <span>➔</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
     </div>
 
@@ -105,12 +105,12 @@
 
         <div class="flex flex-wrap items-center gap-2 w-full md:w-auto shrink-0">
             @if($takeawayQr)
-                <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $takeawayQr->id }}/download?format=svg" class="px-3 py-1.5 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white text-xs font-bold rounded-brand transition-colors flex items-center gap-1 shadow-xs" title="Télécharger le fichier vectoriel SVG">
-                    <span>📥</span>
+                <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $takeawayQr->id }}/download?format=svg" class="px-3 py-1.5 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white text-xs font-bold rounded-brand transition-colors flex items-center gap-1.5 shadow-xs" title="Télécharger le fichier vectoriel SVG">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     <span>SVG</span>
                 </a>
-                <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $takeawayQr->id }}/download?format=pdf" class="px-3 py-1.5 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white text-xs font-bold rounded-brand transition-colors flex items-center gap-1 shadow-xs" title="Télécharger l'affiche A5 PDF">
-                    <span>📄</span>
+                <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $takeawayQr->id }}/download?format=pdf" class="px-3 py-1.5 bg-white dark:bg-brand-dark-card hover:border-brand-orange border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white text-xs font-bold rounded-brand transition-colors flex items-center gap-1.5 shadow-xs" title="Télécharger l'affiche A5 PDF">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     <span>PDF A5</span>
                 </a>
                 <a href="/?restaurant={{ $restaurant->slug }}" target="_blank" class="px-3.5 py-1.5 bg-brand-orange hover:bg-brand-orange-dark text-white text-xs font-bold rounded-brand transition-colors shadow-sm flex items-center gap-1">
@@ -160,7 +160,7 @@
                         <!-- Caractéristiques -->
                         <div class="mt-3 flex items-center gap-3 text-xs text-gray-500">
                             <span class="flex items-center gap-1">
-                                <span>👥</span>
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                                 <span>{{ $table->capacity }} couverts</span>
                             </span>
                             <span>•</span>
@@ -183,7 +183,7 @@
                                 </div>
                                 <button
                                     type="button"
-                                    class="btn-config-table-qr px-2.5 py-1.5 rounded bg-brand-light dark:bg-brand-orange/15 hover:bg-brand-orange hover:text-white text-brand-orange text-xs font-bold transition-colors shrink-0"
+                                    class="btn-config-table-qr px-2.5 py-1.5 rounded bg-brand-light dark:bg-brand-orange/15 hover:bg-brand-orange hover:text-white text-brand-orange text-xs font-bold transition-colors shrink-0 flex items-center gap-1"
                                     data-table-id="{{ $table->id }}"
                                     data-table-label="{{ $table->label }}"
                                     data-table-capacity="{{ $table->capacity }}"
@@ -192,7 +192,8 @@
                                     data-qr-token="{{ $qr->token }}"
                                     title="Configurer et afficher le QR Code de cette table"
                                 >
-                                    ⚙️ Gérer QR
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span>Gérer QR</span>
                                 </button>
                             </div>
                         @else
@@ -214,8 +215,9 @@
                             </a>
 
                             <!-- Téléchargement rapide Chevalet PDF -->
-                            <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $qr->id }}/download?format=pdf" target="_blank" class="px-2 py-1.5 bg-gray-50 dark:bg-brand-dark hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-medium rounded border border-gray-200 dark:border-brand-dark-border transition-colors whitespace-nowrap" title="Télécharger le chevalet A5 PDF">
-                                📄 PDF
+                            <a href="/api/v1/restaurants/{{ $restaurant->id }}/qr-codes/{{ $qr->id }}/download?format=pdf" target="_blank" class="px-2 py-1.5 bg-gray-50 dark:bg-brand-dark hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-medium rounded border border-gray-200 dark:border-brand-dark-border transition-colors whitespace-nowrap flex items-center gap-1" title="Télécharger le chevalet A5 PDF">
+                                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span>PDF</span>
                             </a>
                         @endif
 
@@ -238,7 +240,7 @@
                             data-label="{{ $table->label }}"
                             title="Supprimer la table"
                         >
-                            🗑️
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                     </div>
                 </div>
