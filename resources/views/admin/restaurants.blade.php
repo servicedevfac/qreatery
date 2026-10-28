@@ -20,6 +20,18 @@
                 </svg>
                 <span>Actualiser</span>
             </button>
+
+            <button
+                type="button"
+                id="btn-create-restaurant"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-brand text-xs font-semibold bg-brand-orange hover:bg-brand-orange-dark text-white shadow-sm transition-colors focus-ring touch-target"
+                aria-label="Créer un nouvel établissement"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Nouveau restaurant</span>
+            </button>
         </div>
     </x-slot>
 
@@ -147,13 +159,22 @@
             <p id="restaurants-empty-message" class="text-xs text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
                 Aucun restaurant ne correspond aux critères de recherche ou de filtre sélectionnés.
             </p>
-            <button
-                type="button"
-                id="btn-empty-reset"
-                class="px-3.5 py-1.5 bg-brand-light dark:bg-brand-orange/10 text-brand-orange text-xs font-semibold rounded-brand hover:bg-brand-orange hover:text-white transition-colors"
-            >
-                Effacer les filtres
-            </button>
+            <div class="flex items-center justify-center gap-2 pt-1">
+                <button
+                    type="button"
+                    id="btn-empty-reset"
+                    class="px-3.5 py-1.5 bg-brand-light dark:bg-brand-orange/10 text-brand-orange text-xs font-semibold rounded-brand hover:bg-brand-orange hover:text-white transition-colors"
+                >
+                    Effacer les filtres
+                </button>
+                <button
+                    type="button"
+                    id="btn-empty-create"
+                    class="px-3.5 py-1.5 bg-brand-orange hover:bg-brand-orange-dark text-white text-xs font-semibold rounded-brand transition-colors"
+                >
+                    + Créer un établissement
+                </button>
+            </div>
         </div>
 
         <!-- ÉTAT 4 : Tableau & Cartes Succès -->
@@ -296,4 +317,320 @@
             </form>
         </div>
     </div>
+
+    <!-- Modale de Création d'un Restaurant (Super-Admin) -->
+    <div
+        id="create-restaurant-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-restaurant-modal-title"
+        class="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0 flex items-center justify-center transition-all duration-200 hidden"
+    >
+        <div id="create-restaurant-modal-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" aria-hidden="true"></div>
+
+        <div class="relative w-full max-w-2xl bg-white dark:bg-brand-dark-card rounded-brand-lg shadow-2xl border border-gray-200 dark:border-brand-dark-border overflow-hidden z-10 max-h-[90vh] flex flex-col">
+            <!-- Entête Modal -->
+            <div class="p-5 border-b border-gray-200 dark:border-brand-dark-border flex items-center justify-between shrink-0 bg-gray-50/50 dark:bg-brand-dark/40">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-brand bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 id="create-restaurant-modal-title" class="text-base font-bold text-brand-text dark:text-white">
+                            Créer un nouvel établissement
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Enregistrez un nouveau restaurant et configurez ses accès initiaux.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    id="btn-close-create-restaurant-modal"
+                    class="touch-target p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-brand focus-ring"
+                    aria-label="Fermer la boîte de dialogue"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Formulaire scrollable -->
+            <form id="create-restaurant-form" class="p-6 space-y-5 overflow-y-auto flex-1">
+                <!-- Zone d'erreur générale -->
+                <div id="create-resto-general-error" class="hidden p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-brand text-xs text-rose-700 dark:text-rose-300"></div>
+
+                <!-- 1. IDENTITÉ DU RESTAURANT -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 border-b border-gray-100 dark:border-brand-dark-border pb-1.5">
+                        <span class="w-2 h-2 rounded-full bg-brand-orange"></span>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">Identité de l'établissement</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-name" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Nom du restaurant <span class="text-rose-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="create-resto-name"
+                                name="name"
+                                required
+                                placeholder="ex: Le Palais Gourmand"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
+                            >
+                            <p id="create-resto-error-name" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-slug" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Identifiant URL (Slug)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-xs text-gray-400 font-mono">/</span>
+                                <input
+                                    type="text"
+                                    id="create-resto-slug"
+                                    name="slug"
+                                    placeholder="auto-généré si vide"
+                                    class="w-full pl-6 pr-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-mono"
+                                >
+                            </div>
+                            <span class="text-[10px] text-gray-400">ex: le-palais-gourmand</span>
+                            <p id="create-resto-error-slug" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-2">
+                            <label for="create-resto-description" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Description ou Présentation
+                            </label>
+                            <textarea
+                                id="create-resto-description"
+                                name="description"
+                                rows="2"
+                                placeholder="Cuisine africaine & européenne raffinée au cœur de la ville..."
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            ></textarea>
+                            <p id="create-resto-error-description" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. COORDONNÉES & CONTACT -->
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center gap-2 border-b border-gray-100 dark:border-brand-dark-border pb-1.5">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">Contact &amp; Coordonnées</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-phone" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Téléphone
+                            </label>
+                            <input
+                                type="tel"
+                                id="create-resto-phone"
+                                name="phone"
+                                placeholder="+225 07 00 00 00"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            >
+                            <p id="create-resto-error-phone" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-email" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Email de contact
+                            </label>
+                            <input
+                                type="email"
+                                id="create-resto-email"
+                                name="email"
+                                placeholder="contact@palaisgourmand.ci"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            >
+                            <p id="create-resto-error-email" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-address" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Adresse physique
+                            </label>
+                            <input
+                                type="text"
+                                id="create-resto-address"
+                                name="address"
+                                placeholder="Plateau, Rue du Commerce"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            >
+                            <p id="create-resto-error-address" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. PARAMÈTRES RÉGIONAUX & STATUT -->
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center gap-2 border-b border-gray-100 dark:border-brand-dark-border pb-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">Devise, Fuseau &amp; Statut</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="space-y-1">
+                            <label for="create-resto-currency" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Devise
+                            </label>
+                            <select
+                                id="create-resto-currency"
+                                name="currency"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none"
+                            >
+                                <option value="XOF" selected>XOF (FCFA)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="USD">USD ($)</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label for="create-resto-timezone" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Fuseau horaire
+                            </label>
+                            <select
+                                id="create-resto-timezone"
+                                name="timezone"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none"
+                            >
+                                <option value="Africa/Abidjan" selected>Africa/Abidjan (GMT+0)</option>
+                                <option value="Africa/Dakar">Africa/Dakar (GMT+0)</option>
+                                <option value="Africa/Lagos">Africa/Lagos (GMT+1)</option>
+                                <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+                                <option value="UTC">UTC</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label for="create-resto-status" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Statut initial
+                            </label>
+                            <select
+                                id="create-resto-status"
+                                name="status"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none font-semibold text-emerald-600 dark:text-emerald-400"
+                            >
+                                <option value="active" selected>Actif (Opérationnel)</option>
+                                <option value="draft">Brouillon (Configuration)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. COMPTE PROPRIÉTAIRE (GÉRANT) -->
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-brand-dark-border pb-1.5">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">Gérant / Propriétaire</h4>
+                        </div>
+                        <span class="text-[10px] text-gray-400">Si non renseigné, le Super-Admin sera rattaché</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-owner-name" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Nom du gérant
+                            </label>
+                            <input
+                                type="text"
+                                id="create-resto-owner-name"
+                                name="owner_name"
+                                placeholder="ex: Alexandre Danho"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            >
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-owner-email" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Email de connexion
+                            </label>
+                            <input
+                                type="email"
+                                id="create-resto-owner-email"
+                                name="owner_email"
+                                placeholder="owner@resto.test"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                            >
+                            <p id="create-resto-error-owner_email" class="hidden text-[11px] text-rose-500 font-medium"></p>
+                        </div>
+
+                        <div class="space-y-1 sm:col-span-1">
+                            <label for="create-resto-owner-password" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Mot de passe initial
+                            </label>
+                            <input
+                                type="text"
+                                id="create-resto-owner-password"
+                                name="owner_password"
+                                placeholder="Défaut: password"
+                                class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-mono text-xs"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. ABONNEMENT INITIAL -->
+                @php
+                    $availablePlans = $plans ?? \App\Models\Plan::query()->where('is_active', true)->orderBy('price_minor')->get();
+                @endphp
+                @if(count($availablePlans) > 0)
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center gap-2 border-b border-gray-100 dark:border-brand-dark-border pb-1.5">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">Formule d'Abonnement Initiale</h4>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="create-resto-plan-id" class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            Sélectionner un plan SaaS (optionnel)
+                        </label>
+                        <select
+                            id="create-resto-plan-id"
+                            name="plan_id"
+                            class="w-full px-3 py-2 rounded-brand text-xs sm:text-sm bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-white border border-gray-200 dark:border-brand-dark-border focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none"
+                        >
+                            <option value="">-- Aucun abonnement immédiat --</option>
+                            @foreach($availablePlans as $p)
+                                <option value="{{ $p->id }}">
+                                    {{ $p->name }} — {{ number_format($p->price_minor / 100, 0, ',', ' ') }} {{ strtoupper($p->currency) }} / {{ $p->billing_period }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="text-[10px] text-gray-400">Active immédiatement les fonctionnalités du plan choisi pour le restaurant.</span>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Boutons d'action -->
+                <div class="pt-4 border-t border-gray-200 dark:border-brand-dark-border flex items-center justify-end gap-3 sticky bottom-0 bg-white dark:bg-brand-dark-card py-2">
+                    <button
+                        type="button"
+                        id="btn-cancel-create-restaurant-modal"
+                        class="px-4 py-2 rounded-brand text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-brand-dark hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors focus-ring touch-target"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-submit-create-restaurant-modal"
+                        class="px-5 py-2 rounded-brand text-xs font-bold text-white bg-brand-orange hover:bg-brand-orange-dark shadow-sm focus-ring touch-target flex items-center gap-2 transition-all"
+                    >
+                        <span id="create-resto-submit-spinner" class="hidden animate-spin w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full"></span>
+                        <span id="create-resto-submit-text">Créer le restaurant</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </x-layouts.super-admin>
+

@@ -3051,7 +3051,7 @@
             "authors": [
                 {
                     "name": "Mark Baker",
-                    "email": "mark@lange.demon.co.uk"
+                    "email": "mark@lange.reposn.co.uk"
                 }
             ],
             "description": "PHP Class for working with complex numbers",
@@ -3106,7 +3106,7 @@
             "authors": [
                 {
                     "name": "Mark Baker",
-                    "email": "mark@demon-angel.eu"
+                    "email": "mark@reposn-angel.eu"
                 }
             ],
             "description": "PHP Class for working with matrices",

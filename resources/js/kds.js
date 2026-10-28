@@ -86,7 +86,7 @@ import { createRealtimeClient } from './realtime.js';
         // Détection des paramètres d'URL
         const urlParams = new URLSearchParams(window.location.search);
         state.restaurantId = urlParams.get('restaurant_id') || null;
-        state.restaurantSlug = urlParams.get('restaurant') || 'restaurant-demo';
+        state.restaurantSlug = urlParams.get('restaurant') || 'restaurant-repos';
 
         // 1. Tenter de charger les restaurants de l'utilisateur pour vérifier la session
         const authOk = await resolveUserRestaurants();
@@ -1028,7 +1028,7 @@ import { createRealtimeClient } from './realtime.js';
                         renderBoard();
                     }
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
     }
 

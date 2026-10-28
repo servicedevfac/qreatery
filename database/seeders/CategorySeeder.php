@@ -10,8 +10,8 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
@@ -55,7 +55,7 @@ class CategorySeeder extends Seeder
 
         foreach ($categories as $cat) {
             Category::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => $cat['slug']],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => $cat['slug']],
                 $cat
             );
         }

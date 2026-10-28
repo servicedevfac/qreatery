@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Api\V1\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Auth\AuthenticatedUserController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -85,7 +87,7 @@ Route::get('/login', function (Request $request) {
         $membership = $user->restaurantMemberships()->where('is_active', true)->with('restaurant')->first();
         if ($membership) {
             $role = $membership->role?->value ?? (string) $membership->role;
-            $slug = $membership->restaurant?->slug ?? 'restaurant-demo';
+            $slug = $membership->restaurant?->slug ?? 'restaurant-repos';
             $email = strtolower((string) $user->email);
 
             if ($role === 'cashier') {
@@ -102,7 +104,7 @@ Route::get('/login', function (Request $request) {
             return redirect("/?view=restaurant&restaurant={$slug}");
         }
 
-        return redirect('/?restaurant=restaurant-demo');
+        return redirect('/?restaurant=restaurant-repos');
     }
 
     return view('welcome', ['view' => 'login']);
@@ -146,7 +148,7 @@ Route::post('/login', function (Request $request) {
     $membership = $user->restaurantMemberships()->where('is_active', true)->with('restaurant')->first();
     if ($membership) {
         $role = $membership->role?->value ?? (string) $membership->role;
-        $slug = $membership->restaurant?->slug ?? 'restaurant-demo';
+        $slug = $membership->restaurant?->slug ?? 'restaurant-repos';
         $email = strtolower((string) $user->email);
 
         if ($role === 'cashier') {
@@ -163,7 +165,7 @@ Route::post('/login', function (Request $request) {
         return redirect("/?view=restaurant&restaurant={$slug}")->with('success', "Bienvenue sur votre espace de gestion, {$user->name}");
     }
 
-    return redirect('/?restaurant=restaurant-demo')->with('success', "Bienvenue {$user->name}");
+    return redirect('/?restaurant=restaurant-repos')->with('success', "Bienvenue {$user->name}");
 });
 
 Route::match(['get', 'post'], '/logout', function (Request $request) {
@@ -177,3 +179,11 @@ Route::match(['get', 'post'], '/logout', function (Request $request) {
 Route::get('/qr/{token}', function (string $token) {
     return redirect('/?qr='.$token);
 })->name('qr.redirect');
+
+Route::post('/admin/restaurants', [AdminRestaurantController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('admin.restaurants.store');
+
+Route::post('/admin/subscriptions', [AdminSubscriptionController::class, 'createGlobal'])
+    ->middleware(['auth', 'verified'])
+    ->name('admin.subscriptions.store');

@@ -76,7 +76,7 @@ class ReportControllerTest extends TestCase
     {
         Carbon::setTestNow('2026-10-21 12:00:00');
         $owner = User::factory()->create();
-        $restaurant = Restaurant::factory()->create(['slug' => 'export-demo']);
+        $restaurant = Restaurant::factory()->create(['slug' => 'export-repos']);
         RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
         Order::factory()->for($restaurant)->create(['total_minor' => 8500]);
 
@@ -85,14 +85,14 @@ class ReportControllerTest extends TestCase
 
         $pdf->assertOk()
             ->assertHeader('content-type', 'application/pdf')
-            ->assertDownload('rapport-export-demo-20261021-120000.pdf');
+            ->assertDownload('rapport-export-repos-20261021-120000.pdf');
         $this->assertStringStartsWith('%PDF', $pdf->getContent());
 
         $xlsx = $this->actingAs($owner)
             ->get("/api/v1/restaurants/{$restaurant->id}/reports/overview/export/xlsx");
 
         $xlsx->assertOk()
-            ->assertDownload('rapport-export-demo-20261021-120000.xlsx');
+            ->assertDownload('rapport-export-repos-20261021-120000.xlsx');
         $this->assertSame('PK', file_get_contents($xlsx->baseResponse->getFile()->getPathname(), false, null, 0, 2));
     }
 }

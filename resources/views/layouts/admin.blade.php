@@ -17,7 +17,7 @@
 <body class="h-full bg-gray-50 dark:bg-brand-dark text-brand-text dark:text-gray-100 font-sans antialiased flex flex-col md:flex-row selection:bg-brand-orange selection:text-white">
 @php
     $activeSection = $activeSection ?? request('section', 'dashboard');
-    $currentRestaurantSlug = request('restaurant', 'restaurant-demo');
+    $currentRestaurantSlug = request('restaurant', 'restaurant-repos');
     $queryResto = '/?view=restaurant' . ($currentRestaurantSlug ? '&restaurant=' . $currentRestaurantSlug : '');
     $user = auth()->user();
     $userRoleLabel = 'Invité';

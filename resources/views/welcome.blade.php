@@ -19,9 +19,11 @@
         </div>
     @else
         @if(request('section') === 'restaurants')
-            @include('admin.restaurants')
+            @include('admin.restaurants', ['plans' => $plans ?? []])
         @elseif(request('section') === 'plans')
             @include('admin.plans')
+        @elseif(request('section') === 'subscriptions')
+            @include('admin.subscriptions', ['plans' => $plans ?? []])
         @else
             @include('admin.dashboard')
         @endif

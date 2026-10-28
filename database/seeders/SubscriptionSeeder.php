@@ -20,11 +20,11 @@ class SubscriptionSeeder extends Seeder
     public function run(): void
     {
         $planPro = Plan::query()->where('slug', 'pro')->first();
-        $admin = User::query()->where('email', 'admin@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $admin = User::query()->where('email', 'admin@repos.test')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         if ($restaurant && $planPro) {
-            $subDemo = Subscription::query()->updateOrCreate(
+            $subrepos = Subscription::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id],
                 [
                     'plan_id' => $planPro->id,
@@ -38,20 +38,20 @@ class SubscriptionSeeder extends Seeder
 
             // Historique de statut
             SubscriptionStatusHistory::query()->firstOrCreate(
-                ['subscription_id' => $subDemo->id, 'to_status' => SubscriptionStatus::Active],
+                ['subscription_id' => $subrepos->id, 'to_status' => SubscriptionStatus::Active],
                 ['actor_id' => $admin?->id, 'from_status' => SubscriptionStatus::Trialing, 'reason' => 'Paiement annuel validé']
             );
 
             // Paiements d'abonnement
             SubscriptionPayment::query()->updateOrCreate(
-                ['idempotency_key' => 'sub-pay-demo-001'],
+                ['idempotency_key' => 'sub-pay-repos-001'],
                 [
-                    'subscription_id' => $subDemo->id,
+                    'subscription_id' => $subrepos->id,
                     'recorded_by' => $admin?->id,
                     'amount_minor' => $planPro->price_minor,
                     'currency' => $planPro->currency,
                     'method' => 'bank_transfer',
-                    'transaction_reference' => 'TX-SUB-DEMO-001',
+                    'transaction_reference' => 'TX-SUB-repos-001',
                     'status' => SubscriptionPaymentStatus::Succeeded,
                     'paid_at' => now()->subDays(30),
                     'metadata' => ['invoice_number' => 'FAC-2026-0001'],
@@ -59,14 +59,14 @@ class SubscriptionSeeder extends Seeder
             );
 
             SubscriptionPayment::query()->updateOrCreate(
-                ['idempotency_key' => 'sub-pay-demo-002'],
+                ['idempotency_key' => 'sub-pay-repos-002'],
                 [
-                    'subscription_id' => $subDemo->id,
+                    'subscription_id' => $subrepos->id,
                     'recorded_by' => $admin?->id,
                     'amount_minor' => $planPro->price_minor,
                     'currency' => $planPro->currency,
                     'method' => 'mobile_money',
-                    'transaction_reference' => 'TX-SUB-DEMO-002',
+                    'transaction_reference' => 'TX-SUB-repos-002',
                     'status' => SubscriptionPaymentStatus::Succeeded,
                     'paid_at' => now()->subDays(2),
                     'metadata' => ['operator' => 'Wave'],

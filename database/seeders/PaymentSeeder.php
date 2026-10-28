@@ -12,8 +12,8 @@ class PaymentSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
@@ -25,7 +25,7 @@ class PaymentSeeder extends Seeder
             Payment::query()->updateOrCreate(
                 ['idempotency_key' => 'pay-ord-0003-cash'],
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'order_id' => $order3->id,
                     'operator_id' => $cashier?->id,
                     'type' => 'charge',
@@ -49,7 +49,7 @@ class PaymentSeeder extends Seeder
             Payment::query()->updateOrCreate(
                 ['idempotency_key' => 'pay-ord-0005-partial-1'],
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'order_id' => $order5->id,
                     'operator_id' => $cashier?->id,
                     'type' => 'charge',
@@ -73,7 +73,7 @@ class PaymentSeeder extends Seeder
             Payment::query()->updateOrCreate(
                 ['idempotency_key' => 'pay-ord-0006-card'],
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'order_id' => $order6->id,
                     'operator_id' => $cashier?->id,
                     'type' => 'charge',
@@ -97,7 +97,7 @@ class PaymentSeeder extends Seeder
             Payment::query()->updateOrCreate(
                 ['idempotency_key' => 'pay-ord-0007-cash'],
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'order_id' => $order7->id,
                     'operator_id' => $cashier?->id,
                     'type' => 'charge',

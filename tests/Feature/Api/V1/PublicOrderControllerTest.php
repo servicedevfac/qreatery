@@ -106,7 +106,7 @@ class PublicOrderControllerTest extends TestCase
         $qrCode = QrCode::factory()->for($restaurant)->create([
             'restaurant_table_id' => $table->id,
             'type' => 'table',
-            'token' => 'qr-demo-table-1',
+            'token' => 'qr-repos-table-1',
         ]);
         $product = Product::factory()->for($restaurant)->create(['price_minor' => 1000]);
 

@@ -51,7 +51,7 @@ import { createRealtimeClient } from './realtime.js';
 
         const urlParams = new URLSearchParams(window.location.search);
         state.restaurantId = urlParams.get('restaurant_id') || null;
-        state.restaurantSlug = urlParams.get('restaurant') || 'restaurant-demo';
+        state.restaurantSlug = urlParams.get('restaurant') || 'restaurant-repos';
 
         // 1. Vérifier la session staff et récupérer les restaurants
         const authOk = await resolveUserRestaurants();
@@ -167,9 +167,9 @@ import { createRealtimeClient } from './realtime.js';
         if (fullscreenBtn) {
             fullscreenBtn.addEventListener('click', function () {
                 if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(() => {});
+                    document.documentElement.requestFullscreen().catch(() => { });
                 } else {
-                    document.exitFullscreen().catch(() => {});
+                    document.exitFullscreen().catch(() => { });
                 }
             });
         }

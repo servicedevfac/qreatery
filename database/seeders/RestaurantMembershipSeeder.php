@@ -17,14 +17,14 @@ class RestaurantMembershipSeeder extends Seeder
     public function run(): void
     {
         $allPermissions = array_map(fn ($p) => $p->value, RestaurantPermission::cases());
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         if (! $restaurant) {
             return;
         }
 
         // 1. Propriétaire (Tous les droits de gestion)
-        $owner = User::query()->where('email', 'owner@qreatery.test')->first();
+        $owner = User::query()->where('email', 'owner@repos.test')->first();
         if ($owner) {
             RestaurantMembership::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id, 'user_id' => $owner->id],
@@ -33,7 +33,7 @@ class RestaurantMembershipSeeder extends Seeder
         }
 
         // 2. Manager de Salle
-        $manager = User::query()->where('email', 'manager@qreatery.test')->first();
+        $manager = User::query()->where('email', 'manager@repos.test')->first();
         if ($manager) {
             RestaurantMembership::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id, 'user_id' => $manager->id],
@@ -56,7 +56,7 @@ class RestaurantMembershipSeeder extends Seeder
         }
 
         // 3. Caissier (Caisse POS)
-        $cashier = User::query()->where('email', 'cashier@qreatery.test')->first();
+        $cashier = User::query()->where('email', 'cashier@repos.test')->first();
         if ($cashier) {
             RestaurantMembership::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id, 'user_id' => $cashier->id],
@@ -74,7 +74,7 @@ class RestaurantMembershipSeeder extends Seeder
         }
 
         // 4. Chef Cuisinier (Écran Cuisine KDS)
-        $cook = User::query()->where('email', 'cook@qreatery.test')->first();
+        $cook = User::query()->where('email', 'cook@repos.test')->first();
         if ($cook) {
             RestaurantMembership::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id, 'user_id' => $cook->id],
@@ -91,7 +91,7 @@ class RestaurantMembershipSeeder extends Seeder
         }
 
         // 5. Serveur de Salle
-        $waiter = User::query()->where('email', 'waiter@qreatery.test')->first();
+        $waiter = User::query()->where('email', 'waiter@repos.test')->first();
         if ($waiter) {
             RestaurantMembership::query()->updateOrCreate(
                 ['restaurant_id' => $restaurant->id, 'user_id' => $waiter->id],

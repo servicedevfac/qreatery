@@ -18,6 +18,10 @@ class StoreSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'restaurant_id' => [
+                'sometimes',
+                Rule::exists('restaurants', 'id'),
+            ],
             'plan_id' => [
                 'required',
                 Rule::exists('plans', 'id')->where('is_active', true),

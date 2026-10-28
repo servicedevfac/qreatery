@@ -18,7 +18,7 @@ class RestaurantSeeder extends Seeder
     public function run(): void
     {
         // Supprimer les dépendances et restaurants tiers pour garantir l'unicité
-        $staleIds = Restaurant::query()->where('slug', '!=', 'restaurant-demo')->pluck('id');
+        $staleIds = Restaurant::query()->where('slug', '!=', 'restaurant-repos')->pluck('id');
         if ($staleIds->isNotEmpty()) {
             SubscriptionPayment::whereHas('subscription', fn ($q) => $q->whereIn('restaurant_id', $staleIds))->delete();
             SubscriptionStatusHistory::whereHas('subscription', fn ($q) => $q->whereIn('restaurant_id', $staleIds))->delete();
@@ -28,14 +28,14 @@ class RestaurantSeeder extends Seeder
         }
 
         Restaurant::query()->updateOrCreate(
-            ['slug' => 'restaurant-demo'],
+            ['slug' => 'restaurant-repos'],
             [
-                'name' => 'Qreatery Restaurant',
-                'slug' => 'restaurant-demo',
+                'name' => 'Repos Restaurant',
+                'slug' => 'restaurant-repos',
                 'description' => 'Restaurant gastronomique et bistronomique équipé de la suite Qreatery (Commande sur table QR, Caisse tactile POS et Écran Cuisine KDS).',
                 'address' => 'Rue des Jardins, Cocody Angré 7e Tranche, Abidjan, Côte d\'Ivoire',
                 'phone' => '+225 0700000001',
-                'email' => 'contact@qreatery-restaurant.test',
+                'email' => 'contact@restaurantrepos.test',
                 'currency' => 'XOF',
                 'timezone' => 'Africa/Abidjan',
                 'status' => RestaurantStatus::Active,

@@ -16,8 +16,8 @@ class OrderSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
@@ -25,20 +25,20 @@ class OrderSeeder extends Seeder
         $cook = User::query()->where('email', 'cook@qreatery.test')->first();
         $manager = User::query()->where('email', 'manager@qreatery.test')->first();
 
-        $table1 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 1')->first();
-        $table2 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 2')->first();
-        $table3 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 3')->first();
-        $table4 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 4')->first();
+        $table1 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 1')->first();
+        $table2 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 2')->first();
+        $table3 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 3')->first();
+        $table4 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 4')->first();
 
-        $prodBurger = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'burger-qreatery-signature')->first();
-        $prodCesar = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'salade-cesar-croustillante')->first();
-        $prodNems = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'nems-crevettes-fraiches')->first();
-        $prodCote = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'cote-de-boeuf-braisee')->first();
-        $prodMerou = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'filet-merou-braise')->first();
-        $prodKedjenou = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'poulet-kedjenou-traditionnel')->first();
-        $prodMojito = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'mojito-passion-frais')->first();
-        $prodBissap = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'bissap-frais-artisanal')->first();
-        $prodFondant = Product::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'fondant-chocolat-glace-vanille')->first();
+        $prodBurger = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'burger-qreatery-signature')->first();
+        $prodCesar = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'salade-cesar-croustillante')->first();
+        $prodNems = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'nems-crevettes-fraiches')->first();
+        $prodCote = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'cote-de-boeuf-braisee')->first();
+        $prodMerou = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'filet-merou-braise')->first();
+        $prodKedjenou = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'poulet-kedjenou-traditionnel')->first();
+        $prodMojito = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'mojito-passion-frais')->first();
+        $prodBissap = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'bissap-frais-artisanal')->first();
+        $prodFondant = Product::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'fondant-chocolat-glace-vanille')->first();
 
         // ---------------------------------------------------------------------
         // Commande 1 : PENDING (KDS Vert, reçue il y a 5 min, Table 1)
@@ -46,7 +46,7 @@ class OrderSeeder extends Seeder
         $order1 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0001'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table1?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0001'),
                 'mode' => 'dine_in',
@@ -79,7 +79,7 @@ class OrderSeeder extends Seeder
         $order2 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0002'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table2?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0002'),
                 'mode' => 'dine_in',
@@ -121,7 +121,7 @@ class OrderSeeder extends Seeder
         $order3 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0003'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table3?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0003'),
                 'mode' => 'dine_in',
@@ -161,7 +161,7 @@ class OrderSeeder extends Seeder
         $order4 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0004'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table4?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0004'),
                 'mode' => 'dine_in',
@@ -194,7 +194,7 @@ class OrderSeeder extends Seeder
         $order5 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0005'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table1?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0005'),
                 'mode' => 'dine_in',
@@ -228,7 +228,7 @@ class OrderSeeder extends Seeder
         $order6 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0006'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table2?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0006'),
                 'mode' => 'dine_in',
@@ -262,7 +262,7 @@ class OrderSeeder extends Seeder
         $order7 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0007'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => null,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0007'),
                 'mode' => 'takeaway',
@@ -296,7 +296,7 @@ class OrderSeeder extends Seeder
         $order8 = Order::query()->updateOrCreate(
             ['number' => 'ORD-2026-0008'],
             [
-                'restaurant_id' => $demoRestaurant->id,
+                'restaurant_id' => $reposRestaurant->id,
                 'restaurant_table_id' => $table3?->id,
                 'tracking_token' => hash('sha256', 'qreatery-track-order-0008'),
                 'mode' => 'dine_in',

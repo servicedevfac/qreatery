@@ -24,7 +24,7 @@
         <div class="flex items-center gap-2 shrink-0">
             <!-- Accès rapide Espace Gestion Propriétaire / Staff -->
             <a
-                href="/?view=restaurant&restaurant={{ request('restaurant', 'restaurant-demo') }}"
+                href="/?view=restaurant&restaurant={{ request('restaurant', 'restaurant-repos') }}"
                 class="touch-target p-2 rounded-brand bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border text-gray-500 hover:text-brand-orange dark:text-gray-400 dark:hover:text-brand-orange transition-colors focus-ring"
                 title="Accéder à l'espace de gestion restaurant (Propriétaire / Personnel)"
                 aria-label="Espace de gestion restaurant"

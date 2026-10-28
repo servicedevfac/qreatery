@@ -41,7 +41,7 @@
         </div>
 
         @php
-            $currentRestoSlug = request('restaurant', 'restaurant-demo');
+            $currentRestoSlug = request('restaurant', 'restaurant-repos');
         @endphp
 
         <!-- Centre : Raccourcis navigation Propriétaire et filtres POS -->

@@ -28,7 +28,7 @@ class UserResource extends JsonResource
                 $membership = $this->restaurantMemberships()->where('is_active', true)->with('restaurant')->first();
                 if ($membership) {
                     $role = $membership->role?->value ?? (string) $membership->role;
-                    $slug = $membership->restaurant?->slug ?? 'restaurant-demo';
+                    $slug = $membership->restaurant?->slug ?? 'restaurant-repos';
                     $email = strtolower((string) $this->email);
 
                     if ($role === 'cashier') {
@@ -45,7 +45,7 @@ class UserResource extends JsonResource
                     return "/?view=restaurant&restaurant={$slug}";
                 }
 
-                return '/?restaurant=restaurant-demo';
+                return '/?restaurant=restaurant-repos';
             })(),
             'last_login_at' => $this->last_login_at,
             'created_at' => $this->created_at,

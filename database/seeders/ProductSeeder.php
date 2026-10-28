@@ -13,25 +13,25 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
-        $catEntrees = Category::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'entrees-tapas')->first();
-        $catPlats = Category::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'plats-chauds-grillades')->first();
-        $catBurgers = Category::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'burgers-street-food')->first();
-        $catBoissons = Category::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'boissons-cocktails')->first();
-        $catDesserts = Category::query()->where('restaurant_id', $demoRestaurant->id)->where('slug', 'desserts-gourmands')->first();
+        $catEntrees = Category::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'entrees-tapas')->first();
+        $catPlats = Category::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'plats-chauds-grillades')->first();
+        $catBurgers = Category::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'burgers-street-food')->first();
+        $catBoissons = Category::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'boissons-cocktails')->first();
+        $catDesserts = Category::query()->where('restaurant_id', $reposRestaurant->id)->where('slug', 'desserts-gourmands')->first();
 
-        $groupCuisson = OptionGroup::query()->where('restaurant_id', $demoRestaurant->id)->where('name', 'Cuisson de la viande')->first();
-        $groupSauces = OptionGroup::query()->where('restaurant_id', $demoRestaurant->id)->where('name', 'Sauces d\'accompagnement')->first();
-        $groupSupplements = OptionGroup::query()->where('restaurant_id', $demoRestaurant->id)->where('name', 'Suppléments gourmands')->first();
+        $groupCuisson = OptionGroup::query()->where('restaurant_id', $reposRestaurant->id)->where('name', 'Cuisson de la viande')->first();
+        $groupSauces = OptionGroup::query()->where('restaurant_id', $reposRestaurant->id)->where('name', 'Sauces d\'accompagnement')->first();
+        $groupSupplements = OptionGroup::query()->where('restaurant_id', $reposRestaurant->id)->where('name', 'Suppléments gourmands')->first();
 
         // 1. Burger Qreatery Signature (Avec variantes et options)
         if ($catBurgers) {
             $burger = Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'burger-qreatery-signature'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'burger-qreatery-signature'],
                 [
                     'category_id' => $catBurgers->id,
                     'name' => 'Burger Qreatery Signature',
@@ -62,7 +62,7 @@ class ProductSeeder extends Seeder
         // 2. Salade César Croustillante
         if ($catEntrees) {
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'salade-cesar-croustillante'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'salade-cesar-croustillante'],
                 [
                     'category_id' => $catEntrees->id,
                     'name' => 'Salade César Croustillante',
@@ -77,7 +77,7 @@ class ProductSeeder extends Seeder
 
             // Nems aux crevettes
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'nems-crevettes-fraiches'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'nems-crevettes-fraiches'],
                 [
                     'category_id' => $catEntrees->id,
                     'name' => 'Nems aux Crevettes Fraîches (x4)',
@@ -95,7 +95,7 @@ class ProductSeeder extends Seeder
         if ($catPlats) {
             // Côte de boeuf
             $coteBoeuf = Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'cote-de-boeuf-braisee'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'cote-de-boeuf-braisee'],
                 [
                     'category_id' => $catPlats->id,
                     'name' => 'Côte de Bœuf Braisée (400g)',
@@ -113,7 +113,7 @@ class ProductSeeder extends Seeder
 
             // Filet de Mérou braisé
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'filet-merou-braise'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'filet-merou-braise'],
                 [
                     'category_id' => $catPlats->id,
                     'name' => 'Filet de Mérou Braisé & Alloco',
@@ -128,7 +128,7 @@ class ProductSeeder extends Seeder
 
             // Poulet Kedjenou
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'poulet-kedjenou-traditionnel'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'poulet-kedjenou-traditionnel'],
                 [
                     'category_id' => $catPlats->id,
                     'name' => 'Poulet Kedjenou Traditionnel',
@@ -145,7 +145,7 @@ class ProductSeeder extends Seeder
         // 4. Boissons & Cocktails
         if ($catBoissons) {
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'mojito-passion-frais'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'mojito-passion-frais'],
                 [
                     'category_id' => $catBoissons->id,
                     'name' => 'Mojito Passion Frais',
@@ -159,7 +159,7 @@ class ProductSeeder extends Seeder
             );
 
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'bissap-frais-artisanal'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'bissap-frais-artisanal'],
                 [
                     'category_id' => $catBoissons->id,
                     'name' => 'Bissap Frais Artisanal (50cl)',
@@ -176,7 +176,7 @@ class ProductSeeder extends Seeder
         // 5. Desserts Gourmands
         if ($catDesserts) {
             Product::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'slug' => 'fondant-chocolat-glace-vanille'],
+                ['restaurant_id' => $reposRestaurant->id, 'slug' => 'fondant-chocolat-glace-vanille'],
                 [
                     'category_id' => $catDesserts->id,
                     'name' => 'Fondant au Chocolat Noir & Glace Vanille',

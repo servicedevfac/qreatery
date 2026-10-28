@@ -2,10 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
 class LandingPageTest extends TestCase
 {
+    use LazilyRefreshDatabase;
+
     public function test_landing_page_renders_successfully(): void
     {
         $response = $this->get('/');
@@ -26,7 +30,7 @@ class LandingPageTest extends TestCase
 
     public function test_client_view_preserved_with_restaurant_parameter(): void
     {
-        $response = $this->get('/?restaurant=restaurant-demo');
+        $response = $this->get('/?restaurant=restaurant-repos');
 
         $response->assertStatus(200);
         $response->assertSee('client-menu-container');
@@ -54,5 +58,18 @@ class LandingPageTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Connexion');
+    }
+
+    public function test_super_admin_subscriptions_section_renders_successfully(): void
+    {
+        $admin = User::factory()->create(['is_platform_admin' => true]);
+
+        $response = $this->actingAs($admin)->get('/?view=admin&section=subscriptions');
+
+        $response->assertStatus(200);
+        $response->assertSee('subscriptions-total-badge');
+        $response->assertSee('Abonnements &amp; Règlements', false);
+        $response->assertSee('kpi-active-count');
+        $response->assertSee('create-subscription-modal');
     }
 }

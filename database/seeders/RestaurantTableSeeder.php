@@ -10,8 +10,8 @@ class RestaurantTableSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
@@ -27,7 +27,7 @@ class RestaurantTableSeeder extends Seeder
 
         foreach ($tables as $t) {
             RestaurantTable::query()->updateOrCreate(
-                ['restaurant_id' => $demoRestaurant->id, 'label' => $t['label']],
+                ['restaurant_id' => $reposRestaurant->id, 'label' => $t['label']],
                 $t
             );
         }

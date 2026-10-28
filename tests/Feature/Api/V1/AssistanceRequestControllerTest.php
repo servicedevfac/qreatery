@@ -21,7 +21,7 @@ class AssistanceRequestControllerTest extends TestCase
     {
         Event::fake([AssistanceRequested::class]);
         $owner = User::factory()->create();
-        $restaurant = Restaurant::factory()->create(['slug' => 'assistance-demo']);
+        $restaurant = Restaurant::factory()->create(['slug' => 'assistance-repos']);
         RestaurantMembership::factory()->owner()->for($restaurant)->for($owner)->create();
         $restaurantTable = RestaurantTable::factory()->for($restaurant)->create(['label' => 'Table 4']);
         $qrCode = QrCode::factory()->for($restaurant)->create([
@@ -29,7 +29,7 @@ class AssistanceRequestControllerTest extends TestCase
             'type' => 'table',
         ]);
 
-        $create = $this->postJson('/api/v1/public/restaurants/assistance-demo/assistance-requests', [
+        $create = $this->postJson('/api/v1/public/restaurants/assistance-repos/assistance-requests', [
             'qr_token' => $qrCode->token,
             'type' => 'waiter',
             'message' => 'Nous souhaitons commander autre chose.',

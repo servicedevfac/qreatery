@@ -1,5 +1,7 @@
 @php
-    $orders = $restaurant->orders()->with(['restaurantTable', 'items.options', 'payments', 'statusHistories'])->latest('id')->get();
+    $demoService = $demoService ?? app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $isDemoSession ?? $demoService->isDemoSession(auth()->user(), $restaurant);
+    $orders = $demoService->getOrdersData($restaurant, $isDemoSession);
 @endphp
 
 <div class="space-y-6">

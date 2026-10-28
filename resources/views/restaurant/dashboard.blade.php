@@ -1,21 +1,19 @@
 @php
-    $ordersToday = $restaurant->orders()->with(['restaurantTable'])->whereDate('created_at', today())->get();
-    $activeOrders = $ordersToday->whereIn('preparation_status', ['pending', 'accepted', 'preparing', 'ready']);
-    
-    $chargesTodayMinor = $restaurant->payments()
-        ->where('status', 'succeeded')
-        ->where('type', 'charge')
-        ->whereDate('processed_at', today())
-        ->sum('amount_minor');
-        
-    $tables = $restaurant->restaurantTables()->where('is_active', true)->whereNull('archived_at')->get();
-    $totalTables = $tables->count();
-    $occupiedTables = $activeOrders->whereNotNull('restaurant_table_id')->pluck('restaurant_table_id')->unique()->count();
-    
-    $pendingAssistance = $restaurant->assistanceRequests()->where('status', 'pending')->with('restaurantTable')->latest()->take(5)->get();
-    $lateOrders = $activeOrders->filter(function($order) {
-        return $order->created_at && $order->created_at->diffInMinutes(now()) >= 45;
-    });
+    $demoService = $demoService ?? app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $isDemoSession ?? $demoService->isDemoSession(auth()->user(), $restaurant);
+    $dashData = $demoService->getDashboardData($restaurant, $isDemoSession);
+
+    $chargesTodayMinor = $dashData['chargesTodayMinor'];
+    $totalOrdersTodayCount = $dashData['totalOrdersTodayCount'];
+    $activeOrdersCount = $dashData['activeOrdersCount'];
+    $totalTables = $dashData['totalTables'];
+    $occupiedTables = $dashData['occupiedTables'];
+    $avgBasketMinor = $dashData['averageBasketMinor'];
+    $pendingAssistance = $dashData['pendingAssistance'];
+    $lateOrders = $dashData['lateOrders'];
+    $recentOrders = $dashData['recentOrders'];
+    $tables = $dashData['tables'];
+    $occupiedTableIds = $dashData['occupiedTableIds'];
 @endphp
 
 <div class="space-y-6">
@@ -87,7 +85,7 @@
             </div>
             <div class="mt-3">
                 <p class="text-2xl font-black text-brand-text dark:text-white">
-                    {{ $activeOrders->count() }} <span class="text-xs font-semibold text-gray-500">/ {{ $ordersToday->count() }} totales</span>
+                    {{ $activeOrdersCount }} <span class="text-xs font-semibold text-gray-500">/ {{ $totalOrdersTodayCount }} totales</span>
                 </p>
                 <p class="text-[11px] text-gray-500 mt-1">En attente, préparation ou prêtes</p>
             </div>
@@ -120,11 +118,8 @@
                 </span>
             </div>
             <div class="mt-3">
-                @php
-                    $avgBasket = $ordersToday->count() > 0 ? (int) round($ordersToday->avg('total_minor')) : 0;
-                @endphp
                 <p class="text-2xl font-black text-brand-text dark:text-white">
-                    {{ number_format($avgBasket / 100, 0, ',', ' ') }} <span class="text-xs font-semibold text-gray-500">{{ $restaurant->currency }}</span>
+                    {{ number_format($avgBasketMinor / 100, 0, ',', ' ') }} <span class="text-xs font-semibold text-gray-500">{{ $restaurant->currency }}</span>
                 </p>
                 <p class="text-[11px] text-gray-500 mt-1">Moyenne par commande aujourd'hui</p>
             </div>
@@ -132,7 +127,7 @@
     </div>
 
     <!-- Raccourcis Opérationnels Directs -->
-    <div class="bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-transparent border border-brand-orange/20 rounded-brand-lg p-4 flex flex-wrap items-center justify-between gap-4">
+    <div class="bg-brand-orange/10 border border-brand-orange/20 rounded-brand-lg p-4 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
             <span class="w-10 h-10 rounded-brand bg-brand-orange text-white flex items-center justify-center font-bold text-lg shadow-sm">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -175,7 +170,7 @@
             </div>
 
             <div class="divide-y divide-gray-100 dark:divide-brand-dark-border overflow-x-auto">
-                @forelse($restaurant->orders()->with(['restaurantTable', 'items'])->latest()->take(6)->get() as $order)
+                @forelse($recentOrders as $order)
                     <div class="p-4 flex items-center justify-between gap-4 hover:bg-gray-50 dark:hover:bg-brand-dark/50 transition-colors">
                         <div class="flex items-center gap-3 min-w-0">
                             <span class="w-9 h-9 rounded-brand bg-gray-100 dark:bg-brand-dark text-gray-700 dark:text-gray-300 flex items-center justify-center font-mono text-xs font-bold shrink-0">
@@ -191,7 +186,7 @@
                                     </span>
                                 </div>
                                 <p class="text-xs text-gray-500 truncate">
-                                    {{ $order->mode === 'dine_in' ? 'Table ' . ($order->restaurantTable?->label ?? 'N/A') : 'À emporter' }} • {{ $order->items->count() }} article(s)
+                                    {{ $order->mode === 'dine_in' ? 'Table ' . ($order->restaurantTable?->label ?? 'N/A') : 'À emporter' }} • {{ isset($order->items) ? $order->items->count() : 1 }} article(s)
                                 </p>
                             </div>
                         </div>
@@ -249,7 +244,7 @@
                 <div class="grid grid-cols-2 gap-3 mt-4">
                     @forelse($tables->take(6) as $tbl)
                         @php
-                            $isOccupied = $activeOrders->where('restaurant_table_id', $tbl->id)->isNotEmpty();
+                            $isOccupied = in_array($tbl->id, $occupiedTableIds);
                         @endphp
                         <div class="p-3 rounded-brand border {{ $isOccupied ? 'border-amber-400 bg-amber-50/50 dark:bg-amber-950/20' : 'border-gray-200 dark:border-brand-dark-border bg-gray-50/50 dark:bg-brand-dark/40' }} flex flex-col justify-between">
                             <div class="flex items-center justify-between">

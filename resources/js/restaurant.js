@@ -6,7 +6,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var ctx = window.QreateryContext || {};
     var restaurantId = ctx.restaurantId || 1;
-    var restaurantSlug = ctx.restaurantSlug || 'restaurant-demo';
+    var restaurantSlug = ctx.restaurantSlug || 'restaurant-repos';
     var csrfToken = ctx.csrfToken || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     /* ==========================================================
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     credentials: 'same-origin'
                 });
-            } catch (e) {}
+            } catch (e) { }
             window.location.reload();
         });
     }

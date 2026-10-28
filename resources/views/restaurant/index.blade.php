@@ -1,10 +1,12 @@
 @php
-    $restaurantSlug = request('restaurant', 'restaurant-demo');
+    $restaurantSlug = request('restaurant', 'restaurant-repos');
     $restaurant = \App\Models\Restaurant::query()->where('slug', $restaurantSlug)->first()
         ?? \App\Models\Restaurant::query()->where('status', 'active')->first()
         ?? \App\Models\Restaurant::query()->first();
 
-    $allRestaurants = \App\Models\Restaurant::query()->orderBy('name')->get();
+    $demoService = app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $demoService->isDemoSession(auth()->user(), $restaurant);
+    $allRestaurants = $demoService->getAccessibleRestaurants(auth()->user(), $restaurant);
 
     $activeSection = request('section', 'dashboard');
     $sectionTitles = [
@@ -15,7 +17,8 @@
         'reports' => 'Rapports & Analyses Financières',
         'settings' => 'Configuration & Équipe',
     ];
-    $headerTitle = ($restaurant ? $restaurant->name . ' — ' : '') . ($sectionTitles[$activeSection] ?? 'Gestion Restaurant');
+    $displayRestoName = $isDemoSession ? 'Qreatery Restaurant (DÉMO)' : ($restaurant?->name ?? 'Restaurant');
+    $headerTitle = $displayRestoName . ' — ' . ($sectionTitles[$activeSection] ?? 'Gestion Restaurant');
 
     // Vérification de l'état d'abonnement pour alerte éventuelle (DEC-07 / DEC-08)
     $activeSub = $restaurant?->subscriptions()->latest('id')->first();
@@ -34,10 +37,13 @@
             <label for="restaurant-switcher" class="text-xs font-medium text-gray-500 hidden sm:inline">Établissement :</label>
             <select id="restaurant-switcher" class="text-xs font-semibold bg-gray-50 dark:bg-brand-dark border border-gray-200 dark:border-brand-dark-border text-brand-text dark:text-white rounded-brand px-2.5 py-1.5 focus:ring-1 focus:ring-brand-orange focus:border-brand-orange cursor-pointer">
                 @foreach($allRestaurants as $resto)
-                    <option value="{{ $resto->slug }}" {{ $restaurant && $restaurant->id === $resto->id ? 'selected' : '' }}>
+                    <option value="{{ $resto->slug }}" {{ ($restaurant && $restaurant->id === $resto->id) || $isDemoSession ? 'selected' : '' }}>
                         {{ $resto->name }} ({{ strtoupper($resto->status->value) }})
                     </option>
                 @endforeach
+                @if($isDemoSession)
+                    <option disabled value="">— Connectez-vous pour vos établissements —</option>
+                @endif
             </select>
         </div>
 
@@ -67,14 +73,19 @@
         </button>
     </x-slot>
 
-    <!-- Bandeau Mode Consultation si non connecté -->
-    @if(!auth()->check())
-        <div class="mb-5 bg-gradient-to-r from-amber-500/10 via-brand-orange/10 to-transparent border border-amber-500/30 rounded-brand-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+    <!-- Bandeau Mode Démonstration pour Session Invité -->
+    @if($isDemoSession)
+        <div class="mb-5 bg-amber-500/10 border border-amber-500/30 rounded-brand-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-2.5">
-                <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <div class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
                 <div>
-                    <span class="font-bold text-brand-text dark:text-white">Session invité (Consultation) :</span>
-                    <span class="text-gray-600 dark:text-gray-400 ml-1">Connectez-vous pour ajouter des plats, créer des tables ou modifier la configuration.</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-brand-text dark:text-white">Session invité (Mode Démonstration) :</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-200 dark:bg-amber-900/50 text-amber-900 dark:text-amber-200">Données factices</span>
+                    </div>
+                    <span class="text-gray-600 dark:text-gray-400">Toutes les données affichées ci-dessous sont 100% fictives pour préserver la confidentialité du restaurant. Connectez-vous pour ajouter des plats, créer des tables ou accéder à vos vraies données.</span>
                 </div>
             </div>
             <a href="/login" class="px-3.5 py-1.5 bg-brand-orange hover:bg-brand-orange-dark text-white font-bold rounded-brand transition-colors shrink-0 shadow-xs flex items-center gap-1.5">
@@ -86,17 +97,17 @@
 
     <!-- Contenu selon la section active -->
     @if($activeSection === 'orders')
-        @include('restaurant.orders')
+        @include('restaurant.orders', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @elseif($activeSection === 'menu')
-        @include('restaurant.menu')
+        @include('restaurant.menu', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @elseif($activeSection === 'tables')
-        @include('restaurant.tables')
+        @include('restaurant.tables', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @elseif($activeSection === 'reports')
-        @include('restaurant.reports')
+        @include('restaurant.reports', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @elseif($activeSection === 'settings')
-        @include('restaurant.settings')
+        @include('restaurant.settings', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @else
-        @include('restaurant.dashboard')
+        @include('restaurant.dashboard', ['isDemoSession' => $isDemoSession, 'demoService' => $demoService])
     @endif
 
     <!-- Modales fonctionnelles de l'espace restaurant -->
@@ -111,7 +122,7 @@
     <script>
         window.QreateryContext = {
             restaurantId: {{ $restaurant->id ?? 1 }},
-            restaurantSlug: '{{ $restaurant->slug ?? "restaurant-demo" }}',
+            restaurantSlug: '{{ $restaurant->slug ?? "restaurant-repos" }}',
             restaurantName: '{{ addslashes($restaurant->name ?? "Restaurant Démo") }}',
             currency: '{{ $restaurant->currency ?? "XOF" }}',
             activeSection: '{{ $activeSection }}',

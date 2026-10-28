@@ -4,14 +4,14 @@ import { createRealtimeClient } from './realtime.js';
     'use strict';
 
     // Sécurisation globale des gestionnaires de modales
-    window.openModal = window.openModal || function(id) {
+    window.openModal = window.openModal || function (id) {
         var modal = document.getElementById(id);
         if (!modal) return;
         modal.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
     };
 
-    window.closeModal = window.closeModal || function(id) {
+    window.closeModal = window.closeModal || function (id) {
         var modal = document.getElementById(id);
         if (!modal) return;
         modal.classList.add('hidden');
@@ -107,7 +107,7 @@ import { createRealtimeClient } from './realtime.js';
         }
 
         // Cas 3 : Accès par slug restaurant ou restaurant par défaut (mode à emporter par défaut)
-        state.restaurantSlug = slugFromUrl || 'restaurant-demo';
+        state.restaurantSlug = slugFromUrl || 'restaurant-repos';
         setOrderMode('takeaway');
         showLoading(true);
         await loadMenu(state.restaurantSlug);
@@ -1001,7 +1001,7 @@ import { createRealtimeClient } from './realtime.js';
                 const newUrl = new URL(window.location);
                 newUrl.searchParams.set('tracking', createdOrder.tracking_token);
                 window.history.pushState({}, '', newUrl);
-            } catch (e) {}
+            } catch (e) { }
 
             renderTrackingOrder(createdOrder);
             initTrackingRealtime(createdOrder.tracking_token);

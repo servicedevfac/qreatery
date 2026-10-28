@@ -107,7 +107,7 @@
                         </ul>
                         <div class="pt-2">
                             <a
-                                href="/?restaurant=restaurant-demo"
+                                href="/?restaurant=restaurant-repos"
                                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-orange hover:bg-brand-orange-dark text-white text-xs font-bold rounded-brand transition-colors shadow-sm"
                             >
                                 <span>Tester le menu client en direct</span>

@@ -1,14 +1,12 @@
 @php
-    $tables = $restaurant->restaurantTables()->whereNull('archived_at')->with(['qrCodes'])->orderBy('id')->get();
-    $takeawayQr = $restaurant->qrCodes()->where('type', 'takeaway')->where('status', 'active')->first();
-    $qrConfig = $restaurant->settings['qr_options'] ?? [];
-    
-    // Commandes actives par table pour identifier l'occupation en temps réel
-    $activeOrdersByTable = $restaurant->orders()
-        ->whereIn('preparation_status', ['pending', 'accepted', 'preparing', 'ready'])
-        ->whereNotNull('restaurant_table_id')
-        ->get()
-        ->groupBy('restaurant_table_id');
+    $demoService = $demoService ?? app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $isDemoSession ?? $demoService->isDemoSession(auth()->user(), $restaurant);
+    $tablesData = $demoService->getTablesData($restaurant, $isDemoSession);
+
+    $tables = $tablesData['tables'];
+    $takeawayQr = $tablesData['takeawayQr'];
+    $qrConfig = $tablesData['qrConfig'];
+    $activeOrdersByTable = $tablesData['activeOrdersByTable'];
 @endphp
 
 <div class="space-y-6">

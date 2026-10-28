@@ -1,7 +1,11 @@
 @php
-    $memberships = $restaurant->memberships()->with('user')->get();
-    $openingHours = $restaurant->openingHours()->orderBy('day_of_week')->get();
-    $subscription = $restaurant->subscriptions()->latest('id')->with('plan')->first();
+    $demoService = $demoService ?? app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $isDemoSession ?? $demoService->isDemoSession(auth()->user(), $restaurant);
+    $settingsData = $demoService->getSettingsData($restaurant, $isDemoSession);
+
+    $memberships = $settingsData['memberships'];
+    $openingHours = $settingsData['openingHours'];
+    $subscription = $settingsData['subscription'];
     
     $days = [
         1 => 'Lundi',
@@ -69,8 +73,8 @@
                             {{ $roleLabels[$roleVal] ?? ucfirst($roleVal) }}
                         </span>
 
-                        <span class="text-xs {{ $membership->is_active ? 'text-emerald-600' : 'text-gray-400' }} font-semibold">
-                            {{ $membership->is_active ? 'Actif' : 'Suspendu' }}
+                        <span class="text-xs {{ ($membership->is_active ?? true) ? 'text-emerald-600' : 'text-gray-400' }} font-semibold">
+                            {{ ($membership->is_active ?? true) ? 'Actif' : 'Suspendu' }}
                         </span>
 
                         @if($roleVal !== 'owner')

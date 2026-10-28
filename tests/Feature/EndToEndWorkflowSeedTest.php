@@ -35,10 +35,10 @@ class EndToEndWorkflowSeedTest extends TestCase
         $this->assertNotNull($owner);
         $this->assertFalse($owner->is_platform_admin);
 
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        $this->assertNotNull($demoRestaurant);
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        $this->assertNotNull($reposRestaurant);
 
-        $membership = $owner->membershipFor($demoRestaurant);
+        $membership = $owner->membershipFor($reposRestaurant);
         $this->assertNotNull($membership);
         $this->assertSame('owner', $membership->role->value);
     }
@@ -76,7 +76,7 @@ class EndToEndWorkflowSeedTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonFragment(['slug' => 'restaurant-demo']);
+            ->assertJsonFragment(['slug' => 'restaurant-repos']);
     }
 
     /**
@@ -104,9 +104,9 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_05_subscriptions_and_payments_consultation(): void
     {
         $admin = User::query()->where('email', 'admin@qreatery.test')->first();
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
-        $response = $this->actingAs($admin)->getJson("/api/v1/admin/restaurants/{$demoRestaurant->id}/subscriptions");
+        $response = $this->actingAs($admin)->getJson("/api/v1/admin/restaurants/{$reposRestaurant->id}/subscriptions");
 
         $response->assertOk()
             ->assertJsonStructure(['data' => [['id', 'status', 'starts_at', 'ends_at']]]);
@@ -142,11 +142,11 @@ class EndToEndWorkflowSeedTest extends TestCase
         // 1. Résolution du QR code
         $qrResponse = $this->getJson("/api/v1/public/qr-codes/{$qrCode->token}");
         $qrResponse->assertOk()
-            ->assertJsonPath('data.restaurant.slug', 'restaurant-demo')
+            ->assertJsonPath('data.restaurant.slug', 'restaurant-repos')
             ->assertJsonPath('data.table.label', 'Table 1');
 
         // 2. Consultation du menu public du restaurant
-        $menuResponse = $this->getJson('/api/v1/public/restaurants/restaurant-demo/menu');
+        $menuResponse = $this->getJson('/api/v1/public/restaurants/restaurant-repos/menu');
         $menuResponse->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -175,7 +175,7 @@ class EndToEndWorkflowSeedTest extends TestCase
         $qrCode = QrCode::query()->where('type', 'table')->first();
         $this->assertNotNull($qrCode);
 
-        $response = $this->postJson('/api/v1/public/restaurants/restaurant-demo/orders', [
+        $response = $this->postJson('/api/v1/public/restaurants/restaurant-repos/orders', [
             'mode' => 'dine_in',
             'qr_token' => $qrCode->token,
             'customer_name' => 'Jean Client Test',
@@ -217,7 +217,7 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_10_kds_kitchen_orders_reception(): void
     {
         $cook = User::query()->where('email', 'cook@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         $response = $this->actingAs($cook)->getJson("/api/v1/restaurants/{$restaurant->id}/orders");
 
@@ -232,7 +232,7 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_11_kds_order_status_progression(): void
     {
         $cook = User::query()->where('email', 'cook@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
         $order = Order::query()->where('number', 'ORD-2026-0001')->first();
 
         // 1. Passage de pending à accepted
@@ -254,7 +254,7 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_12_pos_orders_management(): void
     {
         $cashier = User::query()->where('email', 'cashier@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
         $order = Order::query()->where('number', 'ORD-2026-0002')->first();
 
         $response = $this->actingAs($cashier)->getJson("/api/v1/restaurants/{$restaurant->id}/orders/{$order->id}");
@@ -270,7 +270,7 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_13_pos_payment_and_partial_payments(): void
     {
         $cashier = User::query()->where('email', 'cashier@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
         $order = Order::query()->where('number', 'ORD-2026-0002')->first(); // 11 500 FCFA
 
         // Paiement partiel de 5 000 FCFA
@@ -295,7 +295,7 @@ class EndToEndWorkflowSeedTest extends TestCase
     public function test_scenario_14_sales_reports_overview(): void
     {
         $owner = User::query()->where('email', 'owner@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         $response = $this->actingAs($owner)->getJson("/api/v1/restaurants/{$restaurant->id}/reports/overview");
 
@@ -320,7 +320,7 @@ class EndToEndWorkflowSeedTest extends TestCase
         $this->assertNotNull($qrCode);
 
         // 1. Client émet une demande d'assistance
-        $publicRes = $this->postJson('/api/v1/public/restaurants/restaurant-demo/assistance-requests', [
+        $publicRes = $this->postJson('/api/v1/public/restaurants/restaurant-repos/assistance-requests', [
             'qr_token' => $qrCode->token,
             'type' => 'waiter',
             'message' => 'Besoin de sauce pimentée s\'il vous plaît.',
@@ -332,7 +332,7 @@ class EndToEndWorkflowSeedTest extends TestCase
 
         // 2. Serveur prend en charge la demande
         $waiter = User::query()->where('email', 'waiter@qreatery.test')->first();
-        $restaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         $patchRes = $this->actingAs($waiter)->patchJson("/api/v1/restaurants/{$restaurant->id}/assistance-requests/{$reqId}", [
             'status' => 'acknowledged',
@@ -348,17 +348,17 @@ class EndToEndWorkflowSeedTest extends TestCase
         // Utilisateur externe sans appartenance au restaurant
         $owner2 = User::query()->where('email', 'owner2@qreatery.test')->first() ?? User::factory()->create();
         // Restaurant 1 (Restaurant Démo)
-        $restoDemo = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $restorepos = Restaurant::query()->where('slug', 'restaurant-repos')->first();
 
         // 1. Tente d'accéder aux commandes du Restaurant 1 sans appartenance
-        $response = $this->actingAs($owner2)->getJson("/api/v1/restaurants/{$restoDemo->id}/orders");
+        $response = $this->actingAs($owner2)->getJson("/api/v1/restaurants/{$restorepos->id}/orders");
 
         // Doit être masqué avec 404 (denyAsNotFound pour protection anti-énumération)
         $response->assertNotFound();
 
         // 2. Membre authentifié mais sans la permission requise (ex: serveur tente d'accéder aux rapports financiers)
         $waiter = User::query()->where('email', 'waiter@qreatery.test')->first();
-        $forbiddenRes = $this->actingAs($waiter)->getJson("/api/v1/restaurants/{$restoDemo->id}/reports/overview");
+        $forbiddenRes = $this->actingAs($waiter)->getJson("/api/v1/restaurants/{$restorepos->id}/reports/overview");
         $forbiddenRes->assertForbidden();
     }
 
@@ -381,7 +381,7 @@ class EndToEndWorkflowSeedTest extends TestCase
         $res404->assertNotFound();
 
         // 4. Données invalides (ex: payload vide sur commande) -> 422 Unprocessable Entity
-        $res422 = $this->postJson('/api/v1/public/restaurants/restaurant-demo/orders', []);
+        $res422 = $this->postJson('/api/v1/public/restaurants/restaurant-repos/orders', []);
         $res422->assertUnprocessable();
     }
 }

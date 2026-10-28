@@ -134,4 +134,94 @@ class AdminSubscriptionControllerTest extends TestCase
             ->assertJsonPath('data.restaurant.id', $restaurant->id)
             ->assertJsonPath('data.status', 'active');
     }
+
+    public function test_admin_can_list_all_platform_subscriptions_with_search_and_filters(): void
+    {
+        $admin = User::factory()->platformAdmin()->create();
+        $restaurant1 = Restaurant::factory()->create(['name' => 'Bistro Gourmet', 'slug' => 'bistro-gourmet']);
+        $restaurant2 = Restaurant::factory()->create(['name' => 'Pizza Napoli', 'slug' => 'pizza-napoli']);
+
+        $plan = Plan::factory()->create(['name' => 'Premium Pass']);
+        $sub1 = Subscription::factory()->for($restaurant1)->for($plan)->create(['status' => 'active']);
+        $sub2 = Subscription::factory()->for($restaurant2)->for($plan)->create(['status' => 'suspended']);
+
+        // Search by restaurant name
+        $this->actingAs($admin)
+            ->getJson('/api/v1/admin/subscriptions?search=Bistro')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $sub1->id);
+
+        // Filter by status
+        $this->actingAs($admin)
+            ->getJson('/api/v1/admin/subscriptions?status=suspended')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $sub2->id);
+
+        // Filter by plan
+        $this->actingAs($admin)
+            ->getJson("/api/v1/admin/subscriptions?plan_id={$plan->id}")
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
+
+    public function test_admin_can_create_global_subscription_specifying_restaurant(): void
+    {
+        $admin = User::factory()->platformAdmin()->create();
+        $restaurant = Restaurant::factory()->create();
+        $plan = Plan::factory()->create(['billing_period' => 'month', 'billing_interval' => 1]);
+
+        $response = $this->actingAs($admin)->postJson('/api/v1/admin/subscriptions', [
+            'restaurant_id' => $restaurant->id,
+            'plan_id' => $plan->id,
+            'starts_at' => now()->addDay()->toDateTimeString(),
+            'notes' => 'Créé depuis la gestion globale',
+        ]);
+
+        $response
+            ->assertCreated()
+            ->assertJsonPath('data.restaurant.id', $restaurant->id)
+            ->assertJsonPath('data.plan.id', $plan->id)
+            ->assertJsonPath('data.status', 'active');
+
+        $this->assertDatabaseHas('subscriptions', [
+            'restaurant_id' => $restaurant->id,
+            'plan_id' => $plan->id,
+            'notes' => 'Créé depuis la gestion globale',
+        ]);
+    }
+
+    public function test_admin_can_view_global_subscription_details(): void
+    {
+        $admin = User::factory()->platformAdmin()->create();
+        $subscription = Subscription::factory()->create();
+
+        $this->actingAs($admin)
+            ->getJson("/api/v1/admin/subscriptions/{$subscription->id}")
+            ->assertOk()
+            ->assertJsonPath('data.id', $subscription->id)
+            ->assertJsonPath('data.restaurant.id', $subscription->restaurant_id);
+    }
+
+    public function test_non_admin_cannot_access_global_subscriptions(): void
+    {
+        $regularUser = User::factory()->create();
+        $subscription = Subscription::factory()->create();
+
+        $this->actingAs($regularUser)
+            ->getJson('/api/v1/admin/subscriptions')
+            ->assertForbidden();
+
+        $this->actingAs($regularUser)
+            ->postJson('/api/v1/admin/subscriptions', [
+                'restaurant_id' => $subscription->restaurant_id,
+                'plan_id' => $subscription->plan_id,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($regularUser)
+            ->getJson("/api/v1/admin/subscriptions/{$subscription->id}")
+            ->assertForbidden();
+    }
 }

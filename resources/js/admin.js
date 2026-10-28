@@ -815,6 +815,212 @@ document.addEventListener('DOMContentLoaded', function () {
                 .replace(/'/g, '&#039;');
         }
 
+        // =====================================================================
+        // Gestion de la Modale de Création de Restaurant (Super-Admin)
+        // =====================================================================
+        var btnCreateRestaurant = document.getElementById('btn-create-restaurant');
+        var btnEmptyCreateRestaurant = document.getElementById('btn-empty-create');
+        var createModal = document.getElementById('create-restaurant-modal');
+        var createModalBackdrop = document.getElementById('create-restaurant-modal-backdrop');
+        var btnCloseCreateModal = document.getElementById('btn-close-create-restaurant-modal');
+        var btnCancelCreateModal = document.getElementById('btn-cancel-create-restaurant-modal');
+        var createForm = document.getElementById('create-restaurant-form');
+        var btnSubmitCreateModal = document.getElementById('btn-submit-create-restaurant-modal');
+        var createSubmitSpinner = document.getElementById('create-resto-submit-spinner');
+        var createSubmitText = document.getElementById('create-resto-submit-text');
+        var createGeneralError = document.getElementById('create-resto-general-error');
+
+        var nameInput = document.getElementById('create-resto-name');
+        var slugInput = document.getElementById('create-resto-slug');
+        var slugManuallyEdited = false;
+
+        function clearCreateErrors() {
+            if (createGeneralError) {
+                createGeneralError.classList.add('hidden');
+                createGeneralError.textContent = '';
+            }
+            var errElements = document.querySelectorAll('[id^="create-resto-error-"]');
+            errElements.forEach(function (el) {
+                el.classList.add('hidden');
+                el.textContent = '';
+            });
+        }
+
+        function openCreateModal() {
+            if (!createModal) return;
+            clearCreateErrors();
+            if (createForm) createForm.reset();
+            slugManuallyEdited = false;
+            createModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            setTimeout(function () {
+                if (nameInput) nameInput.focus();
+            }, 100);
+        }
+
+        function closeCreateModal() {
+            if (!createModal) return;
+            createModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            if (btnSubmitCreateModal) btnSubmitCreateModal.disabled = false;
+            if (createSubmitSpinner) createSubmitSpinner.classList.add('hidden');
+            if (createSubmitText) createSubmitText.textContent = 'Créer le restaurant';
+        }
+
+        if (slugInput) {
+            slugInput.addEventListener('input', function () {
+                slugManuallyEdited = this.value.trim() !== '';
+            });
+        }
+
+        if (nameInput && slugInput) {
+            nameInput.addEventListener('input', function () {
+                if (!slugManuallyEdited) {
+                    slugInput.value = nameInput.value
+                        .toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/(^-|-$)+/g, '');
+                }
+            });
+        }
+
+        if (btnCreateRestaurant) btnCreateRestaurant.addEventListener('click', openCreateModal);
+        if (btnEmptyCreateRestaurant) btnEmptyCreateRestaurant.addEventListener('click', openCreateModal);
+        if (btnCloseCreateModal) btnCloseCreateModal.addEventListener('click', closeCreateModal);
+        if (btnCancelCreateModal) btnCancelCreateModal.addEventListener('click', closeCreateModal);
+        if (createModalBackdrop) createModalBackdrop.addEventListener('click', closeCreateModal);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && createModal && !createModal.classList.contains('hidden')) {
+                closeCreateModal();
+            }
+        });
+
+        if (createForm) {
+            createForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                clearCreateErrors();
+
+                var nameVal = nameInput ? nameInput.value.trim() : '';
+                if (!nameVal || nameVal.length < 2) {
+                    var errName = document.getElementById('create-resto-error-name');
+                    if (errName) {
+                        errName.textContent = 'Le nom du restaurant doit comporter au moins 2 caractères.';
+                        errName.classList.remove('hidden');
+                    }
+                    if (nameInput) nameInput.focus();
+                    return;
+                }
+
+                var formData = new FormData(createForm);
+                var payload = {};
+                formData.forEach(function (val, key) {
+                    var trimmed = typeof val === 'string' ? val.trim() : val;
+                    if (trimmed !== '') {
+                        payload[key] = trimmed;
+                    }
+                });
+
+                if (btnSubmitCreateModal) btnSubmitCreateModal.disabled = true;
+                if (createSubmitSpinner) createSubmitSpinner.classList.remove('hidden');
+                if (createSubmitText) createSubmitText.textContent = 'Création en cours...';
+
+                try {
+                    var headers = {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    };
+
+                    if (typeof window.csrfToken === 'function') {
+                        var token = window.csrfToken();
+                        if (token) headers['X-CSRF-TOKEN'] = token;
+                    } else {
+                        var metaCsrf = document.querySelector('meta[name="csrf-token"]');
+                        if (metaCsrf) headers['X-CSRF-TOKEN'] = metaCsrf.getAttribute('content');
+                    }
+
+                    var authToken = window.sessionStorage ? window.sessionStorage.getItem('auth_token') : null;
+                    if (authToken) {
+                        headers['Authorization'] = 'Bearer ' + authToken;
+                    }
+
+                    var response = await fetch('/api/v1/admin/restaurants', {
+                        method: 'POST',
+                        headers: headers,
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 401) {
+                        alert('Session expirée. Veuillez vous reconnecter en tant que Super-Administrateur.');
+                        closeCreateModal();
+                        return;
+                    }
+
+                    if (response.status === 403) {
+                        alert('Accès refusé (403) : Privilèges Super-Administrateur requis.');
+                        closeCreateModal();
+                        return;
+                    }
+
+                    if (response.status === 422) {
+                        var errData = await response.json();
+                        var errors = errData && errData.errors ? errData.errors : {};
+
+                        Object.keys(errors).forEach(function (field) {
+                            var el = document.getElementById('create-resto-error-' + field);
+                            if (el) {
+                                el.textContent = errors[field][0];
+                                el.classList.remove('hidden');
+                            }
+                        });
+
+                        if (createGeneralError) {
+                            createGeneralError.textContent = errData.message || 'Veuillez corriger les erreurs dans le formulaire.';
+                            createGeneralError.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        if (createGeneralError) {
+                            createGeneralError.textContent = 'Erreur serveur lors de la création (' + response.status + ').';
+                            createGeneralError.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
+                    var createdResult = await response.json();
+                    var createdResto = createdResult && createdResult.data ? createdResult.data : null;
+
+                    closeCreateModal();
+
+                    if (typeof window.showToast === 'function') {
+                        var msg = createdResto ? 'Le restaurant « ' + escapeHtml(createdResto.name) + ' » a été créé avec succès !' : 'Restaurant créé avec succès.';
+                        window.showToast(msg, 'success', 5000);
+                    }
+
+                    // Rafraîchir l'annuaire
+                    state.page = 1;
+                    fetchRestaurants();
+
+                } catch (err) {
+                    console.error('Erreur POST create restaurant:', err);
+                    if (createGeneralError) {
+                        createGeneralError.textContent = 'Erreur réseau. Impossible de contacter le serveur.';
+                        createGeneralError.classList.remove('hidden');
+                    }
+                } finally {
+                    if (btnSubmitCreateModal) btnSubmitCreateModal.disabled = false;
+                    if (createSubmitSpinner) createSubmitSpinner.classList.add('hidden');
+                    if (createSubmitText) createSubmitText.textContent = 'Créer le restaurant';
+                }
+            });
+        }
+
         // Chargement initial
         fetchRestaurants();
     }
@@ -1701,5 +1907,860 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Chargement initial
         fetchPlans();
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Gestion des Abonnements & Règlements SaaS (Lot 6.5)
+    // -------------------------------------------------------------------------
+    var subscriptionsContent = document.getElementById('subscriptions-content');
+    if (subscriptionsContent) {
+        initSubscriptionsManagement();
+    }
+
+    function initSubscriptionsManagement() {
+        var loadingState = document.getElementById('subscriptions-loading-state');
+        var errorState = document.getElementById('subscriptions-error-state');
+        var errorMessage = document.getElementById('subscriptions-error-message');
+        var emptyState = document.getElementById('subscriptions-empty-state');
+        var retryBtn = document.getElementById('btn-retry-subscriptions');
+        var refreshBtn = document.getElementById('btn-refresh-subscriptions');
+        var refreshIcon = document.getElementById('subscriptions-refresh-icon');
+        var totalBadge = document.getElementById('subscriptions-total-badge');
+
+        var searchInput = document.getElementById('subscriptions-search-input');
+        var searchClear = document.getElementById('subscriptions-search-clear');
+        var statusFilter = document.getElementById('subscriptions-status-filter');
+        var planFilter = document.getElementById('subscriptions-plan-filter');
+        var resetFiltersBtn = document.getElementById('btn-reset-subscription-filters');
+        var emptyResetBtn = document.getElementById('btn-empty-reset-sub');
+        var emptyCreateBtn = document.getElementById('btn-empty-create-sub');
+
+        var tableBody = document.getElementById('subscriptions-table-body');
+        var mobileCards = document.getElementById('subscriptions-mobile-cards');
+
+        var prevPageBtn = document.getElementById('btn-sub-pagination-prev');
+        var nextPageBtn = document.getElementById('btn-sub-pagination-next');
+        var paginationInfo = document.getElementById('sub-pagination-info');
+        var currentPageLabel = document.getElementById('sub-pagination-current-page');
+
+        var kpiActive = document.getElementById('kpi-active-count');
+        var kpiGrace = document.getElementById('kpi-grace-count');
+        var kpiSuspended = document.getElementById('kpi-suspended-count');
+        var kpiPayments = document.getElementById('kpi-payments-total');
+
+        // Modales
+        var btnCreateSub = document.getElementById('btn-create-subscription');
+        var createSubModal = document.getElementById('create-subscription-modal');
+        var createSubBackdrop = document.getElementById('create-sub-modal-backdrop');
+        var btnCloseCreateSub = document.getElementById('btn-close-create-sub-modal');
+        var btnCancelCreateSub = document.getElementById('btn-cancel-create-sub-modal');
+        var createSubForm = document.getElementById('create-subscription-form');
+        var btnSubmitCreateSub = document.getElementById('btn-submit-create-sub-modal');
+        var createSubSpinner = document.getElementById('create-sub-submit-spinner');
+        var createSubGeneralError = document.getElementById('create-sub-general-error');
+
+        // Modale Statut
+        var statusModal = document.getElementById('subscription-status-modal');
+        var statusBackdrop = document.getElementById('sub-status-modal-backdrop');
+        var btnCloseStatusModal = document.getElementById('btn-close-sub-status-modal');
+        var btnCancelStatusModal = document.getElementById('btn-cancel-sub-status-modal');
+        var statusForm = document.getElementById('subscription-status-form');
+        var statusModalId = document.getElementById('sub-status-modal-id');
+        var statusModalResto = document.getElementById('sub-status-modal-restaurant-name');
+        var statusModalPlan = document.getElementById('sub-status-modal-plan-info');
+        var statusModalTarget = document.getElementById('sub-status-modal-target-status');
+        var statusModalReason = document.getElementById('sub-status-modal-reason');
+        var statusModalError = document.getElementById('sub-status-modal-error');
+        var btnSubmitStatusModal = document.getElementById('btn-submit-sub-status-modal');
+        var statusSubmitSpinner = document.getElementById('sub-status-submit-spinner');
+
+        // Modale Paiement
+        var paymentModal = document.getElementById('subscription-payment-modal');
+        var paymentBackdrop = document.getElementById('sub-payment-modal-backdrop');
+        var btnClosePaymentModal = document.getElementById('btn-close-sub-payment-modal');
+        var btnCancelPaymentModal = document.getElementById('btn-cancel-sub-payment-modal');
+        var paymentForm = document.getElementById('subscription-payment-form');
+        var paymentModalId = document.getElementById('sub-payment-modal-id');
+        var paymentModalResto = document.getElementById('sub-payment-modal-restaurant-name');
+        var paymentModalPlan = document.getElementById('sub-payment-modal-plan-info');
+        var paymentModalAmount = document.getElementById('sub-payment-modal-amount');
+        var paymentModalCurrency = document.getElementById('sub-payment-modal-currency');
+        var paymentModalMethod = document.getElementById('sub-payment-modal-method');
+        var paymentModalRef = document.getElementById('sub-payment-modal-reference');
+        var paymentModalStatus = document.getElementById('sub-payment-modal-status');
+        var paymentModalError = document.getElementById('sub-payment-modal-error');
+        var btnSubmitPaymentModal = document.getElementById('btn-submit-sub-payment-modal');
+        var paymentSubmitSpinner = document.getElementById('sub-payment-submit-spinner');
+
+        // Modale Détails
+        var detailsModal = document.getElementById('subscription-details-modal');
+        var detailsBackdrop = document.getElementById('sub-details-modal-backdrop');
+        var btnCloseDetailsModal = document.getElementById('btn-close-sub-details-modal');
+        var btnDismissDetailsModal = document.getElementById('btn-dismiss-sub-details-modal');
+        var detailsSubtitle = document.getElementById('sub-details-modal-subtitle');
+        var detailsStatus = document.getElementById('sub-details-status');
+        var detailsPlan = document.getElementById('sub-details-plan');
+        var detailsStarts = document.getElementById('sub-details-starts');
+        var detailsEnds = document.getElementById('sub-details-ends');
+        var detailsPaymentsCount = document.getElementById('sub-details-payments-count');
+        var detailsPaymentsList = document.getElementById('sub-details-payments-list');
+        var detailsHistoryList = document.getElementById('sub-details-history-list');
+
+        var state = {
+            page: 1,
+            search: '',
+            status: '',
+            plan_id: '',
+            isLoading: false,
+            searchTimer: null,
+            currentRequestId: 0,
+            activeSubscriptions: []
+        };
+
+        function setSubscriptionsState(s, msg) {
+            if (loadingState) loadingState.classList.toggle('hidden', s !== 'loading');
+            if (errorState) errorState.classList.toggle('hidden', s !== 'error');
+            if (emptyState) emptyState.classList.toggle('hidden', s !== 'empty');
+            if (subscriptionsContent) subscriptionsContent.classList.toggle('hidden', s !== 'success');
+
+            if (s === 'error' && errorMessage && msg) {
+                errorMessage.textContent = msg;
+            }
+
+            if (s === 'loading') {
+                if (refreshIcon) refreshIcon.classList.add('animate-spin');
+            } else {
+                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+            }
+        }
+
+        function getAuthHeaders() {
+            var headers = {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+
+            if (typeof window.csrfToken === 'function') {
+                var token = window.csrfToken();
+                if (token) headers['X-CSRF-TOKEN'] = token;
+            } else {
+                var metaCsrf = document.querySelector('meta[name="csrf-token"]');
+                if (metaCsrf) headers['X-CSRF-TOKEN'] = metaCsrf.getAttribute('content');
+            }
+
+            var authToken = window.sessionStorage ? window.sessionStorage.getItem('auth_token') : null;
+            if (authToken) {
+                headers['Authorization'] = 'Bearer ' + authToken;
+            }
+
+            return headers;
+        }
+
+        async function fetchSubscriptions() {
+            if (state.isLoading) return;
+            state.isLoading = true;
+            setSubscriptionsState('loading');
+
+            var requestId = ++state.currentRequestId;
+
+            try {
+                var params = new URLSearchParams();
+                if (state.page > 1) params.set('page', state.page);
+                if (state.search) params.set('search', state.search);
+                if (state.status) params.set('status', state.status);
+                if (state.plan_id) params.set('plan_id', state.plan_id);
+
+                var url = '/api/v1/admin/subscriptions' + (params.toString() ? '?' + params.toString() : '');
+
+                var response = await fetch(url, {
+                    method: 'GET',
+                    headers: getAuthHeaders(),
+                    credentials: 'same-origin'
+                });
+
+                if (requestId !== state.currentRequestId) return;
+
+                if (!response.ok) {
+                    setSubscriptionsState('error', 'Impossible de récupérer la liste des abonnements (' + response.status + ').');
+                    state.isLoading = false;
+                    return;
+                }
+
+                var json = await response.json();
+                var items = json && json.data ? json.data : [];
+                var meta = json ? json.meta : null;
+                var links = json ? json.links : null;
+
+                state.activeSubscriptions = items;
+
+                // Calcul métriques KPI
+                updateKpis(items);
+
+                if (!items || items.length === 0) {
+                    setSubscriptionsState('empty');
+                    if (totalBadge) totalBadge.textContent = '0 contrat';
+                    state.isLoading = false;
+                    return;
+                }
+
+                renderSubscriptions(items, meta, links);
+                setSubscriptionsState('success');
+
+            } catch (err) {
+                if (requestId === state.currentRequestId) {
+                    console.error('Erreur API Subscriptions:', err);
+                    setSubscriptionsState('error', 'Erreur réseau. Impossible de contacter le serveur.');
+                }
+            } finally {
+                if (requestId === state.currentRequestId) {
+                    state.isLoading = false;
+                }
+            }
+        }
+
+        function updateKpis(items) {
+            var activeCount = 0;
+            var graceCount = 0;
+            var suspendedCount = 0;
+            var totalPaymentsCount = 0;
+
+            items.forEach(function (sub) {
+                if (sub.status === 'active') activeCount++;
+                else if (sub.status === 'grace_period') graceCount++;
+                else if (sub.status === 'suspended' || sub.status === 'expired') suspendedCount++;
+
+                if (sub.payments && Array.isArray(sub.payments)) {
+                    totalPaymentsCount += sub.payments.length;
+                }
+            });
+
+            if (kpiActive) kpiActive.textContent = activeCount;
+            if (kpiGrace) kpiGrace.textContent = graceCount;
+            if (kpiSuspended) kpiSuspended.textContent = suspendedCount;
+            if (kpiPayments) kpiPayments.textContent = totalPaymentsCount;
+        }
+
+        function getStatusBadge(status) {
+            switch (status) {
+                case 'active':
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Actif</span>';
+                case 'grace_period':
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Grâce (7j)</span>';
+                case 'suspended':
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Suspendu</span>';
+                case 'trialing':
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Essai</span>';
+                case 'cancelled':
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Résilié</span>';
+                default:
+                    return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-brand-dark text-gray-600 dark:text-gray-400"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>' + (status || 'Inconnu') + '</span>';
+            }
+        }
+
+        function formatDate(dStr) {
+            if (!dStr) return '—';
+            var d = new Date(dStr);
+            if (isNaN(d.getTime())) return dStr;
+            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function renderSubscriptions(items, meta, links) {
+            if (meta && totalBadge) {
+                totalBadge.textContent = meta.total + ' contrat' + (meta.total > 1 ? 's' : '');
+            }
+
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                items.forEach(function (sub) {
+                    var tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50/80 dark:hover:bg-brand-dark/40 transition-colors';
+                    tr.innerHTML = buildTableRow(sub);
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            if (mobileCards) {
+                mobileCards.innerHTML = '';
+                items.forEach(function (sub) {
+                    var card = document.createElement('div');
+                    card.className = 'p-4 bg-white dark:bg-brand-dark-card rounded-brand-lg border border-gray-200 dark:border-brand-dark-border shadow-2xs space-y-3';
+                    card.innerHTML = buildMobileCard(sub);
+                    mobileCards.appendChild(card);
+                });
+            }
+
+            // Pagination
+            if (meta && paginationInfo) {
+                paginationInfo.textContent = 'Affichage de ' + (meta.from || 0) + ' à ' + (meta.to || 0) + ' sur ' + (meta.total || 0) + ' contrat(s)';
+            }
+            if (meta && currentPageLabel) {
+                currentPageLabel.textContent = meta.current_page || 1;
+            }
+            if (prevPageBtn) prevPageBtn.disabled = !links || !links.prev;
+            if (nextPageBtn) nextPageBtn.disabled = !links || !links.next;
+
+            bindRowActions();
+        }
+
+        function buildTableRow(sub) {
+            var resto = sub.restaurant || {};
+            var plan = sub.plan || {};
+            var paymentsCount = sub.payments ? sub.payments.length : 0;
+            var price = plan.price_minor ? (plan.price_minor / 100).toLocaleString('fr-FR') : '0';
+
+            return '<td class="py-3 px-4">' +
+                '<div class="flex items-center gap-2.5">' +
+                    '<div class="w-8 h-8 rounded-brand bg-brand-orange/10 text-brand-orange flex items-center justify-center font-bold text-xs shrink-0">' +
+                        (resto.name ? escapeHtml(resto.name.charAt(0).toUpperCase()) : 'R') +
+                    '</div>' +
+                    '<div class="min-w-0">' +
+                        '<div class="font-bold text-brand-text dark:text-white truncate">' + escapeHtml(resto.name || 'Restaurant') + '</div>' +
+                        '<div class="text-[11px] text-gray-400 font-mono truncate">/' + escapeHtml(resto.slug || '') + '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</td>' +
+            '<td class="py-3 px-4">' +
+                '<span class="font-bold text-brand-orange">' + escapeHtml(plan.name || 'Plan Inconnu') + '</span>' +
+                '<div class="text-[11px] text-gray-500 dark:text-gray-400">' + price + ' ' + (plan.currency || 'XOF').toUpperCase() + ' / ' + (plan.billing_period || 'mois') + '</div>' +
+            '</td>' +
+            '<td class="py-3 px-4">' +
+                '<div class="text-xs text-brand-text dark:text-gray-200">Du ' + formatDate(sub.starts_at) + ' au ' + formatDate(sub.ends_at) + '</div>' +
+                (sub.grace_ends_at ? '<div class="text-[10px] text-amber-600 dark:text-amber-400">Grâce jusqu\'au ' + formatDate(sub.grace_ends_at) + '</div>' : '') +
+            '</td>' +
+            '<td class="py-3 px-4 text-center">' +
+                getStatusBadge(sub.status) +
+            '</td>' +
+            '<td class="py-3 px-4">' +
+                '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-gray-100 dark:bg-brand-dark text-gray-700 dark:text-gray-300">' +
+                    paymentsCount + ' règlement' + (paymentsCount > 1 ? 's' : '') +
+                '</span>' +
+            '</td>' +
+            '<td class="py-3 px-4 text-right">' +
+                '<div class="flex items-center justify-end gap-1.5">' +
+                    '<button type="button" class="btn-sub-status px-2.5 py-1 text-xs font-semibold rounded-brand bg-gray-100 hover:bg-gray-200 dark:bg-brand-dark dark:hover:bg-brand-dark-border text-gray-700 dark:text-gray-200 transition-colors" data-id="' + sub.id + '" title="Changer le statut">' +
+                        'Statut' +
+                    '</button>' +
+                    '<button type="button" class="btn-sub-pay px-2.5 py-1 text-xs font-semibold rounded-brand bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 transition-colors" data-id="' + sub.id + '" title="Encaisser">' +
+                        '+ Règlement' +
+                    '</button>' +
+                    '<button type="button" class="btn-sub-details px-2.5 py-1 text-xs font-semibold rounded-brand bg-brand-light dark:bg-brand-orange/10 hover:bg-brand-orange hover:text-white text-brand-orange transition-colors" data-id="' + sub.id + '" title="Détails & Historique">' +
+                        'Détails' +
+                    '</button>' +
+                '</div>' +
+            '</td>';
+        }
+
+        function buildMobileCard(sub) {
+            var resto = sub.restaurant || {};
+            var plan = sub.plan || {};
+            var paymentsCount = sub.payments ? sub.payments.length : 0;
+            var price = plan.price_minor ? (plan.price_minor / 100).toLocaleString('fr-FR') : '0';
+
+            return '<div class="flex items-start justify-between gap-3">' +
+                '<div>' +
+                    '<h4 class="text-sm font-bold text-brand-text dark:text-white">' + escapeHtml(resto.name || 'Restaurant') + '</h4>' +
+                    '<p class="text-xs text-brand-orange font-semibold">' + escapeHtml(plan.name || 'Plan') + ' (' + price + ' ' + (plan.currency || 'XOF') + ')</p>' +
+                '</div>' +
+                '<div>' + getStatusBadge(sub.status) + '</div>' +
+            '</div>' +
+            '<div class="text-xs text-gray-500 pt-1 border-t border-gray-100 dark:border-brand-dark-border">' +
+                '<div>Période : ' + formatDate(sub.starts_at) + ' au ' + formatDate(sub.ends_at) + '</div>' +
+                '<div>Règlements enregistrés : ' + paymentsCount + '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-2 pt-2">' +
+                '<button type="button" class="btn-sub-status flex-1 py-1.5 text-xs font-semibold rounded-brand bg-gray-100 dark:bg-brand-dark text-gray-700 dark:text-gray-200" data-id="' + sub.id + '">Statut</button>' +
+                '<button type="button" class="btn-sub-pay flex-1 py-1.5 text-xs font-semibold rounded-brand bg-emerald-600 text-white" data-id="' + sub.id + '">+ Règlement</button>' +
+                '<button type="button" class="btn-sub-details flex-1 py-1.5 text-xs font-semibold rounded-brand bg-brand-orange text-white" data-id="' + sub.id + '">Détails</button>' +
+            '</div>';
+        }
+
+        function bindRowActions() {
+            document.querySelectorAll('.btn-sub-status').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = parseInt(this.getAttribute('data-id'), 10);
+                    var sub = state.activeSubscriptions.find(function (s) { return s.id === id; });
+                    if (sub) openStatusModal(sub);
+                });
+            });
+
+            document.querySelectorAll('.btn-sub-pay').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = parseInt(this.getAttribute('data-id'), 10);
+                    var sub = state.activeSubscriptions.find(function (s) { return s.id === id; });
+                    if (sub) openPaymentModal(sub);
+                });
+            });
+
+            document.querySelectorAll('.btn-sub-details').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = parseInt(this.getAttribute('data-id'), 10);
+                    var sub = state.activeSubscriptions.find(function (s) { return s.id === id; });
+                    if (sub) openDetailsModal(sub);
+                });
+            });
+        }
+
+        // =====================================================================
+        // Gestion Modale Création Abonnement
+        // =====================================================================
+        function openCreateSubModal() {
+            if (!createSubModal) return;
+            if (createSubForm) createSubForm.reset();
+            if (createSubGeneralError) createSubGeneralError.classList.add('hidden');
+            createSubModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeCreateSubModal() {
+            if (!createSubModal) return;
+            createSubModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            if (btnSubmitCreateSub) btnSubmitCreateSub.disabled = false;
+            if (createSubSpinner) createSubSpinner.classList.add('hidden');
+        }
+
+        if (btnCreateSub) btnCreateSub.addEventListener('click', openCreateSubModal);
+        if (emptyCreateBtn) emptyCreateBtn.addEventListener('click', openCreateSubModal);
+        if (btnCloseCreateSub) btnCloseCreateSub.addEventListener('click', closeCreateSubModal);
+        if (btnCancelCreateSub) btnCancelCreateSub.addEventListener('click', closeCreateSubModal);
+        if (createSubBackdrop) createSubBackdrop.addEventListener('click', closeCreateSubModal);
+
+        if (createSubForm) {
+            createSubForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                var restoId = document.getElementById('create-sub-restaurant-id').value;
+                var planId = document.getElementById('create-sub-plan-id').value;
+                var startsAt = document.getElementById('create-sub-starts-at').value;
+                var graceDays = document.getElementById('create-sub-grace-days').value;
+                var status = document.getElementById('create-sub-status').value;
+                var notes = document.getElementById('create-sub-notes').value;
+
+                if (!restoId || !planId) {
+                    alert('Veuillez sélectionner un établissement et une formule SaaS.');
+                    return;
+                }
+
+                var payload = {
+                    restaurant_id: parseInt(restoId, 10),
+                    plan_id: parseInt(planId, 10),
+                    status: status,
+                    grace_days: parseInt(graceDays, 10) || 7,
+                    notes: notes || null
+                };
+
+                if (startsAt) {
+                    payload.starts_at = startsAt;
+                }
+
+                if (btnSubmitCreateSub) btnSubmitCreateSub.disabled = true;
+                if (createSubSpinner) createSubSpinner.classList.remove('hidden');
+
+                try {
+                    var response = await fetch('/api/v1/admin/subscriptions', {
+                        method: 'POST',
+                        headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders()),
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 422) {
+                        var errData = await response.json();
+                        var msg = errData && errData.message ? errData.message : 'Erreur de validation.';
+                        if (createSubGeneralError) {
+                            createSubGeneralError.textContent = msg;
+                            createSubGeneralError.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        alert('Erreur lors de la création de l\'abonnement (' + response.status + ').');
+                        return;
+                    }
+
+                    closeCreateSubModal();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast('Abonnement activé avec succès !', 'success', 4000);
+                    }
+                    state.page = 1;
+                    fetchSubscriptions();
+
+                } catch (err) {
+                    console.error('Erreur POST subscription:', err);
+                    alert('Erreur réseau.');
+                } finally {
+                    if (btnSubmitCreateSub) btnSubmitCreateSub.disabled = false;
+                    if (createSubSpinner) createSubSpinner.classList.add('hidden');
+                }
+            });
+        }
+
+        // =====================================================================
+        // Gestion Modale Statut Abonnement
+        // =====================================================================
+        function openStatusModal(sub) {
+            if (!statusModal) return;
+            statusModalId.value = sub.id;
+            statusModalResto.textContent = (sub.restaurant ? sub.restaurant.name : 'Restaurant');
+            statusModalPlan.textContent = 'Formule : ' + (sub.plan ? sub.plan.name : 'N/A') + ' (Statut actuel : ' + sub.status + ')';
+            statusModalTarget.value = sub.status;
+            statusModalReason.value = '';
+            if (statusModalError) statusModalError.classList.add('hidden');
+
+            statusModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeStatusModal() {
+            if (!statusModal) return;
+            statusModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            if (btnSubmitStatusModal) btnSubmitStatusModal.disabled = false;
+            if (statusSubmitSpinner) statusSubmitSpinner.classList.add('hidden');
+        }
+
+        if (btnCloseStatusModal) btnCloseStatusModal.addEventListener('click', closeStatusModal);
+        if (btnCancelStatusModal) btnCancelStatusModal.addEventListener('click', closeStatusModal);
+        if (statusBackdrop) statusBackdrop.addEventListener('click', closeStatusModal);
+
+        if (statusForm) {
+            statusForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                var subId = statusModalId.value;
+                var targetStatus = statusModalTarget.value;
+                var reason = statusModalReason.value.trim();
+
+                if ((targetStatus === 'suspended' || targetStatus === 'cancelled') && !reason) {
+                    if (statusModalError) {
+                        statusModalError.textContent = 'Le motif est obligatoire pour suspendre ou résilier un abonnement.';
+                        statusModalError.classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                if (btnSubmitStatusModal) btnSubmitStatusModal.disabled = true;
+                if (statusSubmitSpinner) statusSubmitSpinner.classList.remove('hidden');
+
+                try {
+                    var response = await fetch('/api/v1/admin/subscriptions/' + subId + '/status', {
+                        method: 'PATCH',
+                        headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders()),
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ status: targetStatus, reason: reason || null })
+                    });
+
+                    if (response.status === 422) {
+                        var errData = await response.json();
+                        var msg = errData && errData.message ? errData.message : 'Transition de statut refusée.';
+                        if (statusModalError) {
+                            statusModalError.textContent = msg;
+                            statusModalError.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        alert('Erreur lors de la mise à jour (' + response.status + ').');
+                        return;
+                    }
+
+                    closeStatusModal();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast('Statut de l\'abonnement mis à jour !', 'success', 4000);
+                    }
+                    fetchSubscriptions();
+
+                } catch (err) {
+                    console.error('Erreur PATCH subscription status:', err);
+                    alert('Erreur réseau.');
+                } finally {
+                    if (btnSubmitStatusModal) btnSubmitStatusModal.disabled = false;
+                    if (statusSubmitSpinner) statusSubmitSpinner.classList.add('hidden');
+                }
+            });
+        }
+
+        // =====================================================================
+        // Gestion Modale Enregistrement Paiement
+        // =====================================================================
+        function openPaymentModal(sub) {
+            if (!paymentModal) return;
+            paymentModalId.value = sub.id;
+            paymentModalResto.textContent = (sub.restaurant ? sub.restaurant.name : 'Restaurant');
+            var plan = sub.plan || {};
+            paymentModalPlan.textContent = (plan.name || 'Formule') + ' — ' + (plan.price_minor ? (plan.price_minor / 100).toLocaleString('fr-FR') : '0') + ' ' + (plan.currency || 'XOF');
+            paymentModalAmount.value = plan.price_minor ? (plan.price_minor / 100) : 35000;
+            paymentModalCurrency.value = (plan.currency || 'XOF').toUpperCase();
+            paymentModalRef.value = 'REG-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 89999 + 10000);
+            if (paymentModalError) paymentModalError.classList.add('hidden');
+
+            paymentModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closePaymentModal() {
+            if (!paymentModal) return;
+            paymentModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            if (btnSubmitPaymentModal) btnSubmitPaymentModal.disabled = false;
+            if (paymentSubmitSpinner) paymentSubmitSpinner.classList.add('hidden');
+        }
+
+        if (btnClosePaymentModal) btnClosePaymentModal.addEventListener('click', closePaymentModal);
+        if (btnCancelPaymentModal) btnCancelPaymentModal.addEventListener('click', closePaymentModal);
+        if (paymentBackdrop) paymentBackdrop.addEventListener('click', closePaymentModal);
+
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                var subId = paymentModalId.value;
+                var amountVal = parseFloat(paymentModalAmount.value);
+                var currency = paymentModalCurrency.value;
+                var method = paymentModalMethod.value;
+                var ref = paymentModalRef.value.trim();
+                var status = paymentModalStatus.value;
+
+                if (isNaN(amountVal) || amountVal <= 0) {
+                    alert('Veuillez saisir un montant valide.');
+                    return;
+                }
+
+                var payload = {
+                    amount_minor: Math.round(amountVal * 100),
+                    currency: currency.toLowerCase(),
+                    method: method,
+                    transaction_reference: ref || null,
+                    idempotency_key: 'PAY-SUB-' + subId + '-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    status: status,
+                    paid_at: new Date().toISOString()
+                };
+
+                if (btnSubmitPaymentModal) btnSubmitPaymentModal.disabled = true;
+                if (paymentSubmitSpinner) paymentSubmitSpinner.classList.remove('hidden');
+
+                try {
+                    var response = await fetch('/api/v1/admin/subscriptions/' + subId + '/payments', {
+                        method: 'POST',
+                        headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders()),
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 422) {
+                        var errData = await response.json();
+                        var msg = errData && errData.message ? errData.message : 'Erreur d\'enregistrement du règlement.';
+                        if (paymentModalError) {
+                            paymentModalError.textContent = msg;
+                            paymentModalError.classList.remove('hidden');
+                        }
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        alert('Erreur serveur lors de l\'enregistrement du règlement (' + response.status + ').');
+                        return;
+                    }
+
+                    closePaymentModal();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast('Règlement enregistré avec succès !', 'success', 4000);
+                    }
+                    fetchSubscriptions();
+
+                } catch (err) {
+                    console.error('Erreur POST subscription payment:', err);
+                    alert('Erreur réseau.');
+                } finally {
+                    if (btnSubmitPaymentModal) btnSubmitPaymentModal.disabled = false;
+                    if (paymentSubmitSpinner) paymentSubmitSpinner.classList.add('hidden');
+                }
+            });
+        }
+
+        // =====================================================================
+        // Gestion Modale Détails & Historique
+        // =====================================================================
+        async function openDetailsModal(sub) {
+            if (!detailsModal) return;
+
+            var resto = sub.restaurant || {};
+            var plan = sub.plan || {};
+
+            if (detailsSubtitle) detailsSubtitle.textContent = (resto.name || 'Restaurant') + ' — ' + (plan.name || 'Formule');
+            if (detailsStatus) detailsStatus.innerHTML = getStatusBadge(sub.status);
+            if (detailsPlan) detailsPlan.textContent = (plan.name || 'N/A') + ' (' + (plan.price_minor ? (plan.price_minor / 100).toLocaleString('fr-FR') : '0') + ' ' + (plan.currency || 'XOF') + ')';
+            if (detailsStarts) detailsStarts.textContent = formatDate(sub.starts_at);
+            if (detailsEnds) detailsEnds.textContent = formatDate(sub.ends_at);
+
+            detailsModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+
+            // Chargement complet du contrat avec historique
+            try {
+                var res = await fetch('/api/v1/admin/subscriptions/' + sub.id, {
+                    method: 'GET',
+                    headers: getAuthHeaders(),
+                    credentials: 'same-origin'
+                });
+
+                if (res.ok) {
+                    var fullSub = (await res.json()).data;
+                    renderDetailsContent(fullSub);
+                } else {
+                    renderDetailsContent(sub);
+                }
+            } catch (e) {
+                renderDetailsContent(sub);
+            }
+        }
+
+        function renderDetailsContent(sub) {
+            var payments = sub.payments || [];
+            var histories = sub.status_history || [];
+
+            if (detailsPaymentsCount) detailsPaymentsCount.textContent = payments.length + ' règlement(s)';
+
+            if (detailsPaymentsList) {
+                detailsPaymentsList.innerHTML = '';
+                if (payments.length === 0) {
+                    detailsPaymentsList.innerHTML = '<p class="text-xs text-gray-400 italic py-2">Aucun règlement enregistré pour le moment.</p>';
+                } else {
+                    payments.forEach(function (p) {
+                        var div = document.createElement('div');
+                        div.className = 'p-2.5 rounded-brand bg-gray-50 dark:bg-brand-dark/50 border border-gray-100 dark:border-brand-dark-border flex items-center justify-between text-xs';
+                        var amount = (p.amount_minor / 100).toLocaleString('fr-FR') + ' ' + (p.currency || 'XOF').toUpperCase();
+                        div.innerHTML = '<div>' +
+                            '<span class="font-bold text-brand-text dark:text-white">' + amount + '</span>' +
+                            '<span class="text-[11px] text-gray-400 block">' + (p.method || 'Moyen') + ' — Ref: ' + (p.transaction_reference || 'N/A') + '</span>' +
+                        '</div>' +
+                        '<div class="text-right">' +
+                            '<span class="px-2 py-0.5 rounded text-[10px] font-bold ' + (p.status === 'succeeded' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-gray-100 text-gray-700') + '">' + p.status + '</span>' +
+                            '<span class="text-[10px] text-gray-400 block mt-0.5">' + formatDate(p.created_at) + '</span>' +
+                        '</div>';
+                        detailsPaymentsList.appendChild(div);
+                    });
+                }
+            }
+
+            if (detailsHistoryList) {
+                detailsHistoryList.innerHTML = '';
+                if (histories.length === 0) {
+                    detailsHistoryList.innerHTML = '<p class="text-xs text-gray-400 italic py-2">Aucune transition enregistrée.</p>';
+                } else {
+                    histories.forEach(function (h) {
+                        var div = document.createElement('div');
+                        div.className = 'p-2.5 rounded-brand bg-gray-50 dark:bg-brand-dark/50 border border-gray-100 dark:border-brand-dark-border text-xs space-y-1';
+                        var actorName = h.actor ? h.actor.name : 'Système';
+                        div.innerHTML = '<div class="flex items-center justify-between">' +
+                            '<span class="font-bold text-brand-text dark:text-white">' + (h.from_status || 'Création') + ' &rarr; <span class="text-brand-orange">' + h.to_status + '</span></span>' +
+                            '<span class="text-[10px] text-gray-400">' + formatDate(h.created_at) + ' par ' + escapeHtml(actorName) + '</span>' +
+                        '</div>' +
+                        (h.reason ? '<p class="text-[11px] text-gray-500 italic">« ' + escapeHtml(h.reason) + ' »</p>' : '');
+                        detailsHistoryList.appendChild(div);
+                    });
+                }
+            }
+        }
+
+        function closeDetailsModal() {
+            if (!detailsModal) return;
+            detailsModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        if (btnCloseDetailsModal) btnCloseDetailsModal.addEventListener('click', closeDetailsModal);
+        if (btnDismissDetailsModal) btnDismissDetailsModal.addEventListener('click', closeDetailsModal);
+        if (detailsBackdrop) detailsBackdrop.addEventListener('click', closeDetailsModal);
+
+        // =====================================================================
+        // Filtres & Recherche
+        // =====================================================================
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                var val = this.value.trim();
+                if (searchClear) searchClear.classList.toggle('hidden', val.length === 0);
+
+                if (state.searchTimer) clearTimeout(state.searchTimer);
+                state.searchTimer = setTimeout(function () {
+                    state.search = val;
+                    state.page = 1;
+                    fetchSubscriptions();
+                }, 300);
+            });
+        }
+
+        if (searchClear) {
+            searchClear.addEventListener('click', function () {
+                if (searchInput) searchInput.value = '';
+                searchClear.classList.add('hidden');
+                state.search = '';
+                state.page = 1;
+                fetchSubscriptions();
+            });
+        }
+
+        if (statusFilter) {
+            statusFilter.addEventListener('change', function () {
+                state.status = this.value;
+                state.page = 1;
+                fetchSubscriptions();
+            });
+        }
+
+        if (planFilter) {
+            planFilter.addEventListener('change', function () {
+                state.plan_id = this.value;
+                state.page = 1;
+                fetchSubscriptions();
+            });
+        }
+
+        function resetAllFilters() {
+            if (searchInput) searchInput.value = '';
+            if (searchClear) searchClear.classList.add('hidden');
+            if (statusFilter) statusFilter.value = '';
+            if (planFilter) planFilter.value = '';
+            state.search = '';
+            state.status = '';
+            state.plan_id = '';
+            state.page = 1;
+            fetchSubscriptions();
+        }
+
+        if (resetFiltersBtn) resetFiltersBtn.addEventListener('click', resetAllFilters);
+        if (emptyResetBtn) emptyResetBtn.addEventListener('click', resetAllFilters);
+        if (retryBtn) retryBtn.addEventListener('click', fetchSubscriptions);
+        if (refreshBtn) refreshBtn.addEventListener('click', fetchSubscriptions);
+
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', function () {
+                if (state.page > 1) {
+                    state.page--;
+                    fetchSubscriptions();
+                }
+            });
+        }
+
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', function () {
+                state.page++;
+                fetchSubscriptions();
+            });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                if (createSubModal && !createSubModal.classList.contains('hidden')) closeCreateSubModal();
+                if (statusModal && !statusModal.classList.contains('hidden')) closeStatusModal();
+                if (paymentModal && !paymentModal.classList.contains('hidden')) closePaymentModal();
+                if (detailsModal && !detailsModal.classList.contains('hidden')) closeDetailsModal();
+            }
+        });
+
+        // Chargement initial
+        fetchSubscriptions();
     }
 });

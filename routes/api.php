@@ -61,8 +61,12 @@ Route::middleware(['auth:sanctum', 'verified', 'platform.admin'])
         Route::get('audit-logs', AdminAuditLogController::class)->name('audit-logs.index');
         Route::apiResource('plans', AdminPlanController::class)->only(['index', 'store', 'show', 'update']);
         Route::get('restaurants', [AdminRestaurantController::class, 'index'])->name('restaurants.index');
+        Route::post('restaurants', [AdminRestaurantController::class, 'store'])->name('restaurants.store');
         Route::patch('restaurants/{restaurant}/status', [AdminRestaurantController::class, 'updateStatus'])
             ->name('restaurants.status.update');
+        Route::get('subscriptions', [AdminSubscriptionController::class, 'allSubscriptions'])->name('subscriptions.all');
+        Route::post('subscriptions', [AdminSubscriptionController::class, 'createGlobal'])->name('subscriptions.store_global');
+        Route::get('subscriptions/{subscription}', [AdminSubscriptionController::class, 'showGlobal'])->name('subscriptions.show_global');
         Route::apiResource('restaurants.subscriptions', AdminSubscriptionController::class)
             ->only(['index', 'store', 'show']);
         Route::patch('subscriptions/{subscription}/status', AdminSubscriptionStatusController::class)

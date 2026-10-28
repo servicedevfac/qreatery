@@ -11,14 +11,14 @@ class OptionGroupSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
         // 1. Cuisson de la viande
         $groupCuisson = OptionGroup::query()->updateOrCreate(
-            ['restaurant_id' => $demoRestaurant->id, 'name' => 'Cuisson de la viande'],
+            ['restaurant_id' => $reposRestaurant->id, 'name' => 'Cuisson de la viande'],
             [
                 'minimum_selections' => 1,
                 'maximum_selections' => 1,
@@ -41,7 +41,7 @@ class OptionGroupSeeder extends Seeder
 
         // 2. Sauces d'accompagnement
         $groupSauces = OptionGroup::query()->updateOrCreate(
-            ['restaurant_id' => $demoRestaurant->id, 'name' => 'Sauces d\'accompagnement'],
+            ['restaurant_id' => $reposRestaurant->id, 'name' => 'Sauces d\'accompagnement'],
             [
                 'minimum_selections' => 0,
                 'maximum_selections' => 2,
@@ -64,7 +64,7 @@ class OptionGroupSeeder extends Seeder
 
         // 3. Suppléments gourmands
         $groupSupplements = OptionGroup::query()->updateOrCreate(
-            ['restaurant_id' => $demoRestaurant->id, 'name' => 'Suppléments gourmands'],
+            ['restaurant_id' => $reposRestaurant->id, 'name' => 'Suppléments gourmands'],
             [
                 'minimum_selections' => 0,
                 'maximum_selections' => 3,

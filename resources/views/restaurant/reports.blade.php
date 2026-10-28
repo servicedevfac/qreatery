@@ -1,6 +1,7 @@
 @php
-    $action = app(\App\Actions\BuildRestaurantReportAction::class);
-    $report = $action->handle($restaurant, []);
+    $demoService = $demoService ?? app(\App\Services\RestaurantDemoDataService::class);
+    $isDemoSession = $isDemoSession ?? $demoService->isDemoSession(auth()->user(), $restaurant);
+    $report = $demoService->getReportsData($restaurant, $isDemoSession);
 @endphp
 
 <div class="space-y-6">

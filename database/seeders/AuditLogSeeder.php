@@ -16,7 +16,7 @@ class AuditLogSeeder extends Seeder
         $owner = User::query()->where('email', 'owner@qreatery.test')->first();
         $manager = User::query()->where('email', 'manager@qreatery.test')->first();
 
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
         $pauseRestaurant = Restaurant::query()->where('slug', 'la-pause-fraicheur')->first();
         $planPro = Plan::query()->where('slug', 'pro')->first();
 
@@ -60,10 +60,10 @@ class AuditLogSeeder extends Seeder
             ],
             [
                 'actor_id' => $owner?->id,
-                'restaurant_id' => $demoRestaurant?->id,
+                'restaurant_id' => $reposRestaurant?->id,
                 'action' => 'menu.category_create',
                 'auditable_type' => Restaurant::class,
-                'auditable_id' => $demoRestaurant?->id,
+                'auditable_id' => $reposRestaurant?->id,
                 'ip_address' => '192.168.1.100',
                 'user_agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
                 'metadata' => ['category' => 'Burgers & Street Food'],
@@ -71,10 +71,10 @@ class AuditLogSeeder extends Seeder
             ],
             [
                 'actor_id' => $manager?->id,
-                'restaurant_id' => $demoRestaurant?->id,
+                'restaurant_id' => $reposRestaurant?->id,
                 'action' => 'order.cancel',
                 'auditable_type' => Restaurant::class,
-                'auditable_id' => $demoRestaurant?->id,
+                'auditable_id' => $reposRestaurant?->id,
                 'ip_address' => '192.168.1.102',
                 'user_agent' => 'Qreatery POS Tablet Agent',
                 'metadata' => [

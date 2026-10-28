@@ -45,12 +45,12 @@ class PublicMenuControllerTest extends TestCase
 
     public function test_public_menu_search_filters_products(): void
     {
-        $restaurant = Restaurant::factory()->create(['slug' => 'maquis-demo']);
+        $restaurant = Restaurant::factory()->create(['slug' => 'maquis-repos']);
         $category = Category::factory()->for($restaurant)->create();
         Product::factory()->for($restaurant)->for($category)->create(['name' => 'Poulet braisé']);
         Product::factory()->for($restaurant)->for($category)->create(['name' => 'Poisson braisé']);
 
-        $this->getJson('/api/v1/public/restaurants/maquis-demo/menu?search=Poulet')
+        $this->getJson('/api/v1/public/restaurants/maquis-repos/menu?search=Poulet')
             ->assertOk()
             ->assertJsonCount(1, 'data.categories.0.products')
             ->assertJsonPath('data.categories.0.products.0.name', 'Poulet braisé');

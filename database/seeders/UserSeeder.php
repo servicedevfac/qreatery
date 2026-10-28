@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
         ])->delete();
 
         // 1. Super-Administrateur Plateforme SaaS
-        $admin = User::query()->firstOrNew(['email' => 'admin@qreatery.test']);
-        $admin->name = 'Super Administrateur Qreatery';
+        $admin = User::query()->firstOrNew(['email' => 'admin@repos.test']);
+        $admin->name = 'Super Administrateur repos';
         $admin->password = $password;
         $admin->is_active = true;
         $admin->email_verified_at = now();
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
         $admin->save();
 
         // 2. Propriétaire du Restaurant
-        $owner = User::query()->firstOrNew(['email' => 'owner@qreatery.test']);
+        $owner = User::query()->firstOrNew(['email' => 'owner@repos.test']);
         $owner->name = 'Alexandre Danho (Propriétaire)';
         $owner->password = $password;
         $owner->is_active = true;
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
         $owner->save();
 
         // 3. Manager / Responsable de Salle
-        $manager = User::query()->firstOrNew(['email' => 'manager@qreatery.test']);
+        $manager = User::query()->firstOrNew(['email' => 'manager@repos.test']);
         $manager->name = 'Marc Kouassi (Manager de Salle)';
         $manager->password = $password;
         $manager->is_active = true;
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
         $manager->save();
 
         // 4. Caissier (Poste Caisse Tactile POS)
-        $cashier = User::query()->firstOrNew(['email' => 'cashier@qreatery.test']);
+        $cashier = User::query()->firstOrNew(['email' => 'cashier@repos.test']);
         $cashier->name = 'Aminata Diallo (Caissière)';
         $cashier->password = $password;
         $cashier->is_active = true;
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
         $cashier->save();
 
         // 5. Chef Cuisinier (Écran Cuisine KDS)
-        $cook = User::query()->firstOrNew(['email' => 'cook@qreatery.test']);
+        $cook = User::query()->firstOrNew(['email' => 'cook@repos.test']);
         $cook->name = 'Chef Ibrahim Traoré (Cuisine KDS)';
         $cook->password = $password;
         $cook->is_active = true;
@@ -70,7 +70,7 @@ class UserSeeder extends Seeder
         $cook->save();
 
         // 6. Serveur de Salle
-        $waiter = User::query()->firstOrNew(['email' => 'waiter@qreatery.test']);
+        $waiter = User::query()->firstOrNew(['email' => 'waiter@repos.test']);
         $waiter->name = 'Jean-Luc Yao (Serveur de Salle)';
         $waiter->password = $password;
         $waiter->is_active = true;

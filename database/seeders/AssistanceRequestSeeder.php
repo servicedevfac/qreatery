@@ -13,16 +13,16 @@ class AssistanceRequestSeeder extends Seeder
 {
     public function run(): void
     {
-        $demoRestaurant = Restaurant::query()->where('slug', 'restaurant-demo')->first();
-        if (! $demoRestaurant) {
+        $reposRestaurant = Restaurant::query()->where('slug', 'restaurant-repos')->first();
+        if (! $reposRestaurant) {
             return;
         }
 
-        $waiter = User::query()->where('email', 'waiter@qreatery.test')->first();
+        $waiter = User::query()->where('email', 'waiter@repos.test')->first();
 
-        $table1 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 1')->first();
-        $table2 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 2')->first();
-        $table4 = RestaurantTable::query()->where('restaurant_id', $demoRestaurant->id)->where('label', 'Table 4')->first();
+        $table1 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 1')->first();
+        $table2 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 2')->first();
+        $table4 = RestaurantTable::query()->where('restaurant_id', $reposRestaurant->id)->where('label', 'Table 4')->first();
 
         $order2 = Order::query()->where('number', 'ORD-2026-0002')->first();
 
@@ -31,7 +31,7 @@ class AssistanceRequestSeeder extends Seeder
         if ($table2) {
             AssistanceRequest::query()->updateOrCreate(
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'restaurant_table_id' => $table2->id,
                     'type' => 'waiter',
                     'status' => 'pending',
@@ -51,7 +51,7 @@ class AssistanceRequestSeeder extends Seeder
         if ($table4) {
             AssistanceRequest::query()->updateOrCreate(
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'restaurant_table_id' => $table4->id,
                     'type' => 'bill',
                 ],
@@ -71,7 +71,7 @@ class AssistanceRequestSeeder extends Seeder
         if ($table1) {
             AssistanceRequest::query()->updateOrCreate(
                 [
-                    'restaurant_id' => $demoRestaurant->id,
+                    'restaurant_id' => $reposRestaurant->id,
                     'restaurant_table_id' => $table1->id,
                     'type' => 'other',
                 ],
